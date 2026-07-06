@@ -38,8 +38,16 @@ export async function POST(req: NextRequest) {
   const encoder = new TextEncoder();
   const stream = new ReadableStream({
     async start(controller) {
+      let closed = false;
       const emit = (event: AgentEvent) => {
-        controller.enqueue(encoder.encode(JSON.stringify(event) + "\n"));
+        if (closed) return;
+        try {
+          controller.enqueue(encoder.encode(JSON.stringify(event) + "\n"));
+        } catch {
+          // Client disconnected mid-stream; stop writing but let the agent
+          // finish (its own errors are handled below).
+          closed = true;
+        }
       };
       try {
         emit({ type: "status", message: `Starting research on "${company}"…` });

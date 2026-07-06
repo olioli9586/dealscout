@@ -102,6 +102,10 @@ export async function runResearchAgent(
   ];
 
   let profileSaved = false;
+  // The _20260209 web tools run code execution (dynamic filtering) inside a
+  // server-side container. Follow-up requests in the loop must reference that
+  // same container or the API rejects them with "container_id is required".
+  let containerId: string | undefined;
 
   for (let iteration = 0; iteration < MAX_ITERATIONS; iteration++) {
     const stream = client.messages.stream({
@@ -111,6 +115,7 @@ export async function runResearchAgent(
       thinking: { type: "adaptive", display: "summarized" },
       tools,
       messages,
+      ...(containerId ? { container: containerId } : {}),
     });
 
     for await (const event of stream) {
@@ -130,6 +135,10 @@ export async function runResearchAgent(
         } else if (event.delta.type === "thinking_delta" && event.delta.thinking) {
           emit({ type: "thinking", text: event.delta.thinking });
         }
+      } else if (event.type === "message_delta") {
+        // The container id arrives on message_delta and is NOT merged into
+        // finalMessage() by the SDK accumulator — capture it here.
+        if (event.delta.container?.id) containerId = event.delta.container.id;
       }
     }
 
