@@ -5,34 +5,44 @@ import type { AgentEvent, CompanyProfile } from "@/lib/agent";
 
 type Phase = "idle" | "running" | "done" | "error";
 
+interface LogLine {
+  at: string; // elapsed, e.g. "0:04"
+  text: string;
+}
+
+const EXAMPLES = ["Ramp", "Mistral AI", "Anduril", "Neon"];
+
+function elapsed(since: number): string {
+  const s = Math.floor((Date.now() - since) / 1000);
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+}
+
 export default function Home() {
   const [company, setCompany] = useState("");
   const [phase, setPhase] = useState<Phase>("idle");
-  const [statuses, setStatuses] = useState<string[]>([]);
+  const [log, setLog] = useState<LogLine[]>([]);
+  const [thought, setThought] = useState("");
   const [narrative, setNarrative] = useState("");
   const [profile, setProfile] = useState<CompanyProfile | null>(null);
   const [error, setError] = useState("");
-  const abortRef = useRef<AbortController | null>(null);
+  const startRef = useRef(0);
 
-  async function runResearch(e: React.FormEvent) {
-    e.preventDefault();
-    if (!company.trim() || phase === "running") return;
-
+  async function run(name: string) {
+    if (!name.trim() || phase === "running") return;
+    setCompany(name);
     setPhase("running");
-    setStatuses([]);
+    setLog([]);
+    setThought("");
     setNarrative("");
     setProfile(null);
     setError("");
-
-    const controller = new AbortController();
-    abortRef.current = controller;
+    startRef.current = Date.now();
 
     try {
       const res = await fetch("/api/research", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ company: company.trim() }),
-        signal: controller.signal,
+        body: JSON.stringify({ company: name.trim() }),
       });
 
       if (!res.ok || !res.body) {
@@ -48,16 +58,22 @@ export default function Home() {
         const { done, value } = await reader.read();
         if (done) break;
         buffer += decoder.decode(value, { stream: true });
-
         const lines = buffer.split("\n");
         buffer = lines.pop() ?? "";
+
         for (const line of lines) {
           if (!line.trim()) continue;
           const event = JSON.parse(line) as AgentEvent;
           if (event.type === "status") {
-            setStatuses((prev) =>
-              prev[prev.length - 1] === event.message ? prev : [...prev, event.message],
+            const at = elapsed(startRef.current);
+            setLog((prev) =>
+              prev[prev.length - 1]?.text === event.message
+                ? prev
+                : [...prev, { at, text: event.message }],
             );
+            setThought("");
+          } else if (event.type === "thinking") {
+            setThought((prev) => (prev + event.text).slice(-160));
           } else if (event.type === "text") {
             setNarrative((prev) => prev + event.text);
           } else if (event.type === "profile") {
@@ -68,96 +84,156 @@ export default function Home() {
         }
       }
       setPhase("done");
+      setThought("");
     } catch (err) {
-      if ((err as Error).name === "AbortError") return;
       setError((err as Error).message);
       setPhase("error");
     }
   }
 
   return (
-    <main className="min-h-screen bg-[#0b1120] text-slate-200">
-      <div className="mx-auto max-w-3xl px-6 py-16">
-        <header className="mb-10">
-          <h1 className="text-4xl font-bold tracking-tight text-white">
-            DealScout
-            <span className="ml-3 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 align-middle text-xs font-medium text-emerald-300">
-              research agent
-            </span>
+    <main className="min-h-screen">
+      <div className="mx-auto max-w-2xl px-6 pb-24 pt-14 sm:pt-20">
+        {/* Masthead */}
+        <header>
+          <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-ticker">
+            ▮ Deal-sourcing intelligence · live agent
+          </p>
+          <h1 className="mt-5 font-serif text-[2.6rem] font-medium leading-[1.08] text-bright sm:text-5xl">
+            Every company has a story.
+            <br />
+            <em className="text-ticker">Send the agent</em> to find it.
           </h1>
-          <p className="mt-3 text-slate-400">
-            Type a company name. An autonomous agent searches the web, reads sources, and
-            returns a structured deal-sourcing profile — watch it work in real time.
+          <p className="mt-5 max-w-lg text-[15px] leading-relaxed text-muted">
+            DealScout is an autonomous researcher: it searches the web, reads
+            sources, and files a structured dossier — funding, deal signals,
+            confidence — while you watch it work.
           </p>
         </header>
 
-        <form onSubmit={runResearch} className="flex gap-3">
-          <input
-            value={company}
-            onChange={(e) => setCompany(e.target.value)}
-            placeholder="e.g. Ramp, Mistral AI, Rippling…"
-            className="flex-1 rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-slate-100 placeholder-slate-500 outline-none focus:border-emerald-500"
-          />
-          <button
-            type="submit"
-            disabled={phase === "running" || !company.trim()}
-            className="rounded-xl bg-emerald-500 px-6 py-3 font-semibold text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            {phase === "running" ? "Researching…" : "Research"}
-          </button>
+        {/* Command bar */}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            run(company);
+          }}
+          className="mt-10"
+        >
+          <label htmlFor="company" className="sr-only">
+            Company name
+          </label>
+          <div className="flex items-center gap-3 border border-line bg-panel px-4 py-3 font-mono text-sm focus-within:border-ticker">
+            <span aria-hidden className="select-none text-ticker">
+              &gt;
+            </span>
+            <input
+              id="company"
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
+              placeholder="research a company…"
+              autoComplete="off"
+              className="min-w-0 flex-1 bg-transparent text-bright placeholder-muted/60 outline-none"
+            />
+            <button
+              type="submit"
+              disabled={phase === "running" || !company.trim()}
+              className="shrink-0 bg-ticker px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-ink transition hover:bg-[#f7bd63] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ticker disabled:cursor-not-allowed disabled:opacity-35"
+            >
+              {phase === "running" ? "Working…" : "Run"}
+            </button>
+          </div>
         </form>
 
-        {statuses.length > 0 && (
-          <section className="mt-8 rounded-xl border border-slate-800 bg-slate-900/60 p-5">
-            <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-slate-500">
-              Agent activity
-            </h2>
-            <ol className="space-y-1.5 text-sm">
-              {statuses.map((s, i) => (
-                <li key={i} className="flex items-center gap-2 text-slate-400">
-                  <span
-                    className={
-                      phase === "running" && i === statuses.length - 1
-                        ? "h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400"
-                        : "h-1.5 w-1.5 rounded-full bg-slate-600"
-                    }
-                  />
-                  {s}
-                </li>
-              ))}
+        {/* Example targets (empty state) */}
+        {phase === "idle" && (
+          <div className="mt-4 flex flex-wrap items-center gap-2 font-mono text-xs text-muted">
+            <span className="mr-1">try:</span>
+            {EXAMPLES.map((name) => (
+              <button
+                key={name}
+                onClick={() => run(name)}
+                className="border border-line px-2.5 py-1 text-muted transition hover:border-ticker hover:text-ticker focus-visible:outline focus-visible:outline-2 focus-visible:outline-ticker"
+              >
+                {name}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Agent log */}
+        {log.length > 0 && (
+          <section className="mt-10 border border-line bg-panel" aria-live="polite">
+            <div className="flex items-center justify-between border-b border-line px-4 py-2">
+              <h2 className="font-mono text-[11px] uppercase tracking-[0.25em] text-muted">
+                Agent log
+              </h2>
+              <span className="font-mono text-[11px] text-muted">
+                {phase === "running" ? elapsed(startRef.current) : "closed"}
+              </span>
+            </div>
+            <ol className="px-4 py-3 font-mono text-[13px] leading-6">
+              {log.map((line, i) => {
+                const active = phase === "running" && i === log.length - 1;
+                return (
+                  <li key={i} className={active ? "text-ticker" : "text-muted"}>
+                    <span className="mr-3 opacity-50">{line.at}</span>
+                    {line.text}
+                    {active && <span className="caret-blink ml-1">▍</span>}
+                  </li>
+                );
+              })}
             </ol>
+            {thought && (
+              <p className="border-t border-line px-4 py-2 font-serif text-sm italic text-muted/80">
+                …{thought}
+              </p>
+            )}
           </section>
         )}
 
+        {/* Analyst notes (streamed narration) */}
         {narrative && (
-          <section className="mt-6 rounded-xl border border-slate-800 bg-slate-900/60 p-5">
-            <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-slate-500">
-              Notes
+          <section className="mt-6">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.25em] text-muted">
+              Notes from the field
             </h2>
-            <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-300">{narrative}</p>
+            <p className="mt-2 whitespace-pre-wrap border-l-2 border-line pl-4 text-[15px] leading-relaxed text-bright/80">
+              {narrative}
+            </p>
           </section>
         )}
 
+        {/* The dossier */}
         {profile && (
-          <section className="mt-6 overflow-hidden rounded-xl border border-emerald-700/40">
-            <div className="border-b border-emerald-700/40 bg-emerald-500/10 px-5 py-4">
-              <div className="flex items-baseline justify-between gap-4">
-                <h2 className="text-xl font-bold text-white">{profile.company_name}</h2>
+          <article className="dossier-enter mt-10 bg-paper text-paper-ink shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+            <div className="border-b border-paper-line px-6 py-5 sm:px-8">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-paper-muted">
+                    DealScout · Field dossier
+                  </p>
+                  <h2 className="mt-2 font-serif text-3xl font-semibold leading-tight">
+                    {profile.company_name}
+                  </h2>
+                </div>
                 <span
-                  className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                  className={`mt-1 shrink-0 -rotate-3 border-2 px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.2em] ${
                     profile.confidence === "high"
-                      ? "bg-emerald-500/20 text-emerald-300"
+                      ? "border-emerald-800/60 text-emerald-900"
                       : profile.confidence === "medium"
-                        ? "bg-amber-500/20 text-amber-300"
-                        : "bg-rose-500/20 text-rose-300"
+                        ? "border-amber-800/60 text-amber-900"
+                        : "border-rose-800/60 text-rose-900"
                   }`}
                 >
                   {profile.confidence} confidence
                 </span>
               </div>
-              <p className="mt-2 text-sm text-slate-300">{profile.summary}</p>
+              <p className="mt-4 font-serif text-[17px] italic leading-relaxed">
+                {profile.summary}
+              </p>
             </div>
-            <dl className="grid grid-cols-1 gap-x-8 gap-y-4 bg-slate-900/60 p-5 sm:grid-cols-2">
+
+            <dl className="grid grid-cols-1 gap-x-10 gap-y-4 px-6 py-6 sm:grid-cols-2 sm:px-8">
               <Field label="Website" value={profile.website} />
               <Field label="Industry" value={profile.industry} />
               <Field label="Headquarters" value={profile.hq_location} />
@@ -167,24 +243,36 @@ export default function Home() {
               <Field label="Business model" value={profile.business_model} wide />
               <ListField label="Products & services" items={profile.products_services} />
               <ListField label="Recent news" items={profile.recent_news} />
-              <ListField label="Deal signals" items={profile.deal_signals} highlight />
+              <ListField label="Deal signals" items={profile.deal_signals} signal />
             </dl>
-          </section>
+
+            <p className="border-t border-paper-line px-6 py-3 font-mono text-[10px] uppercase tracking-[0.2em] text-paper-muted sm:px-8">
+              Compiled by an autonomous agent · verify before use ·{" "}
+              {new Date().toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
+            </p>
+          </article>
         )}
 
         {error && (
-          <p className="mt-6 rounded-xl border border-rose-800 bg-rose-950/50 p-4 text-sm text-rose-300">
+          <p
+            role="alert"
+            className="mt-8 border border-rose-900/60 bg-rose-950/40 px-4 py-3 font-mono text-sm text-rose-300"
+          >
             {error}
           </p>
         )}
 
-        <footer className="mt-16 text-center text-xs text-slate-600">
-          Built with Next.js + the Claude API (server-side web search) ·{" "}
+        <footer className="mt-20 flex items-center justify-between border-t border-line pt-5 font-mono text-[11px] text-muted">
+          <span>Next.js · Claude API · server-side web search</span>
           <a
-            className="underline hover:text-slate-400"
+            className="underline decoration-line underline-offset-4 transition hover:text-ticker"
             href="https://github.com/olioli9586/dealscout"
           >
-            source on GitHub
+            source ↗
           </a>
         </footer>
       </div>
@@ -194,9 +282,9 @@ export default function Home() {
 
 function Field({ label, value, wide }: { label: string; value: string; wide?: boolean }) {
   return (
-    <div className={wide ? "sm:col-span-2" : ""}>
-      <dt className="text-xs font-semibold uppercase tracking-widest text-slate-500">{label}</dt>
-      <dd className="mt-1 text-sm text-slate-200">{value || "unknown"}</dd>
+    <div className={`border-b border-dotted border-paper-line pb-2 ${wide ? "sm:col-span-2" : ""}`}>
+      <dt className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper-muted">{label}</dt>
+      <dd className="mt-1 text-[14px] leading-snug">{value || "unknown"}</dd>
     </div>
   );
 }
@@ -204,26 +292,27 @@ function Field({ label, value, wide }: { label: string; value: string; wide?: bo
 function ListField({
   label,
   items,
-  highlight,
+  signal,
 }: {
   label: string;
   items: string[];
-  highlight?: boolean;
+  signal?: boolean;
 }) {
   return (
-    <div className="sm:col-span-2">
-      <dt className="text-xs font-semibold uppercase tracking-widest text-slate-500">{label}</dt>
-      <dd className="mt-1">
+    <div className="border-b border-dotted border-paper-line pb-2 sm:col-span-2">
+      <dt className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper-muted">{label}</dt>
+      <dd className="mt-1.5">
         {items.length === 0 ? (
-          <span className="text-sm text-slate-500">unknown</span>
+          <span className="text-[14px] text-paper-muted">unknown</span>
         ) : (
-          <ul className="space-y-1">
+          <ul className="space-y-1.5">
             {items.map((item, i) => (
-              <li
-                key={i}
-                className={`text-sm ${highlight ? "text-emerald-200" : "text-slate-200"}`}
-              >
-                • {item}
+              <li key={i} className="flex gap-2 text-[14px] leading-snug">
+                <span
+                  aria-hidden
+                  className={`mt-[7px] h-1.5 w-1.5 shrink-0 ${signal ? "bg-ticker" : "bg-paper-line"}`}
+                />
+                {item}
               </li>
             ))}
           </ul>
