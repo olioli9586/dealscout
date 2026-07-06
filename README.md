@@ -9,7 +9,7 @@ stream in real time.
 > intern at an M&A/investment firm: enriching company profiles for deal-sourcing
 > pipelines.
 
-**Live demo:** _coming soon_
+**Live demo:** https://dealscout-gamma.vercel.app (rate-limited to a few runs per visitor per day)
 
 ## How it works
 
