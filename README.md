@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DealScout — AI Company Research Agent
 
-## Getting Started
+An autonomous research agent for deal sourcing. Type a company name and the agent
+searches the web, reads sources, and returns a **structured company profile**
+(industry, funding, deal signals, confidence rating) — while you watch its steps
+stream in real time.
 
-First, run the development server:
+> Built to productionize a workflow I did manually as an AI Solutions Engineer
+> intern at an M&A/investment firm: enriching company profiles for deal-sourcing
+> pipelines.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+**Live demo:** _coming soon_
+
+## How it works
+
+```
+Browser ──POST /api/research──▶ Next.js Route Handler (streams NDJSON events)
+                                       │
+                                       ▼
+                              Agent loop (lib/agent.ts)
+                                       │  Claude API (claude-opus-4-8)
+                                       ▼
+              ┌─────────────────── tools ────────────────────┐
+              │ web_search / web_fetch (server-side,         │
+              │ run on Anthropic's infra — no scraper here)  │
+              │ save_profile (custom, strict JSON schema)    │
+              └──────────────────────────────────────────────┘
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. The route handler validates input, applies a per-IP daily rate limit, and opens
+   a streaming response (newline-delimited JSON events).
+2. `runResearchAgent` drives the agent loop: Claude plans, calls the **server-side
+   web search / web fetch tools** (they execute on Anthropic's infrastructure, so
+   the app needs no search-API key), and narrates progress.
+3. When the model believes research is done, it calls the custom **`save_profile`
+   tool**, whose `strict: true` JSON schema guarantees the profile parses — no
+   "hope the model emits clean JSON" fragility.
+4. The UI renders three live panes: agent activity (tool usage), narrated notes
+   (streamed text), and the final profile card.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Design decisions
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Hand-rolled agent loop, no framework.** The loop is ~100 lines
+  (`lib/agent.ts`) and handles the three stop reasons that matter:
+  `pause_turn` (server-side tool loop needs to be resumed — re-send as-is),
+  `tool_use` (our custom tool fired — capture input, return a `tool_result`),
+  and `refusal`/`end_turn` (terminate). Owning the loop makes behavior
+  debuggable and the interview story explainable.
+- **Structured output via a strict tool instead of prose JSON.** `strict: true`
+  on the tool schema makes the API validate the arguments, so `block.input` can
+  be trusted as a typed `CompanyProfile`.
+- **Streaming end-to-end.** Research takes tens of seconds; the Anthropic SDK
+  stream is translated into app-level events (`status` / `thinking` / `text` /
+  `profile`) and piped to the browser as NDJSON over a `ReadableStream`.
+- **Demo-mode cost guardrails.** Per-IP daily cap (in-memory). Known limitation:
+  on serverless each warm instance keeps its own counter, so the effective cap is
+  `limit × instances` — acceptable for a portfolio demo; the production fix is a
+  shared store (Upstash Redis). `max_uses` on the web tools also bounds per-request
+  spend.
+- **Model is configurable** (`DEALSCOUT_MODEL`), defaulting to `claude-opus-4-8`.
 
-## Learn More
+## Run locally
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm install
+cp .env.example .env.local   # add your ANTHROPIC_API_KEY
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Tech
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Next.js 16 (App Router) · TypeScript · Tailwind CSS · Anthropic SDK
+(`@anthropic-ai/sdk`) · deployed on Vercel
 
-## Deploy on Vercel
+## Roadmap
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [ ] Batch mode: paste a list of companies, get a CSV back
+- [ ] MCP server exposing the research tools to any MCP client
+- [ ] Persist profiles to Postgres (Neon) with a history view
+- [ ] Evaluation suite (accuracy of profiles vs. hand-checked ground truth)
