@@ -40,6 +40,7 @@ export type AgentEvent =
   | { type: "error"; message: string };
 
 const MODEL = process.env.DEALSCOUT_MODEL ?? "claude-opus-4-8";
+const FALLBACK_MODEL = "claude-opus-4-8";
 const MAX_ITERATIONS = 8;
 
 const SYSTEM_PROMPT = `You are DealScout, a company research analyst for a deal-sourcing team.
@@ -102,6 +103,8 @@ export async function runResearchAgent(
   ];
 
   let profileSaved = false;
+  // If the configured model is retired/unavailable (404), fall back once.
+  let model = MODEL;
   // The _20260209 web tools run code execution (dynamic filtering) inside a
   // server-side container. Follow-up requests in the loop must reference that
   // same container or the API rejects them with "container_id is required".
@@ -109,7 +112,7 @@ export async function runResearchAgent(
 
   for (let iteration = 0; iteration < MAX_ITERATIONS; iteration++) {
     const stream = client.messages.stream({
-      model: MODEL,
+      model,
       max_tokens: 16000,
       system: SYSTEM_PROMPT,
       thinking: { type: "adaptive", display: "summarized" },
@@ -118,6 +121,8 @@ export async function runResearchAgent(
       ...(containerId ? { container: containerId } : {}),
     });
 
+    let response: Anthropic.Message;
+    try {
     for await (const event of stream) {
       if (event.type === "content_block_start") {
         const block = event.content_block;
@@ -142,7 +147,15 @@ export async function runResearchAgent(
       }
     }
 
-    const response = await stream.finalMessage();
+    response = await stream.finalMessage();
+    } catch (err) {
+      if (err instanceof Anthropic.NotFoundError && model !== FALLBACK_MODEL) {
+        model = FALLBACK_MODEL;
+        emit({ type: "status", message: `Model unavailable — switching to ${FALLBACK_MODEL}…` });
+        continue; // retry the request on the fallback model
+      }
+      throw err;
+    }
     // Echo the assistant turn back verbatim (thinking blocks included) so the
     // next request in the loop is valid.
     messages.push({ role: "assistant", content: response.content });

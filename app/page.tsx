@@ -147,7 +147,13 @@ export default function Home() {
         {/* Example targets (empty state) */}
         {phase === "idle" && (
           <div className="mt-4 flex flex-wrap items-center gap-2 font-mono text-xs text-muted">
-            <span className="mr-1">try:</span>
+            <a
+              href="/batch"
+              className="border border-line px-2.5 py-1 text-ticker/80 transition hover:border-ticker hover:text-ticker"
+            >
+              batch mode →
+            </a>
+            <span className="ml-2 mr-1">try:</span>
             {EXAMPLES.map((name) => (
               <button
                 key={name}
