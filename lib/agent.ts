@@ -41,13 +41,17 @@ export type AgentEvent =
 
 const MODEL = process.env.DEALSCOUT_MODEL ?? "claude-opus-4-8";
 const FALLBACK_MODEL = "claude-opus-4-8";
-const MAX_ITERATIONS = 8;
+const MAX_ITERATIONS = 6;
+// Runs must fit inside the deployment platform's 300s function limit. Lower
+// effort makes the model consolidate tool calls and conclude sooner.
+const EFFORT = (process.env.DEALSCOUT_EFFORT ?? "medium") as "low" | "medium" | "high";
 
 const SYSTEM_PROMPT = `You are DealScout, a company research analyst for a deal-sourcing team.
 
 Given a company name (and optional hints), research it on the web and produce a
-structured profile. Work efficiently: a handful of targeted searches, fetch the
-company website or an authoritative source if needed, then conclude.
+structured profile. You have a hard time budget of about four minutes, so work
+fast: at most 3 targeted searches and 2 page fetches, then conclude. Prefer
+"unknown" for a minor field over spending another search on it.
 
 Rules:
 - Prefer primary sources (company site, filings, reputable press).
@@ -58,8 +62,8 @@ Rules:
 - When research is complete, call save_profile exactly once with every field filled.`;
 
 const tools: Anthropic.Messages.ToolUnion[] = [
-  { type: "web_search_20260209", name: "web_search", max_uses: 6 },
-  { type: "web_fetch_20260209", name: "web_fetch", max_uses: 4 },
+  { type: "web_search_20260209", name: "web_search", max_uses: 4 },
+  { type: "web_fetch_20260209", name: "web_fetch", max_uses: 3 },
   {
     name: "save_profile",
     description:
@@ -116,6 +120,7 @@ export async function runResearchAgent(
       max_tokens: 16000,
       system: SYSTEM_PROMPT,
       thinking: { type: "adaptive", display: "summarized" },
+      output_config: { effort: EFFORT },
       tools,
       messages,
       ...(containerId ? { container: containerId } : {}),

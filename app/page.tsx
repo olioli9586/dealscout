@@ -53,6 +53,7 @@ export default function Home() {
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let buffer = "";
+      let gotProfile = false;
 
       while (true) {
         const { done, value } = await reader.read();
@@ -78,10 +79,16 @@ export default function Home() {
             setNarrative((prev) => prev + event.text);
           } else if (event.type === "profile") {
             setProfile(event.profile);
+            gotProfile = true;
           } else if (event.type === "error") {
             throw new Error(event.message);
           }
         }
+      }
+      if (!gotProfile) {
+        throw new Error(
+          "The run hit the server time limit before finishing — please try again.",
+        );
       }
       setPhase("done");
       setThought("");

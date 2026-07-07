@@ -44,7 +44,7 @@ async function researchOne(name: string): Promise<CompanyProfile> {
       if (event.type === "error") throw new Error(event.message);
     }
   }
-  if (!profile) throw new Error("No profile returned");
+  if (!profile) throw new Error("Hit the server time limit — retry this one");
   return profile;
 }
 
