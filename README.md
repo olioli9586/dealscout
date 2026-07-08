@@ -64,6 +64,13 @@ Browser ──POST /api/research──▶ Next.js Route Handler (streams NDJSON 
   tighter search budgets the same run fits with room to spare.
 - **Batch mode** (`/batch`): up to 10 companies researched sequentially with
   per-row status and CSV export.
+- **MCP server** (`/api/mcp`): the agent is also exposed as a Model Context
+  Protocol tool (`research_company`), so any MCP client — Claude Desktop, IDEs,
+  other agents — can use DealScout as a capability. The endpoint is a
+  hand-rolled, stateless Streamable-HTTP JSON-RPC handler (~100 lines, no SDK):
+  `initialize` / `tools/list` / `tools/call`, with tool failures reported via
+  `isError` inside the result so the calling model can react to them.
+  Connect with: `{"type": "http", "url": "https://dealscout-gamma.vercel.app/api/mcp"}`
 
 ## Run locally
 
