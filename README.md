@@ -11,6 +11,8 @@ stream in real time.
 
 **Live demo:** https://dealscout-gamma.vercel.app (rate-limited to a few runs per visitor per day)
 
+![DealScout](docs/home.png)
+
 ## How it works
 
 ```
