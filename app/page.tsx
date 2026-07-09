@@ -26,6 +26,9 @@ export default function Home() {
   const [profile, setProfile] = useState<CompanyProfile | null>(null);
   const [error, setError] = useState("");
   const startRef = useRef(0);
+  // Mirror of startRef for render-time reads (reading a ref during render
+  // violates React's rules; the handlers keep the ref to avoid stale closures).
+  const [startAt, setStartAt] = useState(0);
 
   async function run(name: string) {
     if (!name.trim() || phase === "running") return;
@@ -37,6 +40,7 @@ export default function Home() {
     setProfile(null);
     setError("");
     startRef.current = Date.now();
+    setStartAt(startRef.current);
 
     try {
       const res = await fetch("/api/research", {
@@ -181,7 +185,7 @@ export default function Home() {
                 Agent log
               </h2>
               <span className="font-mono text-[11px] text-muted">
-                {phase === "running" ? elapsed(startRef.current) : "closed"}
+                {phase === "running" ? elapsed(startAt) : "closed"}
               </span>
             </div>
             <ol className="px-4 py-3 font-mono text-[13px] leading-6">

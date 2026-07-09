@@ -87,9 +87,16 @@ npm run dev
 Next.js 16 (App Router) · TypeScript · Tailwind CSS · Anthropic SDK
 (`@anthropic-ai/sdk`) · deployed on Vercel
 
+## Evaluation
+
+`eval/` holds an accuracy suite: hand-checked ground truth for stable fields
+(website domain, founded year, HQ city) and a grader script. Latest run:
+**15/15 fields correct** across 5 companies — see [eval/RESULTS.md](eval/RESULTS.md).
+Reproduce with `node eval/run-eval.mjs`.
+
 ## Roadmap
 
-- [ ] Batch mode: paste a list of companies, get a CSV back
-- [ ] MCP server exposing the research tools to any MCP client
+- [x] Batch mode (`/batch`): paste a list of companies, get a CSV back
+- [x] MCP server exposing the agent to any MCP client (`/api/mcp`)
+- [x] Evaluation suite (accuracy vs. hand-checked ground truth — `eval/`)
 - [ ] Persist profiles to Postgres (Neon) with a history view
-- [ ] Evaluation suite (accuracy of profiles vs. hand-checked ground truth)

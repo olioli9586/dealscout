@@ -1,0 +1,35 @@
+{
+  "_notes": "Hand-checked ground truth (verified against public sources, Jul 2026). Fields chosen for stability and unambiguity: website domain, founded year, HQ city. Arrays list every acceptable value — e.g. Vercel was founded 2015 as ZEIT and rebranded 2020, so both years grade as correct.",
+  "companies": [
+    {
+      "name": "Anthropic",
+      "website_domain": ["anthropic.com"],
+      "founded_year": ["2021"],
+      "hq_city": ["san francisco"]
+    },
+    {
+      "name": "Vercel",
+      "website_domain": ["vercel.com"],
+      "founded_year": ["2015", "2020"],
+      "hq_city": ["san francisco"]
+    },
+    {
+      "name": "Airbnb",
+      "website_domain": ["airbnb.com"],
+      "founded_year": ["2008", "2007"],
+      "hq_city": ["san francisco"]
+    },
+    {
+      "name": "Shopify",
+      "website_domain": ["shopify.com"],
+      "founded_year": ["2006", "2004"],
+      "hq_city": ["ottawa"]
+    },
+    {
+      "name": "Datadog",
+      "website_domain": ["datadoghq.com"],
+      "founded_year": ["2010"],
+      "hq_city": ["new york"]
+    }
+  ]
+}
