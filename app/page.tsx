@@ -103,154 +103,225 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen">
-      <div className="mx-auto max-w-2xl px-6 pb-24 pt-14 sm:pt-20">
-        {/* Masthead */}
-        <header>
-          <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-ticker">
-            ▮ Deal-sourcing intelligence · live agent
-          </p>
-          <h1 className="mt-5 font-serif text-[2.6rem] font-medium leading-[1.08] text-bright sm:text-5xl">
-            Every company has a story.
+    <main className="flex-1">
+      {/* Command deck */}
+      <section className="dot-grid bg-navy">
+        <div className="mx-auto w-full max-w-3xl px-6 pb-12 pt-12 sm:pb-14 sm:pt-16">
+          <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-[2.75rem]">
+            Company research,
             <br />
-            <em className="text-ticker">Send the agent</em> to find it.
+            run by an agent.
           </h1>
-          <p className="mt-5 max-w-lg text-[15px] leading-relaxed text-muted">
-            DealScout is an autonomous researcher: it searches the web, reads
-            sources, and files a structured dossier — funding, deal signals,
-            confidence — while you watch it work.
+          <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-white/70">
+            Type a name. DealScout searches the web, reads the sources it
+            finds, and files a deal-ready profile — funding, business model,
+            signals — while you watch.
           </p>
-        </header>
 
-        {/* Command bar */}
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            run(company);
-          }}
-          className="mt-10"
-        >
-          <label htmlFor="company" className="sr-only">
-            Company name
-          </label>
-          <div className="flex items-center gap-3 border border-line bg-panel px-4 py-3 font-mono text-sm focus-within:border-ticker">
-            <span aria-hidden className="select-none text-ticker">
-              &gt;
-            </span>
-            <input
-              id="company"
-              value={company}
-              onChange={(e) => setCompany(e.target.value)}
-              placeholder="research a company…"
-              autoComplete="off"
-              className="min-w-0 flex-1 bg-transparent text-bright placeholder-muted/60 outline-none"
-            />
-            <button
-              type="submit"
-              disabled={phase === "running" || !company.trim()}
-              className="shrink-0 bg-ticker px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-ink transition hover:bg-[#f7bd63] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ticker disabled:cursor-not-allowed disabled:opacity-35"
-            >
-              {phase === "running" ? "Working…" : "Run"}
-            </button>
-          </div>
-        </form>
-
-        {/* Example targets (empty state) */}
-        {phase === "idle" && (
-          <div className="mt-4 flex flex-wrap items-center gap-2 font-mono text-xs text-muted">
-            <a
-              href="/batch"
-              className="border border-line px-2.5 py-1 text-ticker/80 transition hover:border-ticker hover:text-ticker"
-            >
-              batch mode →
-            </a>
-            <span className="ml-2 mr-1">try:</span>
-            {EXAMPLES.map((name) => (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              run(company);
+            }}
+            className="mt-7"
+          >
+            <label htmlFor="company" className="sr-only">
+              Company name
+            </label>
+            <div className="flex max-w-xl gap-2">
+              <input
+                id="company"
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
+                placeholder="Company name"
+                autoComplete="off"
+                className="h-11 min-w-0 flex-1 rounded-md border border-white/20 bg-white px-3.5 text-[15px] text-ink outline-none transition placeholder:text-soft/70 focus:border-mint focus:ring-2 focus:ring-mint/30"
+              />
               <button
-                key={name}
-                onClick={() => run(name)}
-                className="border border-line px-2.5 py-1 text-muted transition hover:border-ticker hover:text-ticker focus-visible:outline focus-visible:outline-2 focus-visible:outline-ticker"
+                type="submit"
+                disabled={phase === "running" || !company.trim()}
+                className="h-11 shrink-0 rounded-md bg-accent px-5 text-sm font-semibold text-white transition hover:bg-accent-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {name}
+                {phase === "running" ? "Researching…" : "Research"}
               </button>
-            ))}
-          </div>
+            </div>
+          </form>
+
+          {phase === "idle" && (
+            <div className="mt-4 flex flex-wrap items-center gap-2 text-[13px] text-white/60">
+              <span className="mr-1">Try</span>
+              {EXAMPLES.map((name) => (
+                <button
+                  key={name}
+                  onClick={() => run(name)}
+                  className="rounded-full border border-white/20 px-3 py-1 text-white/80 transition hover:border-mint hover:text-mint focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint"
+                >
+                  {name}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      <div className="mx-auto w-full max-w-3xl px-6 pb-20">
+        {/* Sample report (empty state) — real output from a live run */}
+        {phase === "idle" && (
+          <section className="-mt-0 pt-10">
+            <div className="flex items-baseline justify-between">
+              <h2 className="text-[13px] font-medium text-soft">
+                What you get back
+              </h2>
+              <span className="text-xs text-soft/70">
+                Sample from a live run, Jul 2026
+              </span>
+            </div>
+            <div className="mt-2 rounded-lg border border-edge bg-surface shadow-sm">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-edge px-6 py-4">
+                <h3 className="font-display text-lg font-semibold tracking-tight text-ink">
+                  Ramp
+                </h3>
+                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
+                  High confidence
+                </span>
+                <button
+                  onClick={() => run("Ramp")}
+                  className="ml-auto text-[13px] font-medium text-accent transition hover:text-accent-hover"
+                >
+                  Run it fresh →
+                </button>
+              </div>
+              <dl className="grid grid-cols-2 gap-x-8 gap-y-3 px-6 py-4 sm:grid-cols-4">
+                <div>
+                  <dt className="text-xs font-medium text-soft">Industry</dt>
+                  <dd className="mt-0.5 text-[13px] text-ink">
+                    FinTech — corporate spend
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-xs font-medium text-soft">HQ</dt>
+                  <dd className="mt-0.5 text-[13px] text-ink">New York, NY</dd>
+                </div>
+                <div>
+                  <dt className="text-xs font-medium text-soft">Founded</dt>
+                  <dd className="mt-0.5 text-[13px] text-ink">2019</dd>
+                </div>
+                <div>
+                  <dt className="text-xs font-medium text-soft">Valuation</dt>
+                  <dd className="mt-0.5 text-[13px] text-ink">
+                    $32B (Nov 2025)
+                  </dd>
+                </div>
+              </dl>
+              <div className="border-t border-edge px-6 py-4">
+                <h4 className="text-xs font-medium text-soft">Deal signals</h4>
+                <ul className="mt-1.5 space-y-1">
+                  {[
+                    "Four funding rounds in 2025 totaling $1B+",
+                    "Annualized revenue ~$1.2B, up 133% YoY",
+                    "Employee tender offers — a classic pre-IPO signal",
+                  ].map((item) => (
+                    <li
+                      key={item}
+                      className="flex gap-2 text-[13px] leading-snug text-ink"
+                    >
+                      <span
+                        aria-hidden
+                        className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-accent"
+                      />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </section>
         )}
 
-        {/* Agent log */}
+        {/* Live agent workspace */}
         {log.length > 0 && (
-          <section className="mt-10 border border-line bg-panel" aria-live="polite">
-            <div className="flex items-center justify-between border-b border-line px-4 py-2">
-              <h2 className="font-mono text-[11px] uppercase tracking-[0.25em] text-muted">
-                Agent log
+          <section
+            className="mt-8 overflow-hidden rounded-lg bg-navy"
+            aria-live="polite"
+          >
+            <div className="flex items-center justify-between border-b border-white/10 px-4 py-2.5">
+              <h2 className="flex items-center gap-2 text-[13px] font-medium text-white/80">
+                <span
+                  aria-hidden
+                  className={`h-1.5 w-1.5 rounded-full ${phase === "running" ? "pulse-dot bg-mint" : "bg-white/30"}`}
+                />
+                Agent activity
               </h2>
-              <span className="font-mono text-[11px] text-muted">
-                {phase === "running" ? elapsed(startAt) : "closed"}
-              </span>
+              {phase === "running" && (
+                <span className="font-mono text-xs text-white/50">
+                  {elapsed(startAt)}
+                </span>
+              )}
             </div>
             <ol className="px-4 py-3 font-mono text-[13px] leading-6">
               {log.map((line, i) => {
                 const active = phase === "running" && i === log.length - 1;
                 return (
-                  <li key={i} className={active ? "text-ticker" : "text-muted"}>
-                    <span className="mr-3 opacity-50">{line.at}</span>
-                    {line.text}
-                    {active && <span className="caret-blink ml-1">▍</span>}
+                  <li
+                    key={i}
+                    className={`flex gap-3 ${active ? "text-mint" : "text-white/60"}`}
+                  >
+                    <span className="shrink-0 text-xs leading-6 text-white/35">
+                      {line.at}
+                    </span>
+                    <span>{line.text}</span>
                   </li>
                 );
               })}
             </ol>
             {thought && (
-              <p className="border-t border-line px-4 py-2 font-serif text-sm italic text-muted/80">
+              <p className="border-t border-white/10 px-4 py-2 text-[13px] text-white/45">
                 …{thought}
               </p>
             )}
           </section>
         )}
 
-        {/* Analyst notes (streamed narration) */}
+        {/* Streamed narration — collapses once the profile is in */}
         {narrative && (
-          <section className="mt-6">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.25em] text-muted">
-              Notes from the field
-            </h2>
-            <p className="mt-2 whitespace-pre-wrap border-l-2 border-line pl-4 text-[15px] leading-relaxed text-bright/80">
+          <details className="mt-6" open={!profile}>
+            <summary className="cursor-pointer select-none text-[13px] font-medium text-soft transition hover:text-ink">
+              Research notes
+            </summary>
+            <p className="mt-1.5 whitespace-pre-wrap text-[14px] leading-relaxed text-soft">
               {narrative}
             </p>
-          </section>
+          </details>
         )}
 
-        {/* The dossier */}
+        {/* Company profile */}
         {profile && (
-          <article className="dossier-enter mt-10 bg-paper text-paper-ink shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
-            <div className="border-b border-paper-line px-6 py-5 sm:px-8">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-paper-muted">
-                    DealScout · Field dossier
-                  </p>
-                  <h2 className="mt-2 font-serif text-3xl font-semibold leading-tight">
-                    {profile.company_name}
-                  </h2>
-                </div>
+          <article className="card-enter mt-8 overflow-hidden rounded-lg border border-edge bg-surface shadow-sm">
+            <div className="border-b border-edge px-6 py-5">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                <h2 className="font-display text-2xl font-bold tracking-tight text-ink">
+                  {profile.company_name}
+                </h2>
                 <span
-                  className={`mt-1 shrink-0 -rotate-3 border-2 px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.2em] ${
+                  className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${
                     profile.confidence === "high"
-                      ? "border-emerald-800/60 text-emerald-900"
+                      ? "border-emerald-200 bg-emerald-50 text-emerald-700"
                       : profile.confidence === "medium"
-                        ? "border-amber-800/60 text-amber-900"
-                        : "border-rose-800/60 text-rose-900"
+                        ? "border-amber-200 bg-amber-50 text-amber-800"
+                        : "border-red-200 bg-red-50 text-red-700"
                   }`}
                 >
-                  {profile.confidence} confidence
+                  {profile.confidence[0].toUpperCase() +
+                    profile.confidence.slice(1)}{" "}
+                  confidence
                 </span>
               </div>
-              <p className="mt-4 font-serif text-[17px] italic leading-relaxed">
+              <p className="mt-3 text-[15px] leading-relaxed text-ink/90">
                 {profile.summary}
               </p>
             </div>
 
-            <dl className="grid grid-cols-1 gap-x-10 gap-y-4 px-6 py-6 sm:grid-cols-2 sm:px-8">
+            <dl className="grid grid-cols-1 gap-x-8 gap-y-4 px-6 py-5 sm:grid-cols-2">
               <Field label="Website" value={profile.website} />
               <Field label="Industry" value={profile.industry} />
               <Field label="Headquarters" value={profile.hq_location} />
@@ -263,13 +334,14 @@ export default function Home() {
               <ListField label="Deal signals" items={profile.deal_signals} signal />
             </dl>
 
-            <p className="border-t border-paper-line px-6 py-3 font-mono text-[10px] uppercase tracking-[0.2em] text-paper-muted sm:px-8">
-              Compiled by an autonomous agent · verify before use ·{" "}
+            <p className="border-t border-edge bg-canvas/60 px-6 py-3 text-xs text-soft">
+              Compiled from public web sources on{" "}
               {new Date().toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "short",
                 day: "numeric",
               })}
+              . Verify before use.
             </p>
           </article>
         )}
@@ -277,21 +349,11 @@ export default function Home() {
         {error && (
           <p
             role="alert"
-            className="mt-8 border border-rose-900/60 bg-rose-950/40 px-4 py-3 font-mono text-sm text-rose-300"
+            className="mt-6 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
           >
             {error}
           </p>
         )}
-
-        <footer className="mt-20 flex items-center justify-between border-t border-line pt-5 font-mono text-[11px] text-muted">
-          <span>Next.js · Claude API · server-side web search</span>
-          <a
-            className="underline decoration-line underline-offset-4 transition hover:text-ticker"
-            href="https://github.com/olioli9586/dealscout"
-          >
-            source ↗
-          </a>
-        </footer>
       </div>
     </main>
   );
@@ -299,9 +361,11 @@ export default function Home() {
 
 function Field({ label, value, wide }: { label: string; value: string; wide?: boolean }) {
   return (
-    <div className={`border-b border-dotted border-paper-line pb-2 ${wide ? "sm:col-span-2" : ""}`}>
-      <dt className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper-muted">{label}</dt>
-      <dd className="mt-1 text-[14px] leading-snug">{value || "unknown"}</dd>
+    <div className={wide ? "sm:col-span-2" : ""}>
+      <dt className="text-xs font-medium text-soft">{label}</dt>
+      <dd className="mt-0.5 text-[14px] leading-snug text-ink">
+        {value || "Unknown"}
+      </dd>
     </div>
   );
 }
@@ -316,18 +380,18 @@ function ListField({
   signal?: boolean;
 }) {
   return (
-    <div className="border-b border-dotted border-paper-line pb-2 sm:col-span-2">
-      <dt className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper-muted">{label}</dt>
-      <dd className="mt-1.5">
+    <div className="sm:col-span-2">
+      <dt className="text-xs font-medium text-soft">{label}</dt>
+      <dd className="mt-1">
         {items.length === 0 ? (
-          <span className="text-[14px] text-paper-muted">unknown</span>
+          <span className="text-[14px] text-soft">Unknown</span>
         ) : (
-          <ul className="space-y-1.5">
+          <ul className="space-y-1">
             {items.map((item, i) => (
-              <li key={i} className="flex gap-2 text-[14px] leading-snug">
+              <li key={i} className="flex gap-2 text-[14px] leading-snug text-ink">
                 <span
                   aria-hidden
-                  className={`mt-[7px] h-1.5 w-1.5 shrink-0 ${signal ? "bg-ticker" : "bg-paper-line"}`}
+                  className={`mt-[7px] h-1 w-1 shrink-0 rounded-full ${signal ? "bg-accent" : "bg-edge-strong"}`}
                 />
                 {item}
               </li>

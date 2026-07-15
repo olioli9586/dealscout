@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import type { AgentEvent, CompanyProfile } from "@/lib/agent";
 
@@ -122,86 +121,95 @@ export default function BatchPage() {
   }
 
   return (
-    <main className="min-h-screen">
-      <div className="mx-auto max-w-3xl px-6 pb-24 pt-14 sm:pt-20">
-        <header>
-          <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-ticker">
-            ▮ Batch pipeline
-          </p>
-          <h1 className="mt-4 font-serif text-4xl font-medium leading-tight text-bright">
-            One list in, <em className="text-ticker">a pipeline</em> out.
+    <main className="flex-1">
+      <section className="dot-grid bg-navy">
+        <div className="mx-auto w-full max-w-3xl px-6 py-10 sm:py-12">
+          <h1 className="font-display text-3xl font-bold tracking-tight text-white">
+            Batch research
           </h1>
-          <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-muted">
-            Paste up to {MAX_COMPANIES} company names, one per line. The agent researches
-            them in sequence; export the finished profiles as CSV.
+          <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-white/70">
+            Paste up to {MAX_COMPANIES} company names, one per line. DealScout
+            researches them in order, and you can download the finished
+            profiles as a CSV.
           </p>
-          <p className="mt-2 font-mono text-xs text-muted">
-            <Link href="/" className="underline decoration-line underline-offset-4 hover:text-ticker">
-              ← single-company mode
-            </Link>
-          </p>
-        </header>
+        </div>
+      </section>
 
+      <div className="mx-auto w-full max-w-3xl px-6 pb-20">
         <form onSubmit={runBatch} className="mt-8">
+          <label htmlFor="companies" className="sr-only">
+            Company names, one per line
+          </label>
           <textarea
+            id="companies"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             rows={5}
             placeholder={"Ramp\nMistral AI\nNeon"}
-            className="w-full resize-y border border-line bg-panel px-4 py-3 font-mono text-sm text-bright placeholder-muted/50 outline-none focus:border-ticker"
+            className="w-full resize-y rounded-md border border-edge-strong bg-surface px-3 py-2.5 text-[15px] leading-relaxed text-ink outline-none transition placeholder:text-soft/70 focus:border-accent focus:ring-2 focus:ring-accent/20"
           />
-          <div className="mt-3 flex items-center gap-4">
+          <p className="mt-1.5 text-xs text-soft">
+            Each company counts toward the daily demo limit.
+          </p>
+          <div className="mt-4 flex items-center gap-3">
             <button
               type="submit"
               disabled={running || !input.trim()}
-              className="bg-ticker px-5 py-2 font-mono text-xs font-medium uppercase tracking-widest text-ink transition hover:bg-[#f7bd63] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ticker disabled:cursor-not-allowed disabled:opacity-35"
+              className="h-10 rounded-md bg-accent px-4 text-sm font-medium text-white transition hover:bg-accent-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {running ? "Working…" : "Run batch"}
+              {running ? "Running…" : "Run batch"}
             </button>
             {doneCount > 0 && (
               <button
                 type="button"
                 onClick={downloadCsv}
-                className="border border-line px-5 py-2 font-mono text-xs uppercase tracking-widest text-muted transition hover:border-ticker hover:text-ticker"
+                className="h-10 rounded-md border border-edge-strong bg-surface px-4 text-sm font-medium text-ink transition hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
               >
-                Export CSV ({doneCount})
+                Download CSV ({doneCount})
               </button>
             )}
           </div>
         </form>
 
         {rows.length > 0 && (
-          <section className="mt-10 border border-line bg-panel">
-            <div className="border-b border-line px-4 py-2">
-              <h2 className="font-mono text-[11px] uppercase tracking-[0.25em] text-muted">
-                Pipeline · {doneCount}/{rows.length} complete
+          <section className="mt-8 overflow-hidden rounded-lg border border-edge bg-surface">
+            <div className="border-b border-edge px-4 py-2.5">
+              <h2 className="text-[13px] font-medium text-ink">
+                Results
+                <span className="ml-2 font-mono text-xs font-normal text-soft">
+                  {doneCount}/{rows.length} complete
+                </span>
               </h2>
             </div>
             <ul>
               {rows.map((row, i) => (
-                <li key={i} className="border-b border-line/60 px-4 py-3 last:border-b-0">
-                  <div className="flex items-center gap-3 font-mono text-sm">
+                <li key={i} className="border-b border-edge px-4 py-3 last:border-b-0">
+                  <div className="flex items-center gap-3 text-sm">
                     <StatusDot status={row.status} />
-                    <span className="text-bright">{row.profile?.company_name ?? row.name}</span>
+                    <span className="font-medium text-ink">
+                      {row.profile?.company_name ?? row.name}
+                    </span>
                     {row.profile && (
                       <span
-                        className={`ml-auto text-[10px] uppercase tracking-widest ${
+                        className={`ml-auto text-xs font-medium ${
                           row.profile.confidence === "high"
-                            ? "text-emerald-400"
+                            ? "text-emerald-700"
                             : row.profile.confidence === "medium"
-                              ? "text-ticker"
-                              : "text-rose-400"
+                              ? "text-amber-700"
+                              : "text-red-600"
                         }`}
                       >
-                        {row.profile.confidence}
+                        {row.profile.confidence[0].toUpperCase() +
+                          row.profile.confidence.slice(1)}{" "}
+                        confidence
                       </span>
                     )}
                     {row.status === "error" && (
-                      <span className="ml-auto text-xs text-rose-400">{row.error}</span>
+                      <span className="ml-auto text-xs text-red-600">{row.error}</span>
                     )}
                   </div>
                   {row.profile && (
-                    <p className="mt-1.5 pl-6 text-[13px] leading-relaxed text-muted">
+                    <p className="mt-1 pl-5 text-[13px] leading-relaxed text-soft">
                       {row.profile.industry} · {row.profile.funding_status}
                     </p>
                   )}
@@ -210,16 +218,6 @@ export default function BatchPage() {
             </ul>
           </section>
         )}
-
-        <footer className="mt-20 flex items-center justify-between border-t border-line pt-5 font-mono text-[11px] text-muted">
-          <span>Each company counts toward the daily demo limit</span>
-          <a
-            className="underline decoration-line underline-offset-4 transition hover:text-ticker"
-            href="https://github.com/olioli9586/dealscout"
-          >
-            source ↗
-          </a>
-        </footer>
       </div>
     </main>
   );
@@ -227,10 +225,10 @@ export default function BatchPage() {
 
 function StatusDot({ status }: { status: RowStatus }) {
   if (status === "running")
-    return <span className="caret-blink h-2 w-2 shrink-0 bg-ticker" aria-label="running" />;
+    return <span className="pulse-dot h-2 w-2 shrink-0 rounded-full bg-accent" aria-label="running" />;
   if (status === "done")
-    return <span className="h-2 w-2 shrink-0 bg-emerald-400" aria-label="done" />;
+    return <span className="h-2 w-2 shrink-0 rounded-full bg-emerald-500" aria-label="done" />;
   if (status === "error")
-    return <span className="h-2 w-2 shrink-0 bg-rose-500" aria-label="error" />;
-  return <span className="h-2 w-2 shrink-0 bg-line" aria-label="queued" />;
+    return <span className="h-2 w-2 shrink-0 rounded-full bg-red-500" aria-label="error" />;
+  return <span className="h-2 w-2 shrink-0 rounded-full bg-edge-strong" aria-label="queued" />;
 }
