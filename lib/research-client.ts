@@ -46,8 +46,19 @@ export async function streamResearch(
       buffer = lines.pop() ?? "";
       lines.forEach(handle);
     }
-    // Flush a final line that arrived without a trailing newline.
-    handle(buffer + decoder.decode());
+    // Flush a final line that arrived without a trailing newline. The server
+    // always ends events with "\n", so an unterminated tail usually means the
+    // connection was cut mid-event (e.g. at the server time limit): skip it
+    // if it doesn't parse instead of surfacing a raw JSON SyntaxError, so the
+    // caller reports the timeout and keeps any profile it already received.
+    const tail = buffer + decoder.decode();
+    let last: AgentEvent | undefined;
+    try {
+      if (tail.trim()) last = JSON.parse(tail) as AgentEvent;
+    } catch {
+      // truncated event — ignore
+    }
+    if (last) onEvent(last);
   } finally {
     // Stop the download if we bailed out early (e.g. on an error event).
     reader.cancel().catch(() => {});

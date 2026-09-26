@@ -98,6 +98,19 @@ describe("researchCompany", () => {
     await expect(researchCompany("Ramp", fetchImpl)).rejects.toThrow("The request was declined.");
   });
 
+  it("keeps the profile when the stream is cut off mid-event", async () => {
+    const fetchImpl = streamingFetch([
+      line({ type: "profile", profile: PROFILE }),
+      '{"type":"text","te',
+    ]);
+    await expect(researchCompany("Ramp", fetchImpl)).resolves.toEqual(PROFILE);
+  });
+
+  it("reports the timeout, not a JSON error, when a cut-off stream has no profile", async () => {
+    const fetchImpl = streamingFetch([line({ type: "status", message: "…" }), '{"type":"sta']);
+    await expect(researchCompany("Ramp", fetchImpl)).rejects.toThrow("server time limit");
+  });
+
   it("reports a timeout (not a rate limit) when the stream ends without a profile", async () => {
     const fetchImpl = streamingFetch([line({ type: "status", message: "…" })]);
     const err = await researchCompany("Ramp", fetchImpl).catch((e) => e);
