@@ -159,6 +159,13 @@ export async function runResearchAgent(
         emit({ type: "status", message: `Model unavailable — switching to ${FALLBACK_MODEL}…` });
         continue; // retry the request on the fallback model
       }
+      if (profileSaved) {
+        // The profile has already been delivered; this turn only asks for a
+        // closing sentence. Don't fail the whole run (and discard the
+        // profile client-side) because that optional turn errored.
+        console.warn("closing turn failed after profile was saved:", err);
+        break;
+      }
       throw err;
     }
     // Echo the assistant turn back verbatim (thinking blocks included) so the
@@ -190,7 +197,7 @@ export async function runResearchAgent(
       }
     }
 
-    if (response.stop_reason === "refusal") {
+    if (response.stop_reason === "refusal" && !profileSaved) {
       emit({ type: "error", message: "The request was declined. Try a different company name." });
       return;
     }
