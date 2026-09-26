@@ -82,6 +82,13 @@ cp .env.example .env.local   # add your ANTHROPIC_API_KEY
 npm run dev
 ```
 
+Run the unit tests (Vitest; the Anthropic SDK and `fetch` are mocked, so no
+API key or network is needed):
+
+```bash
+npm test
+```
+
 ## Tech
 
 Next.js 16 (App Router) · TypeScript · Tailwind CSS · Anthropic SDK
