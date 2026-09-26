@@ -14,6 +14,20 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  let company: string;
+  try {
+    const body = await req.json();
+    // Anything but a string (e.g. {"company": {}}) would otherwise be
+    // stringified to "[object Object]" and researched.
+    company = typeof body?.company === "string" ? body.company.trim() : "";
+  } catch {
+    return Response.json({ error: "Invalid JSON body." }, { status: 400 });
+  }
+  if (!company || company.length > 200) {
+    return Response.json({ error: "Provide a company name (max 200 chars)." }, { status: 400 });
+  }
+
+  // Charge the daily quota only for requests that will actually run the agent.
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   const { allowed, remaining } = checkRateLimit(ip);
   if (!allowed) {
@@ -21,17 +35,6 @@ export async function POST(req: NextRequest) {
       { error: "Daily demo limit reached for your IP. Come back tomorrow!" },
       { status: 429 },
     );
-  }
-
-  let company: string;
-  try {
-    const body = await req.json();
-    company = String(body.company ?? "").trim();
-  } catch {
-    return Response.json({ error: "Invalid JSON body." }, { status: 400 });
-  }
-  if (!company || company.length > 200) {
-    return Response.json({ error: "Provide a company name (max 200 chars)." }, { status: 400 });
   }
 
   // Newline-delimited JSON stream: one AgentEvent per line.

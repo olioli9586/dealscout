@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
-import type { AgentEvent, CompanyProfile } from "@/lib/agent";
+import type { CompanyProfile } from "@/lib/agent";
+import { streamResearch } from "@/lib/research-client";
 
 type Phase = "idle" | "running" | "done" | "error";
 
@@ -43,52 +44,27 @@ export default function Home() {
     setStartAt(startRef.current);
 
     try {
-      const res = await fetch("/api/research", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ company: name.trim() }),
-      });
-
-      if (!res.ok || !res.body) {
-        const data = await res.json().catch(() => null);
-        throw new Error(data?.error ?? `Request failed (${res.status})`);
-      }
-
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = "";
       let gotProfile = false;
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split("\n");
-        buffer = lines.pop() ?? "";
-
-        for (const line of lines) {
-          if (!line.trim()) continue;
-          const event = JSON.parse(line) as AgentEvent;
-          if (event.type === "status") {
-            const at = elapsed(startRef.current);
-            setLog((prev) =>
-              prev[prev.length - 1]?.text === event.message
-                ? prev
-                : [...prev, { at, text: event.message }],
-            );
-            setThought("");
-          } else if (event.type === "thinking") {
-            setThought((prev) => (prev + event.text).slice(-160));
-          } else if (event.type === "text") {
-            setNarrative((prev) => prev + event.text);
-          } else if (event.type === "profile") {
-            setProfile(event.profile);
-            gotProfile = true;
-          } else if (event.type === "error") {
-            throw new Error(event.message);
-          }
+      await streamResearch(name.trim(), (event) => {
+        if (event.type === "status") {
+          const at = elapsed(startRef.current);
+          setLog((prev) =>
+            prev[prev.length - 1]?.text === event.message
+              ? prev
+              : [...prev, { at, text: event.message }],
+          );
+          setThought("");
+        } else if (event.type === "thinking") {
+          setThought((prev) => (prev + event.text).slice(-160));
+        } else if (event.type === "text") {
+          setNarrative((prev) => prev + event.text);
+        } else if (event.type === "profile") {
+          setProfile(event.profile);
+          gotProfile = true;
+        } else if (event.type === "error") {
+          throw new Error(event.message);
         }
-      }
+      });
       if (!gotProfile) {
         throw new Error(
           "The run hit the server time limit before finishing — please try again.",

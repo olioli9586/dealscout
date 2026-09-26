@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import type { AgentEvent, CompanyProfile } from "@/lib/agent";
+import type { CompanyProfile } from "@/lib/agent";
+import { profilesToCsv } from "@/lib/csv";
+import { RateLimitError, researchCompany } from "@/lib/research-client";
 
 const MAX_COMPANIES = 10;
 
@@ -12,60 +14,6 @@ interface Row {
   status: RowStatus;
   profile?: CompanyProfile;
   error?: string;
-}
-
-async function researchOne(name: string): Promise<CompanyProfile> {
-  const res = await fetch("/api/research", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ company: name }),
-  });
-  if (!res.ok || !res.body) {
-    const data = await res.json().catch(() => null);
-    throw new Error(data?.error ?? `Request failed (${res.status})`);
-  }
-
-  const reader = res.body.getReader();
-  const decoder = new TextDecoder();
-  let buffer = "";
-  let profile: CompanyProfile | null = null;
-
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    buffer += decoder.decode(value, { stream: true });
-    const lines = buffer.split("\n");
-    buffer = lines.pop() ?? "";
-    for (const line of lines) {
-      if (!line.trim()) continue;
-      const event = JSON.parse(line) as AgentEvent;
-      if (event.type === "profile") profile = event.profile;
-      if (event.type === "error") throw new Error(event.message);
-    }
-  }
-  if (!profile) throw new Error("Hit the server time limit — retry this one");
-  return profile;
-}
-
-function toCsv(rows: Row[]): string {
-  const cols: (keyof CompanyProfile)[] = [
-    "company_name", "website", "industry", "hq_location", "founded_year",
-    "employee_count", "business_model", "products_services", "funding_status",
-    "recent_news", "deal_signals", "confidence", "summary",
-  ];
-  const esc = (v: string) => `"${v.replaceAll('"', '""')}"`;
-  const header = cols.join(",");
-  const lines = rows
-    .filter((r) => r.profile)
-    .map((r) =>
-      cols
-        .map((c) => {
-          const v = r.profile![c];
-          return esc(Array.isArray(v) ? v.join("; ") : String(v));
-        })
-        .join(","),
-    );
-  return [header, ...lines].join("\n");
 }
 
 export default function BatchPage() {
@@ -95,7 +43,7 @@ export default function BatchPage() {
     for (let i = 0; i < names.length; i++) {
       setRows((prev) => prev.map((r, j) => (j === i ? { ...r, status: "running" } : r)));
       try {
-        const profile = await researchOne(names[i]);
+        const profile = await researchCompany(names[i]);
         setRows((prev) => prev.map((r, j) => (j === i ? { ...r, status: "done", profile } : r)));
       } catch (err) {
         setRows((prev) =>
@@ -104,14 +52,15 @@ export default function BatchPage() {
           ),
         );
         // A rate-limit error will hit every remaining row too — stop early.
-        if ((err as Error).message.toLowerCase().includes("limit")) break;
+        if (err instanceof RateLimitError) break;
       }
     }
     setRunning(false);
   }
 
   function downloadCsv() {
-    const blob = new Blob([toCsv(rows)], { type: "text/csv" });
+    const profiles = rows.flatMap((r) => (r.profile ? [r.profile] : []));
+    const blob = new Blob([profilesToCsv(profiles)], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
