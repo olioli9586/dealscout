@@ -6,23 +6,41 @@
 // The production fix would be a shared store (Upstash Redis / Postgres) — see
 // the "Design decisions" section of the README.
 
-const DAILY_LIMIT = Number(process.env.DEMO_DAILY_LIMIT ?? 10);
+const DEFAULT_DAILY_LIMIT = 10;
 
-const usage = new Map<string, { day: string; count: number }>();
+// A malformed value (e.g. "ten") must not silently disable the cap: NaN makes
+// every `count >= limit` comparison false. Fall back to the default instead.
+function parseLimit(raw: string | undefined): number {
+  if (raw === undefined || raw.trim() === "") return DEFAULT_DAILY_LIMIT;
+  const n = Number(raw);
+  return Number.isFinite(n) && n >= 0 ? Math.floor(n) : DEFAULT_DAILY_LIMIT;
+}
+
+const DAILY_LIMIT = parseLimit(process.env.DEMO_DAILY_LIMIT);
+
+// Counters for the current UTC day only. When the day rolls over, the whole
+// map is dropped so a long-lived instance doesn't accumulate one entry per IP
+// forever.
+const usage = new Map<string, number>();
+let usageDay = "";
 
 export function checkRateLimit(ip: string): { allowed: boolean; remaining: number } {
   const today = new Date().toISOString().slice(0, 10);
-  const entry = usage.get(ip);
-
-  if (!entry || entry.day !== today) {
-    usage.set(ip, { day: today, count: 1 });
-    return { allowed: true, remaining: DAILY_LIMIT - 1 };
+  if (today !== usageDay) {
+    usage.clear();
+    usageDay = today;
   }
 
-  if (entry.count >= DAILY_LIMIT) {
+  const count = usage.get(ip) ?? 0;
+  if (count >= DAILY_LIMIT) {
     return { allowed: false, remaining: 0 };
   }
 
-  entry.count++;
-  return { allowed: true, remaining: DAILY_LIMIT - entry.count };
+  usage.set(ip, count + 1);
+  return { allowed: true, remaining: DAILY_LIMIT - count - 1 };
+}
+
+/** Number of IPs currently tracked (exposed for tests). */
+export function trackedIpCount(): number {
+  return usage.size;
 }
