@@ -57,6 +57,17 @@ export async function POST(req: NextRequest) {
   } catch {
     return rpcError(null, -32700, "Parse error");
   }
+  // Valid JSON is not necessarily a request object: `null` would crash on
+  // msg.method below, and batches (arrays) are not part of this protocol
+  // version.
+  if (
+    typeof msg !== "object" ||
+    msg === null ||
+    Array.isArray(msg) ||
+    typeof msg.method !== "string"
+  ) {
+    return rpcError(null, -32600, "Invalid Request");
+  }
 
   switch (msg.method) {
     case "initialize":
@@ -97,12 +108,13 @@ export async function GET() {
 async function handleToolCall(req: NextRequest, msg: JsonRpcRequest) {
   const params = (msg.params ?? {}) as {
     name?: string;
-    arguments?: { company?: string };
+    arguments?: { company?: unknown };
   };
   if (params.name !== TOOL.name) {
     return rpcError(msg.id, -32602, `Unknown tool: ${params.name}`);
   }
-  const company = String(params.arguments?.company ?? "").trim();
+  const raw = params.arguments?.company;
+  const company = typeof raw === "string" ? raw.trim() : "";
   if (!company || company.length > 200) {
     return rpcError(msg.id, -32602, "Provide arguments.company (max 200 chars)");
   }
