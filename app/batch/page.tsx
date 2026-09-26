@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { CompanyProfile } from "@/lib/agent";
+import { profilesToCsv } from "@/lib/csv";
 import { RateLimitError, researchCompany } from "@/lib/research-client";
 
 const MAX_COMPANIES = 10;
@@ -13,27 +14,6 @@ interface Row {
   status: RowStatus;
   profile?: CompanyProfile;
   error?: string;
-}
-
-function toCsv(rows: Row[]): string {
-  const cols: (keyof CompanyProfile)[] = [
-    "company_name", "website", "industry", "hq_location", "founded_year",
-    "employee_count", "business_model", "products_services", "funding_status",
-    "recent_news", "deal_signals", "confidence", "summary",
-  ];
-  const esc = (v: string) => `"${v.replaceAll('"', '""')}"`;
-  const header = cols.join(",");
-  const lines = rows
-    .filter((r) => r.profile)
-    .map((r) =>
-      cols
-        .map((c) => {
-          const v = r.profile![c];
-          return esc(Array.isArray(v) ? v.join("; ") : String(v));
-        })
-        .join(","),
-    );
-  return [header, ...lines].join("\n");
 }
 
 export default function BatchPage() {
@@ -79,7 +59,8 @@ export default function BatchPage() {
   }
 
   function downloadCsv() {
-    const blob = new Blob([toCsv(rows)], { type: "text/csv" });
+    const profiles = rows.flatMap((r) => (r.profile ? [r.profile] : []));
+    const blob = new Blob([profilesToCsv(profiles)], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
