@@ -97,9 +97,12 @@ Next.js 16 (App Router) · TypeScript · Tailwind CSS · Anthropic SDK
 ## Evaluation
 
 `eval/` holds an accuracy suite: hand-checked ground truth for stable fields
-(website domain, founded year, HQ city) and a grader script. Latest run:
-**15/15 fields correct** across 5 companies — see [eval/RESULTS.md](eval/RESULTS.md).
-Reproduce with `node eval/run-eval.mjs`.
+(website domain, founded year, HQ city) and a grader script that also records
+each run's time, cost, API requests, web searches and fetches. Latest run
+(2026-11-06, Sonnet 4.6 at medium effort): **15/15 fields correct** across 5
+companies, $0.24 and 212 s per company (median) — see [eval/RESULTS.md](eval/RESULTS.md).
+Reproduce with `node eval/run-eval.mjs <base-url> --label v1 --max-usd 5`
+(`--max-usd` is a hard spend cap for the whole eval).
 
 ## Roadmap
 

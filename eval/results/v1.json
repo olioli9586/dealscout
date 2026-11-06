@@ -1,0 +1,312 @@
+{
+  "label": "v1",
+  "date": "2026-11-06",
+  "base": "http://localhost:3100",
+  "model": "claude-sonnet-4-6",
+  "effort": "medium",
+  "max_usd": 5,
+  "spent_usd": 1.197752,
+  "stopped": null,
+  "rows": [
+    {
+      "name": "Anthropic",
+      "seconds": 212,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 36930,
+        "output_tokens": 3261,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.189705
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Anthropic",
+        "website": "https://www.anthropic.com",
+        "industry": "Artificial Intelligence / AI Safety",
+        "hq_location": "San Francisco, CA, USA",
+        "founded_year": "2021",
+        "employee_count": "1,000-5,000",
+        "business_model": "Sells API access to Claude large language models and Claude.ai subscriptions (consumer & enterprise tiers), plus revenue-sharing enterprise partnerships.",
+        "products_services": [
+          "Claude (AI model family: Opus, Sonnet, Haiku tiers)",
+          "Claude Code (AI coding assistant)",
+          "Claude.ai (consumer/pro chat interface)",
+          "Anthropic API (developer/enterprise access)",
+          "Claude for Enterprise (team deployments)"
+        ],
+        "funding_status": "Series E ($3.5B at $61.5B post-money valuation, March 2025) led by Lightspeed Venture Partners; prior strategic commitments from Amazon (up to $4B) and Google/Alphabet; total raised reported at ~$7.3B+",
+        "recent_news": [
+          "Series E: Raised $3.5B at $61.5B valuation led by Lightspeed (March 2025)",
+          "Deloitte partnership: Claude being rolled out to 470,000 Deloitte employees (October 2025)",
+          "Cognizant partnership: Claude deployed to up to 350,000 Cognizant employees globally (November 2025)",
+          "Launched Slack integration, allowing users to access Claude directly in Slack workspaces",
+          "Full-year 2025 revenue reported at ~$4.6B, with strong YoY growth trajectory",
+          "IPO path being discussed publicly by analysts and media"
+        ],
+        "deal_signals": [
+          "Largest enterprise deployment to date: Deloitte rolling out Claude to 470k employees signals strong enterprise go-to-market momentum",
+          "Cognizant deal (350k employees) confirms repeatable large-scale enterprise licensing model",
+          "Series E at $61.5B valuation (March 2025) — significant capital raise signals continued aggressive growth investment",
+          "Amazon committed up to $4B strategic investment, with Azure compute procurement deal — deep hyperscaler alignment",
+          "Google/Alphabet is a strategic investor, raising competitive dynamic with OpenAI/Microsoft",
+          "IPO pathway being actively discussed — potential liquidity event on the horizon",
+          "Rapid revenue growth ($4.6B in 2025) suggests strong ARR expansion and enterprise pipeline conversion"
+        ],
+        "confidence": "high",
+        "summary": "Anthropic is a San Francisco-based AI safety company founded in 2021 by Dario Amodei, Daniela Amodei, and other former OpenAI researchers, best known for its Claude family of large language models. The company has rapidly scaled its enterprise business, landing landmark deployments with Deloitte (470k users) and Cognizant (350k users), and reported approximately $4.6B in revenue for full-year 2025. Backed by Amazon, Google, and Lightspeed at a $61.5B+ valuation, Anthropic is widely viewed as one of the most consequential AI companies globally, with an IPO trajectory being closely watched by the market."
+      }
+    },
+    {
+      "name": "Vercel",
+      "seconds": 82,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 72244,
+        "output_tokens": 3592,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 3,
+        "cost_usd": 0.300612
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Vercel",
+        "website": "https://vercel.com",
+        "industry": "Cloud Computing / Developer Tools / Edge Computing",
+        "hq_location": "San Francisco, California, USA",
+        "founded_year": "2015",
+        "employee_count": "551-875",
+        "business_model": "Vercel monetizes through a freemium cloud subscription model, charging developers and enterprises for hosting, deployment, compute, and AI-native tooling on its Frontend/AI Cloud platform.",
+        "products_services": [
+          "Frontend Cloud (build, preview, deploy platform)",
+          "Next.js (open-source React web framework)",
+          "v0 (AI code-generation / 'vibecoding' agent)",
+          "AI SDK (open-source library for AI-powered apps)",
+          "AI Gateway (LLM routing and failover layer)",
+          "AI Cloud (unified platform for agentic/AI-native apps, launched July 2025)"
+        ],
+        "funding_status": "Series F ($300M, September 2025, co-led by Accel and GIC, with BlackRock, StepStone, and Khosla Ventures); total raised ~$863M across 6 rounds; valuation $9.3B",
+        "recent_news": [
+          "September 2025: Closed oversubscribed $300M Series F at $9.3B valuation — nearly 3x the $3.25B valuation from May 2024",
+          "July 2025 (Vercel Ship 2025): Launched 'AI Cloud', a unified platform for AI-native and agentic applications, including AI SDK 6 beta, Vercel Agent for code reviews, and Python SDK support",
+          "May 2025: Crossed $200M ARR, doubling ARR in just ~15 months from $100M in March 2024",
+          "2025: 30% of apps deployed on Vercel are now AI-generated; CEO Guillermo Rauch signals IPO trajectory",
+          "Notable enterprise customers include Anthropic and OpenAI"
+        ],
+        "deal_signals": [
+          "Oversubscribed Series F with participation from BlackRock — a common pre-IPO investor signal",
+          "CEO publicly signaling IPO readiness as next milestone",
+          "Revenue tripled in ~2 years; ARR reportedly tracking toward $340M",
+          "Valuation 3x'd in under 18 months ($3.25B → $9.3B), reflecting aggressive growth narrative",
+          "Strategic AI pivot (AI Cloud, v0, AI SDK) with 30% of platform apps already AI-generated",
+          "Enterprise traction with AI-native giants (Anthropic, OpenAI) as customers",
+          "~76% gross margins on core hosting product — SaaS-quality unit economics"
+        ],
+        "confidence": "high",
+        "summary": "Vercel is a San Francisco-based cloud platform (founded 2015 as ZEIT) that enables developers to build, deploy, and scale web applications — best known for creating and maintaining the Next.js framework and, more recently, the AI code-generation tool v0. The company has executed a sharp pivot toward an \"AI Cloud\" strategy in 2025, with 30% of its platform apps now AI-generated and ARR doubling to $200M+ in 15 months. Following a heavily oversubscribed $300M Series F in September 2025 at a $9.3B valuation (backed by Accel, GIC, and BlackRock), Vercel is widely seen as a strong IPO candidate with SaaS-quality margins and elite AI-native enterprise customers."
+      }
+    },
+    {
+      "name": "Airbnb",
+      "seconds": 259,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 48274,
+        "output_tokens": 3832,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 4,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.24230200000000002
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Airbnb, Inc.",
+        "website": "https://www.airbnb.com",
+        "industry": "Hospitality / Online Travel Marketplace",
+        "hq_location": "San Francisco, California, USA",
+        "founded_year": "2007",
+        "employee_count": "6,000–9,000",
+        "business_model": "Airbnb earns revenue by charging service fees (implied take rate ~9–11%) to both hosts and guests on each accommodation or experience booking transacted through its platform.",
+        "products_services": [
+          "Short-term home and accommodation rentals (host/guest marketplace)",
+          "Airbnb Experiences (activity bookings with local hosts)",
+          "Airbnb Services (new category launched 2025 Summer Release)",
+          "Co-Host Network (launched 2024 Winter Release)",
+          "Long-term stays (monthly rentals)"
+        ],
+        "funding_status": "Public (NASDAQ: ABNB) — IPO December 2020",
+        "recent_news": [
+          "FY2024 revenue of $11.1B, up 12% YoY; Net Income of $2.6B (24% margin); Adjusted EBITDA of $4.0B (36% margin)",
+          "Q2 2025 revenue of $3.1B (+13% YoY); Net Income of $642M; 134.4M nights and seats booked (+7% YoY)",
+          "2025 Summer Release introduced Airbnb Services and a revamped Airbnb Experiences vertical",
+          "2024 Winter Release launched the Co-Host Network, enabling hosts to find local co-hosts to manage their listings",
+          "Ongoing share repurchase program: $3.8B+ repurchased in Class A stock since 2022",
+          "Trailing twelve-month free cash flow reached $4.3B as of Q2 2025"
+        ],
+        "deal_signals": [
+          "Consistent and growing profitability: $2.6B net income in FY2024 and $642M in Q2 2025 alone",
+          "Aggressive capital return via share buybacks ($3.8B+ since 2022), signaling strong balance sheet confidence",
+          "Product development spend growing 16–19% YoY, driven by headcount increases — signals active R&D investment",
+          "New services vertical (Airbnb Services) launched in 2025, representing a major platform expansion beyond accommodations",
+          "Platform scale: 5.5M+ active hosts, 2.5B+ cumulative guest arrivals — dominant network effect moat",
+          "Take rate improvement noted in Q1 2024 (9.3%) with new cross-currency booking fees introduced April 2024"
+        ],
+        "confidence": "high",
+        "summary": "Airbnb is a publicly traded global online marketplace (NASDAQ: ABNB) connecting hosts and guests for short-term stays, experiences, and services, operating in nearly every country. The company delivered $11.1B in FY2024 revenue with a 24% net income margin, demonstrating durable profitability at scale. In 2025, Airbnb is aggressively expanding its platform into new service categories while returning significant capital to shareholders through buybacks."
+      }
+    },
+    {
+      "name": "Shopify",
+      "seconds": 192,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 58968,
+        "output_tokens": 3384,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 4,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.267664
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Shopify Inc.",
+        "website": "https://www.shopify.com",
+        "industry": "E-Commerce / Cloud Commerce Platform Software",
+        "hq_location": "Ottawa, Ontario, Canada",
+        "founded_year": "2004 (incorporated; launched as Shopify in 2006)",
+        "employee_count": "7,601–8,000",
+        "business_model": "Shopify earns revenue via two streams: recurring subscription fees from merchant plans (Subscription Solutions) and volume-based fees tied to merchant success through payments, shipping, lending, and other services (Merchant Solutions).",
+        "products_services": [
+          "Shopify e-commerce platform (online store builder)",
+          "Shopify Payments (integrated payment processing)",
+          "Shopify Capital (merchant lending)",
+          "Shopify Shipping",
+          "Shopify POS (point-of-sale hardware & software)",
+          "Shopify Plus (enterprise tier)",
+          "Shop App (consumer-facing shopping app)",
+          "Shopify Markets (cross-border / international commerce)",
+          "B2B commerce tools",
+          "AI-enabled merchant features (agentic commerce)"
+        ],
+        "funding_status": "Public (NASDAQ: SHOP; TSX: SHOP) — IPO May 21, 2015; market cap ~$220B",
+        "recent_news": [
+          "FY2025 revenue of $11.6 billion, up 30% YoY",
+          "FY2025 GMV of $378.4 billion, up 29% YoY",
+          "FY2025 operating income of $1.47B and net income of $1.23B — profitable at scale",
+          "CEO Tobi Lütke issued an 'AI-before-headcount' memo in April 2025, mandating teams justify new hires only after proving AI cannot fill the role",
+          "Layoffs in revenue operations and customer support teams in 2025, following ~3,000 cuts in 2022–2023",
+          "Continued aggressive investment in AI-enabled features positioned as a 'force multiplier' for merchants",
+          "Shopify Plus and B2B commerce tools identified as key growth vectors for 2025"
+        ],
+        "deal_signals": [
+          "30% YoY revenue growth to $11.6B signals sustained platform expansion — potential acquirer of complementary SaaS tools",
+          "AI-first workforce restructuring (Lütke memo + layoffs in ops/support) indicates cost discipline and margin optimization focus",
+          "Hiring freeze in favor of AI tooling suggests structural headcount reduction trend",
+          "Entered sustained profitability ($1.23B net income 2025) — balance sheet strength for M&A",
+          "$378.4B GMV (29% growth) demonstrates powerful network effects and merchant lock-in",
+          "Aggressive B2B and international/cross-border expansion opens new verticals and geographies",
+          "~$220B market cap positions Shopify as a potential strategic acquirer in payments, logistics, or AI commerce"
+        ],
+        "confidence": "high",
+        "summary": "Shopify is the world's leading cloud-based commerce platform, enabling merchants of all sizes to sell online and in-person across multiple channels globally. The company generated $11.6 billion in revenue and facilitated $378.4 billion in GMV in FY2025, achieving sustained profitability with $1.23 billion in net income. Shopify is aggressively pivoting to an AI-first operational model while expanding into enterprise B2B commerce and international markets, making it both a formidable platform incumbent and an active strategic acquirer."
+      }
+    },
+    {
+      "name": "Datadog",
+      "seconds": 376,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 38213,
+        "output_tokens": 3522,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 1,
+        "cost_usd": 0.197469
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Datadog, Inc.",
+        "website": "https://www.datadoghq.com",
+        "industry": "Cloud Observability, Monitoring & Security (SaaS)",
+        "hq_location": "New York, NY, USA (620 8th Ave, Floor 45)",
+        "founded_year": "2010",
+        "employee_count": "8,000–8,100",
+        "business_model": "Sells subscription-based SaaS licenses for its unified cloud observability and security platform, with usage-based pricing tied to hosts, logs ingested, and other consumption metrics.",
+        "products_services": [
+          "Infrastructure Monitoring",
+          "Application Performance Monitoring (APM)",
+          "Log Management",
+          "Cloud Security (CSPM, CWPP)",
+          "User Experience Monitoring (Real User Monitoring & Synthetics)",
+          "Service Management & OnCall",
+          "AI Observability (LLM & AI agent monitoring)",
+          "Bits AI SRE Agent",
+          "Bits AI Dev Agent",
+          "Bits AI Security Analyst Agent",
+          "Product Analytics",
+          "Network Performance Monitoring",
+          "Cloud Cost Management",
+          "Database Monitoring",
+          "Incident Management"
+        ],
+        "funding_status": "Public (NASDAQ: DDOG); raised ~$794.7M across 5 rounds prior to IPO (September 2019); market cap ~$95.4B (2025)",
+        "recent_news": [
+          "Q2 2025 revenue of $827M, up 28% YoY, with ~3,850 customers at $100K+ ARR (up from ~3,390 a year prior)",
+          "Q1 2025 revenue of $762M, up 25% YoY, with $272M operating cash flow and $244M free cash flow",
+          "DASH 2025 user conference (June 2025): unveiled 125+ new products, capabilities, and features",
+          "Launched three new AI agents: Bits AI SRE Agent, Bits AI Dev Agent, and Bits AI Security Analyst Agent",
+          "Launched OnCall (on-call scheduling integrated with real-time observability) and Product Analytics in 2025",
+          "Launched MCP server enabling AI agents and users to interact with Datadog's observability data",
+          "Over 1,000 customers using AI observability product; broad support for LLM and AI agent monitoring"
+        ],
+        "deal_signals": [
+          "Accelerating revenue growth: 25% YoY in Q1 2025, expanding to 28% YoY in Q2 2025 — $827M quarterly run rate",
+          "Aggressive AI product expansion (AI agents, LLM observability, MCP server) signals platform land-grab strategy",
+          "Growing enterprise customer base: ~3,850 customers with $100K+ ARR, up 14% YoY",
+          "High free cash flow ($244M in Q1 2025 alone) indicates strong financial leverage for M&A",
+          "Broad platform consolidation strategy — 125+ new innovations at DASH 2025 — may indicate intent to acquire niche tooling",
+          "Public company (NASDAQ: DDOG) with ~$95.4B market cap — potential acquirer of observability, security, or AI-infrastructure startups"
+        ],
+        "confidence": "high",
+        "summary": "Datadog is a publicly traded (NASDAQ: DDOG) AI-powered observability and security platform founded in 2010 by Olivier Pomel and Alexis Lê-Quôc, headquartered in New York City. The company generates ~$3.4B+ in annual SaaS revenue through a usage- and subscription-based model serving cloud-native enterprises across infrastructure monitoring, APM, log management, cloud security, and rapidly expanding AI observability. With accelerating top-line growth (~28% YoY in Q2 2025), a ~$95B market cap, strong free cash flow, and an aggressive AI product roadmap, Datadog is both a compelling growth story and an active strategic consolidator in the cloud-native tooling ecosystem."
+      }
+    }
+  ]
+}
