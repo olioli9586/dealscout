@@ -69,7 +69,11 @@ why, and the next step. Branch: `dealscout-v2`.
   fields (5 companies x 3 fields). Growing it to about 50 companies is a 10x
   step, and every new entry needs a hand check.
 
-### The v2 proposal (waiting for an OK before any v2 code)
+### The v2 proposal
+
+**Decided 2026-11-06:** option A (Python LangGraph service), Langfuse for
+tracing, and Haiku 5.5 + Sonnet 5.5 to start with, with a model sweep on
+Day 3. The full proposal as agreed:
 
 **Framework: two options.**
 
@@ -186,9 +190,8 @@ which is about $30 to $90 a month, or weekly) is their call on Day 9.
 
 ### Next
 
-- Their OK on the proposal: framework (A or B), tracing, and the model plan.
-- Then Day 2. If they pick A, check first that Vercel Services works on
-  their plan; if it doesn't, use a second Vercel project for the agent.
+- Day 2. First check that Vercel Services works on their plan; if it
+  doesn't, use a second Vercel project for the agent.
 - Open question for them: production's `DEALSCOUT_MODEL` and
   `DEALSCOUT_EFFORT` (Vercel dashboard, Settings, Environment Variables), to
   label the baseline "the live demo" or keep it as "v1 on Sonnet 4.6".
