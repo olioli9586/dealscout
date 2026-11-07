@@ -1,0 +1,22 @@
+[project]
+name = "dealscout-agent"
+version = "0.1.0"
+description = "DealScout v2: the LangGraph research workflow behind the Next.js app"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "fastapi>=0.162.0",
+    "langgraph>=1.2.20",
+    "langgraph-checkpoint-postgres>=3.2.0",
+    "psycopg[binary,pool]>=3.3.8",
+]
+
+[project.optional-dependencies]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.2.0",
+    "pytest-asyncio>=1.4.1.post1",
+    "ruff>=0.17.4",
+]
+
+[tool.vercel]
+entrypoint = "app.main:app"
