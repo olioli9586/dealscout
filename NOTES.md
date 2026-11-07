@@ -195,3 +195,145 @@ which is about $30 to $90 a month, or weekly) is their call on Day 9.
 - Open question for them: production's `DEALSCOUT_MODEL` and
   `DEALSCOUT_EFFORT` (Vercel dashboard, Settings, Environment Variables), to
   label the baseline "the live demo" or keep it as "v1 on Sonnet 4.6".
+
+## Day 2 (2026-11-07): the agent service, its database, and resume
+
+### Done
+
+- **Vercel Services works here, answered first.** Services is in beta on
+  all plans. `vercel.json` now declares two services in the one project: the
+  Next.js app (`web`, still at the repo root) and the agent (`agent`,
+  FastAPI in `agent/`). The first preview built both
+  (`services/agent/fastapi`, 29.8 MB, and the Next.js functions), and
+  `GET /api/v2/health` reached the agent through the private binding. The
+  agent's own paths (`/health`, `/docs`, `/openapi.json`) answer 404 from
+  outside: only the Next.js app has a public rewrite.
+- **The graph, on fake models** (`agent/app/graph.py`): `load_memory ->
+  planner -> researcher` x N in parallel (one `Send` per branch) `->
+  verifier`, which sends a weak branch back for one more pass (support
+  below 0.8, at most 2 passes) `-> writer -> approve` (an `interrupt`)
+  `-> save`, or the end on reject. The state is in `app/state.py`; parallel
+  findings go through an appending reducer. Model calls sit behind one
+  interface (`app/models.py`) with deterministic fakes (`app/fakes.py`);
+  Day 3 swaps in the Anthropic version without touching the graph.
+- **Postgres**: `agent/migrations/001_init.sql` (`runs`, `profiles`) and
+  `app/migrate.py`, EvalBoard's scheme ported to Python (checksums,
+  advisory lock, one transaction per file), followed by the LangGraph
+  checkpointer's own `setup()`. The Vercel build of the agent runs it
+  (`[tool.vercel.scripts]` in `pyproject.toml`).
+- **Run lifecycle** (`app/runs.py`): a request drives the graph until it
+  ends or pauses at the approval step, then records the status. Resume is
+  allowed for a failed run, or a `running` one whose lease has run out;
+  a decision only when the run is waiting for one. API in `app/main.py`:
+  `POST /runs`, `GET /runs/{id}`, `POST /runs/{id}/resume`,
+  `POST /runs/{id}/decision`, `GET /health`.
+- **Next.js routes** `/api/v2/runs`, `/api/v2/runs/[id]`, `.../resume`,
+  `.../decision`, `/api/v2/health` (`lib/agent-service.ts`): input checked
+  and the per-IP quota charged before anything reaches the agent, run ids
+  must be UUIDs, agent errors come back as `{error}`.
+- **Neon**: a new free database, `dealscout-db` (iad1), created with
+  `vercel integration add neon ... -e preview --no-env-pull`: connected to
+  Preview only, and its credentials never came to this laptop.
+- **Preview, end to end on fakes**: the build log shows
+  `migrate: applied 001_init.sql`; start a run, approve it, profile
+  version 1 saved, resume answers 409 on the finished run. A whole fake run
+  takes 0.5 to 0.6 s seen from here, about 7 checkpoint writes to Neon
+  included, so checkpointing costs nothing next to model calls.
+- **Tests**: 34 pytest (local Postgres 14, Postgres 17 in the new CI
+  `agent` job, plus ruff) and 85 vitest (18 new). Every commit passes on
+  its own in a clean worktree.
+
+### Kill and resume: what the tests show
+
+Day 1 said "finished researchers shouldn't re-run, but check it rather
+than trust the docs". Three tests:
+
+1. A researcher crashes: the run is `failed`, resume runs only that
+   researcher again.
+2. A run is cancelled mid-step, the way a request is cut at the time
+   limit: nothing marks it failed, so it stays `running`; resume is refused
+   until its lease runs out, then the three researchers that had finished
+   are not run again.
+3. A separate process running the graph is SIGKILLed mid-step, and this
+   process resumes it. A call log written by both processes shows business,
+   funding and news ran once (in the killed process) and leadership ran
+   twice (killed once, finished on resume).
+
+To check the tests can fail, four bugs were planted one at a time:
+durability `"exit"` (2 tests fail), deleting the step's pending writes
+before resuming (2), no lease check (2), resume restarting from scratch
+(3). The pending-writes one is the evidence: skipping finished
+researchers comes from LangGraph's pending writes.
+
+### Decisions and why
+
+- **The Next.js app stays at the repo root.** Vercel's guides put every
+  service in its own folder (`frontend/`, `backend/`), but `"root": "."`
+  works (the preview proved it), and moving the app would touch every v1
+  file and its history.
+- **The agent is private; the Next.js routes forward to it.** One public
+  surface: the v1 rate limit and any later auth live in one place, no CORS.
+  A binding grants reachability, not authentication, so the agent trusts
+  every caller; that's safe only because it has no public route.
+- **Durability `"sync"`.** The default `"async"` writes a step's checkpoint
+  while the next step runs, so a kill can lose a step; `"exit"` writes
+  nothing until the run ends (the kill tests fail with it). `"sync"` costs a
+  database round trip per step, which is nothing next to model calls.
+- **A lease, not just a status.** A request cut off at 300 s can't mark its
+  run, so a run holds a lease of 330 s (past `maxDuration`). Resume needs
+  the lease to have run out, which also stops two requests driving one
+  thread and paying twice.
+- **Save is idempotent per run** (`profiles.run_id` is unique): a save that
+  runs again after a resume can't store a second version. The approve node
+  does nothing before `interrupt()`, because it runs again from the top on
+  resume.
+- **Pooled URL at runtime with prepared statements off; unpooled for
+  migrations** (advisory locks need their own session). Same split as
+  EvalBoard.
+- **Migrations run in the Vercel build.** No database credentials on a
+  laptop. The cost: a migration must stay compatible with the deployment
+  still serving until the new one is live.
+- **Preview database only.** Production gets a database of its own at
+  merge (Day 9), so preview test runs never show up in the live history.
+- **Python 3.13 and uv** (Vercel runs 3.12 to 3.14 and read
+  `agent/.python-version`; 3.13 has wheels for every dependency). Dev tools
+  are an optional extra, so the deployed function doesn't install pytest.
+  `uv` was installed with Homebrew for this.
+- **Fakes on the preview.** `AGENT_MODELS` defaults to `fake` until Day 3.
+  `FAKE_RESEARCH_SECONDS` slows the fake researchers, for the kill test on
+  the deployed preview on Day 5.
+- **Deferred:** the batch approval interrupt moves to Day 5, with the
+  batch UI.
+
+### Known gaps
+
+- An edited profile can be any JSON object; validate it against the
+  profile schema once the real writer exists (Day 3).
+- Anyone with a run id can approve it. Ids are random UUIDs, like
+  EvalBoard's share links; fine for the demo.
+- Preview has no `ANTHROPIC_API_KEY` (only Production has one). Day 3
+  needs one on Preview: their call whether to use a separate key with its
+  own spend limit in the Anthropic Console.
+- `runs` has no cost or budget columns yet (Day 3).
+
+### Run it locally
+
+```bash
+cd agent
+uv sync --extra dev
+TEST_DATABASE_URL=postgresql://postgres@127.0.0.1:54329/dealscout_test uv run pytest -q
+DATABASE_URL=postgresql://... uv run python -m app.migrate
+DATABASE_URL=postgresql://... uv run uvicorn app.main:app --port 8001
+# then, in the repo root:
+AGENT_URL=http://127.0.0.1:8001 npm run dev
+```
+
+The test database's name must contain "test": the test session drops its
+schema first.
+
+### Next
+
+- Day 3: the real planner, researchers (web search and fetch, citations)
+  and writer; usage, cost and the run budget in the state; first runs on
+  the 5 companies; model sweep. Needs an Anthropic key on Preview (above),
+  and their OK on the spend cap for the runs.
