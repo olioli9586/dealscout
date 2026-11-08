@@ -337,3 +337,187 @@ schema first.
   and writer; usage, cost and the run budget in the state; first runs on
   the 5 companies; model sweep. Needs an Anthropic key on Preview (above),
   and their OK on the spend cap for the runs.
+
+## Day 3 (2026-11-08): real models, cost and budget, first runs, the sweep
+
+### Done
+
+- **The real model calls** (`agent/app/anthropic_models.py`), through the
+  Anthropic SDK directly:
+  - *Planner*: Haiku 5.5 at low effort, structured output (`messages.parse`
+    with a Pydantic schema). It picks the areas and 1 to 3 search queries
+    each. With no previous profile it covers every area; skipping areas
+    only matters once memory exists (Day 4).
+  - *Researcher*: a short loop with the server-side `web_search` and
+    `web_fetch` tools (`_20260209`, as in v1) and a strict `report_findings`
+    tool for the claims (field, value, URL, quote). The loop follows
+    `pause_turn`, reuses the code execution container, and asks once more
+    if the model stops without reporting. The URLs the tools returned are
+    read from the response's result blocks, not taken from the model.
+  - *Writer*: structured output with the profile schema. It sees each
+    verified claim's field, value and URL, and never the quotes or any page
+    text.
+- **The verifier's mechanical check** (`app/verify.py`): a claim counts as
+  supported only if its URL is one the run's tools actually returned.
+  Today it is the whole verifier; the model check that the quote supports
+  the claim comes on Day 4.
+- **One profile schema** (`app/profile_schema.py`): v1's `CompanyProfile`
+  plus `leadership`, and per field the URLs of the claims behind it,
+  added by code. The same Pydantic model is the writer's output schema,
+  what the fakes return, and the check on an edited profile: a broken edit
+  now gets a 422 (a Day 2 known gap, closed). `to_saved` resets any field
+  that no supported claim backs to "unknown", so the writer can't add
+  facts nobody verified.
+- **Usage and cost in the state.** Every node returns its usage together
+  with its result (`Usage` in `app/state.py`), so both land in the same
+  checkpoint. `app/pricing.py` is `lib/pricing.ts` ported, with the same
+  test cases, so v1 and v2 are priced alike. The run view shows totals and
+  every node's entry (model, effort, requests, searches, fetches, cost,
+  seconds).
+- **Run budget** (`AGENT_RUN_BUDGET_USD`, default $1.50), enforced in the
+  graph: before the fan-out, and before each retry, using what that
+  branch's last pass cost as the estimate for the next one. The writer
+  always runs, so a run over budget still ends with a draft.
+- **Daily cap** over all runs (`AGENT_DAILY_USD`; with real models and no
+  value set it is $5, so the default fails closed): checked before a start
+  or a resume, answered with a 429. Migration `002_cost.sql` adds
+  `budget_usd` and `cost_usd` to `runs`.
+- **Eval**: `run-eval.mjs --api v2` runs each company through
+  `/api/v2/runs` and grades the draft. It records the claims and each
+  node's model and effort, and never approves, so no run gets memory from
+  another. `eval/report.mjs` renders `RESULTS.md` from every saved result,
+  so v1 and each v2 setup sit in one table.
+- **A Day 2 test bug, fixed.** The cut-off tests waited for "3 findings
+  written", but the run's input (`{"findings": []}`) is stored as a
+  `findings` write too, so they sometimes cut the run after only 2
+  researchers. LangGraph then rightly ran the third again, and the test
+  failed about 1 time in 5. Now they count only writes made by graph steps,
+  and one researcher finishes 0.3 s after the others, so the old helper
+  fails every time (checked: 3 out of 3). Day 2's conclusion stands:
+  finished researchers aren't run again.
+- **Tests**: 64 pytest (30 new; the Anthropic code runs against a scripted
+  client, so no network or key) and the 85 vitest, unchanged. ruff clean.
+  Every commit passes on its own in a clean worktree.
+
+### Results (5 companies, local agent and Next.js, `eval/RESULTS.md`)
+
+| setup | fields correct | median time | median cost | claims supported |
+|---|---|---|---|---|
+| v1, Sonnet 4.6 (Day 1) | 15/15 | 212 s | $0.242 | n/a |
+| v2, all Haiku 5.5 | 14/15 (sweep 1: 15/15) | 27 s | $0.127 | 241/242 |
+| v2, Haiku researchers, Sonnet 5.5 writer | 13/15 (15/15) | 39 s | $0.162 | 239/241 |
+| v2, Sonnet 5.5 researchers and writer | 9/15 (12/15) | 48 s | $0.531 | 64/64 |
+
+The planner is Haiku at low effort in every v2 setup. Sweep 1's raw rows
+are in `eval/results/sweep1/`. Between the sweeps the researcher was
+told how to find two fields: fetch the homepage for `website`, and
+`hq_location` is the main office, not a registered or mailing address
+(Sonnet had given Vercel's HQ as Covina, California, from PitchBook). The
+writer also lost the ability to fill fields without a claim. Both sweeps
+ran the same 5 companies.
+
+### What the sweep shows
+
+- **All-Haiku v2 matches v1 on the graded fields at about half the cost
+  and 7x faster.** The time drop comes from running the researchers in
+  parallel. The cost drop comes from the model's price.
+- **On Haiku the bill is web search, not tokens.** Each run makes 8 to 11
+  searches at $0.01, which is about $0.10 of the $0.12. Fewer searches per
+  researcher is the next cost lever, not a cheaper model.
+- **Sonnet 5.5 researchers cost about 4x as much and did worse.** They
+  report far fewer claims (64 to 73 across the 5 companies, against about
+  240 for Haiku). Their business pass reports about 4 claims and no
+  website, even after the "fetch the homepage" hint. The runs did fetch
+  pages (10 fetches in sweep 2), just not the homepage in that pass. The
+  cause isn't known yet. One idea to test cheaply on Day 4: with
+  `_20260209` the tools run from code (dynamic filtering) by default, so
+  let `web_fetch` be called directly and compare.
+- **A Sonnet writer bought nothing measurable** on the graded fields, for
+  about $0.04 more per company. Ungraded fields (summary quality, news)
+  aren't measured, so this says nothing about them.
+- **"Claims supported" near 100% means the URL check alone is weak**:
+  models cite pages their searches returned. The quote check on Day 4 is
+  what will make this number informative.
+- **5 companies x 3 fields is too small to rank close setups.** Airbnb's
+  website flipped between sweeps on the same Haiku setup: reported in one,
+  not in the other. 14/15 against 13/15 is noise. The sweep 2 prompt
+  changes were also made after looking at these 5 companies' misses, so
+  they're tuned on the test set. The 50-company set on Day 8 is the real
+  test.
+
+### Decisions and why
+
+- **Default to Haiku 5.5 everywhere** (Day 1 planned Haiku plus Sonnet;
+  the sweep decides). Env vars switch any node's model:
+  `AGENT_PLANNER_MODEL`, `AGENT_RESEARCHER_MODEL`, `AGENT_WRITER_MODEL`,
+  `AGENT_EFFORT`.
+- **A strict tool for the researcher's claims, structured output for the
+  planner and writer.** JSON structured output is documented as
+  incompatible with citations, which web search always turns on. v1
+  already used a strict tool alongside the web tools.
+- **Usage is returned with the result**, not counted on the side, so a
+  node that finished is counted exactly once even after a resume. A node
+  cut off mid-call reports nothing: run costs are a lower bound for runs
+  that were cut off, as in v1.
+- **Spend limits fail closed.** A cost the table can't price makes the
+  spent amount infinite (no more research, the daily cap refuses). A model
+  with no price, or a limit set to `nan`, `inf` or a negative number, stops
+  the agent at startup: NaN would make every `spent >= limit` check false
+  (the lesson v1's rate limit already learned).
+- **The budget is checked at the graph's edges, not inside a
+  researcher.** Parallel researchers can't see each other's spend, so one
+  research step can overshoot. Each pass is bounded by 6 requests of at
+  most 8,000 output tokens, 3 searches and 2 fetches per request, and
+  8,000 tokens per fetched page.
+- **The daily cap counts what finished requests recorded.** A request in
+  flight isn't counted yet, and two starts at the same moment can both
+  pass, so it bounds spend to the cap plus the runs in flight. That's fine
+  for a demo; an atomic reservation would fix it.
+- **No "page text is data, not instructions" line in the prompts yet**, so
+  the Day 7 injection test has a clean before. The writer seeing claims
+  and never page text is already in place (it's the design, not a
+  defense added later).
+- **Leadership is a profile field now.** v1 had nowhere to put the
+  leadership researcher's output.
+- **Refusal fallbacks are not on yet.** A refusal ends that researcher with
+  no claims (and the verifier then counts it as weak). Haiku 5.5 has no
+  server-side fallback anyway.
+- **All runs were local**, with the key already in `.env.local`. Preview
+  still has no key and runs the fakes, so no Vercel setting changed.
+
+### Known gaps
+
+- Preview still runs the fakes. Real models on the deployed preview need an
+  `ANTHROPIC_API_KEY` there (their call: a separate key with its own spend
+  limit) and `AGENT_MODELS=anthropic`.
+- The smoke run's business researcher once reported 0 claims. The retry
+  recovered, but the retry prompt has nothing specific to say when there
+  were no failed claims.
+- The eval leaves its runs waiting for approval; nothing cleans them up.
+
+### Spend
+
+$8.09 of the $10 cap set for today, all local: smoke run $0.09, sweep 1
+$3.88, sweep 2 $4.12 (the local `runs` table sums the same).
+
+### Run it locally (real models)
+
+```bash
+cd agent
+DATABASE_URL=postgresql://postgres@127.0.0.1:54329/dealscout_dev uv run python -m app.migrate
+AGENT_MODELS=anthropic AGENT_DAILY_USD=10 \
+  DATABASE_URL=postgresql://postgres@127.0.0.1:54329/dealscout_dev \
+  uv run --env-file ../.env.local uvicorn app.main:app --port 8001
+# then, in the repo root:
+AGENT_URL=http://127.0.0.1:8001 DEMO_DAILY_LIMIT=1000 npm run dev -- --port 3100
+node eval/run-eval.mjs http://localhost:3100 --api v2 --label v2-haiku --max-usd 1
+```
+
+### Next
+
+- Day 4: the verifier's model check (does the quote support the claim?)
+  and the retry loop on real runs; memory ("what changed" since the last
+  saved profile); prompt caching, with the cost drop measured. Also two
+  cheap experiments: fewer searches per researcher, and a direct
+  `web_fetch` for Sonnet researchers. Each has a small cap; ask before
+  anything bigger.
