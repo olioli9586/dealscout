@@ -39,6 +39,9 @@ class Finding(TypedDict):
     branch: Branch
     attempt: int
     claims: list[Claim]
+    # Every URL the researcher's web tools returned (search results and
+    # fetched pages), read from the API's result blocks, not from the model.
+    sources: list[str]
 
 
 class Verdict(TypedDict):
@@ -46,6 +49,27 @@ class Verdict(TypedDict):
     attempt: int
     supported: list[Claim]
     unsupported: list[Claim]
+
+
+class Usage(TypedDict):
+    """What one node's model calls used. Zero requests for a node that called
+    no model (the fakes, the mechanical verifier)."""
+
+    node: str
+    branch: Branch | None
+    attempt: int | None
+    model: str
+    effort: str | None
+    requests: int
+    input_tokens: int
+    output_tokens: int
+    cache_creation_input_tokens: int
+    cache_read_input_tokens: int
+    web_search_requests: int
+    web_fetch_requests: int
+    # USD; None if a response came from a model with no known price.
+    cost_usd: float | None
+    seconds: float
 
 
 class Decision(TypedDict):
@@ -57,6 +81,8 @@ class Decision(TypedDict):
 class RunState(TypedDict):
     company: str
     company_key: str
+    # The most this run may spend on model calls, in USD (see spent()).
+    budget_usd: float
     # The latest saved profile for this company, if any (long-term memory).
     previous: NotRequired[dict | None]
     plan: NotRequired[list[BranchPlan]]
@@ -64,6 +90,9 @@ class RunState(TypedDict):
     # of letting the last branch to finish overwrite the others.
     findings: Annotated[list[Finding], operator.add]
     verdicts: Annotated[list[Verdict], operator.add]
+    # One entry per finished node that called a model. A node that was cut
+    # off mid-call reports nothing, so this is a lower bound for such runs.
+    usage: Annotated[list[Usage], operator.add]
     draft: NotRequired[dict]
     decision: NotRequired[Decision]
     # The saved version number, once the save node has run.
@@ -77,3 +106,14 @@ def latest_per_branch[T: (Finding, Verdict)](items: list[T]) -> dict[Branch, T]:
         if item["branch"] not in latest or item["attempt"] > latest[item["branch"]]["attempt"]:
             latest[item["branch"]] = item
     return latest
+
+
+def spent(usage: list[Usage]) -> float:
+    """USD spent so far; infinite once any cost is unknown, so a budget check
+    fails closed instead of ignoring calls it can't price."""
+    total = 0.0
+    for u in usage:
+        if u["cost_usd"] is None:
+            return float("inf")
+        total += u["cost_usd"]
+    return total

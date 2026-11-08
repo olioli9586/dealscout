@@ -1,6 +1,10 @@
 import json
 
+import pytest
+
 from app.fakes import WEAK_URL, FakeModels
+from app.profile_schema import SavedProfile, unknown_profile
+from app.runs import SpendCapReached
 from tests.conftest import research_calls
 
 
@@ -27,8 +31,11 @@ async def test_a_run_pauses_for_approval_with_a_draft(make_runs):
         ("news", 1),
     ]
     assert all(v["unsupported"] == 0 for v in run["verdicts"])
-    assert run["draft"]["name"] == "Acme Corp"
-    assert run["draft"]["ceo"] == "Acme Corp ceo"
+    assert run["draft"]["company_name"] == "Acme Corp"
+    assert run["draft"]["leadership"] == ["Acme Corp leadership"]
+    assert run["draft"]["sources"]["website"] == ["https://example.com/business"]
+    # Every draft is a whole, valid profile.
+    SavedProfile.model_validate(run["draft"])
     assert run["previous_version"] is None
     assert research_calls(models) == {"business": [1], "funding": [1], "leadership": [1], "news": [1]}
 
@@ -53,7 +60,7 @@ async def test_approving_saves_version_1_and_the_next_run_remembers_it(make_runs
 async def test_an_edit_saves_the_edited_profile(make_runs, pool):
     runs, _ = make_runs()
     run = await runs.start("Acme Corp")
-    edited = {"name": "Acme Corporation", "ceo": "Jane Doe"}
+    edited = unknown_profile("Acme Corporation").model_dump() | {"leadership": ["Jane Doe, CEO"]}
     await runs.decide(run["id"], {"action": "edit", "profile": edited})
 
     assert [p["profile"] for p in await saved_profiles(pool)] == [edited]
@@ -84,11 +91,11 @@ async def test_a_weak_branch_gets_one_more_pass_with_its_unsupported_claims(make
     assert research_calls(models) == {"business": [1], "funding": [1, 2], "leadership": [1], "news": [1]}
     retry = [t for t in models.tasks if t["attempt"] == 2]
     assert [t["branch"] for t in retry] == ["funding"]
-    assert {c["field"] for c in retry[0]["retry_claims"]} == {"total_funding", "last_round"}
+    assert {c["field"] for c in retry[0]["retry_claims"]} == {"funding_status", "deal_signals"}
     assert all(c["source_url"] == WEAK_URL for c in retry[0]["retry_claims"])
     # The second pass is supported, so its claims reach the draft.
     assert run["status"] == "awaiting_approval"
-    assert run["draft"]["total_funding"] == "Acme Corp total_funding"
+    assert run["draft"]["funding_status"] == "Acme Corp funding_status"
 
 
 async def test_retries_stop_after_the_cap_and_unsupported_claims_stay_out(make_runs):
@@ -97,7 +104,8 @@ async def test_retries_stop_after_the_cap_and_unsupported_claims_stay_out(make_r
 
     assert research_calls(models)["news"] == [1, 2]
     assert run["status"] == "awaiting_approval"
-    assert "recent_news" not in run["draft"]
+    assert run["draft"]["recent_news"] == []
+    assert "recent_news" not in run["draft"]["sources"]
 
 
 async def test_the_draft_is_stored_as_json(make_runs, pool):
@@ -107,4 +115,59 @@ async def test_the_draft_is_stored_as_json(make_runs, pool):
 
     async with pool.connection() as conn:
         row = await (await conn.execute("select profile::text as raw from profiles")).fetchone()
-    assert json.loads(row["raw"])["name"] == 'Quote "Co"'
+    assert json.loads(row["raw"])["company_name"] == 'Quote "Co"'
+
+
+async def test_every_node_reports_its_usage_and_the_run_totals_it(make_runs, pool):
+    runs, _ = make_runs(FakeModels(costs={"plan": 0.01, "research": 0.1, "write": 0.05}))
+    run = await runs.start("Acme Corp")
+
+    usage = run["usage"]
+    assert sorted(c["node"] for c in usage["calls"]) == ["planner"] + ["researcher"] * 4 + ["writer"]
+    assert usage["cost_usd"] == pytest.approx(0.01 + 4 * 0.1 + 0.05)
+    assert run["budget_usd"] == 1.5
+    async with pool.connection() as conn:
+        row = await (await conn.execute("select cost_usd from runs where id = %s", (run["id"],))).fetchone()
+    assert row["cost_usd"] == pytest.approx(usage["cost_usd"])
+
+
+async def test_a_retry_runs_only_if_the_budget_left_pays_for_another_pass(make_runs):
+    # Four first passes at $0.30 leave $0.30 of a $1.50 budget: enough for
+    # one more pass, so only one of the two weak branches is retried.
+    models = FakeModels(weak_passes={"funding": 1, "news": 1}, costs={"research": 0.3})
+    runs, _ = make_runs(models, run_budget_usd=1.5)
+    run = await runs.start("Acme Corp")
+
+    calls = research_calls(models)
+    assert sorted([calls["funding"], calls["news"]]) == [[1], [1, 2]]
+    assert calls["business"] == calls["leadership"] == [1]
+    assert run["status"] == "awaiting_approval"
+    assert run["usage"]["cost_usd"] == pytest.approx(1.5)
+
+
+async def test_a_spent_budget_skips_retries_but_still_writes_a_draft(make_runs):
+    models = FakeModels(weak_passes={"news": 1}, costs={"research": 0.5})
+    runs, _ = make_runs(models, run_budget_usd=1.0)
+    run = await runs.start("Acme Corp")
+
+    assert research_calls(models)["news"] == [1]
+    assert run["status"] == "awaiting_approval"
+    assert run["draft"]["recent_news"] == []
+
+
+async def test_a_budget_spent_by_the_planner_skips_research(make_runs):
+    models = FakeModels(costs={"plan": 2.0})
+    runs, _ = make_runs(models, run_budget_usd=1.0)
+    run = await runs.start("Acme Corp")
+
+    assert research_calls(models) == {}
+    assert run["draft"]["website"] == "unknown"
+
+
+async def test_the_daily_cap_refuses_new_runs_once_spent(make_runs):
+    runs, _ = make_runs(FakeModels(costs={"research": 0.3}), daily_usd=1.0)
+    await runs.start("Acme Corp")  # $1.20: the cap is checked before a run, not during it
+
+    with pytest.raises(SpendCapReached):
+        await runs.start("Beta Inc")
+    assert await runs.spent_today() == pytest.approx(1.2)

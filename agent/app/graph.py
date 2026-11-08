@@ -8,6 +8,13 @@ Every node boundary is a checkpoint under the run's thread id, so a run that
 is cut off resumes from its last finished step, and researchers that had
 already finished in that step aren't run again (their writes are stored as
 the step's pending writes).
+
+The run budget (state["budget_usd"]) is checked where the graph decides to
+do more research: before the fan-out, and before each retry, using what that
+branch's last pass cost as the estimate for the next. The writer always
+runs, so a run that hits its budget still ends with a draft. One research
+step can overshoot the budget; each researcher's own limits (web tool
+max_uses, a request cap) bound by how much.
 """
 
 import asyncio
@@ -19,12 +26,28 @@ from langgraph.types import Send, interrupt
 
 from app.models import Models
 from app.profiles import ProfileStore
-from app.state import MAX_ATTEMPTS, SUPPORT_BAR, ResearchTask, RunState, Verdict, latest_per_branch
+from app.state import (
+    MAX_ATTEMPTS,
+    SUPPORT_BAR,
+    ResearchTask,
+    RunState,
+    Usage,
+    Verdict,
+    latest_per_branch,
+    spent,
+)
 
 
 def support(verdict: Verdict) -> float:
     total = len(verdict["supported"]) + len(verdict["unsupported"])
     return len(verdict["supported"]) / total if total else 0.0
+
+
+def pass_cost(usage: list[Usage], branch: str, attempt: int) -> float:
+    """What one researcher pass cost (infinite if unknown)."""
+    return spent(
+        [u for u in usage if u["node"] == "researcher" and (u["branch"], u["attempt"]) == (branch, attempt)]
+    )
 
 
 def build_graph(models: Models, profiles: ProfileStore, checkpointer: BaseCheckpointSaver):
@@ -33,9 +56,12 @@ def build_graph(models: Models, profiles: ProfileStore, checkpointer: BaseCheckp
 
     async def planner(state: RunState) -> dict:
         previous = state.get("previous")
-        return {"plan": await models.plan(state["company"], previous["profile"] if previous else None)}
+        plan, usage = await models.plan(state["company"], previous["profile"] if previous else None)
+        return {"plan": plan, "usage": usage}
 
     def fan_out(state: RunState) -> list[Send] | str:
+        if spent(state["usage"]) >= state["budget_usd"]:
+            return "writer"
         sends = [
             Send(
                 "researcher",
@@ -52,7 +78,8 @@ def build_graph(models: Models, profiles: ProfileStore, checkpointer: BaseCheckp
         return sends or "writer"
 
     async def researcher(task: ResearchTask) -> dict:
-        return {"findings": [await models.research(task)]}
+        finding, usage = await models.research(task)
+        return {"findings": [finding], "usage": usage}
 
     async def verifier(state: RunState) -> dict:
         checked = {(v["branch"], v["attempt"]) for v in state["verdicts"]}
@@ -61,32 +88,48 @@ def build_graph(models: Models, profiles: ProfileStore, checkpointer: BaseCheckp
             for f in latest_per_branch(state["findings"]).values()
             if (f["branch"], f["attempt"]) not in checked
         ]
-        return {"verdicts": list(await asyncio.gather(*(models.verify(f) for f in new)))}
+        results = await asyncio.gather(*(models.verify(f) for f in new))
+        return {"verdicts": [v for v, _ in results], "usage": [u for _, usage in results for u in usage]}
 
     def after_verifier(state: RunState) -> list[Send] | str:
         hints = {p["branch"]: p["hints"] for p in state["plan"]}
-        retries = [
-            Send(
-                "researcher",
-                ResearchTask(
-                    company=state["company"],
-                    branch=v["branch"],
-                    hints=hints[v["branch"]],
-                    attempt=v["attempt"] + 1,
-                    retry_claims=v["unsupported"],
-                ),
+        weak = sorted(
+            (
+                v
+                for v in latest_per_branch(state["verdicts"]).values()
+                if support(v) < SUPPORT_BAR and v["attempt"] < MAX_ATTEMPTS
+            ),
+            key=support,
+        )
+        # Weakest branches first, as many as the budget left can pay for.
+        projected = spent(state["usage"])
+        retries = []
+        for v in weak:
+            cost = pass_cost(state["usage"], v["branch"], v["attempt"])
+            if projected + cost > state["budget_usd"]:
+                continue
+            projected += cost
+            retries.append(
+                Send(
+                    "researcher",
+                    ResearchTask(
+                        company=state["company"],
+                        branch=v["branch"],
+                        hints=hints[v["branch"]],
+                        attempt=v["attempt"] + 1,
+                        retry_claims=v["unsupported"],
+                    ),
+                )
             )
-            for v in latest_per_branch(state["verdicts"]).values()
-            if support(v) < SUPPORT_BAR and v["attempt"] < MAX_ATTEMPTS
-        ]
         return retries or "writer"
 
     async def writer(state: RunState) -> dict:
         previous = state.get("previous")
         verdicts = list(latest_per_branch(state["verdicts"]).values())
-        return {
-            "draft": await models.write(state["company"], verdicts, previous["profile"] if previous else None)
-        }
+        draft, usage = await models.write(
+            state["company"], verdicts, previous["profile"] if previous else None
+        )
+        return {"draft": draft, "usage": usage}
 
     def approve(state: RunState) -> dict:
         # On resume this node runs again from the top, and interrupt() returns

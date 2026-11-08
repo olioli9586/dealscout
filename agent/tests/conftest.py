@@ -47,10 +47,10 @@ async def pool(db_url):
 
 @pytest.fixture
 def make_runs(pool):
-    def make(models: FakeModels | None = None, lease_seconds: float = 330) -> tuple[Runs, FakeModels]:
+    def make(models: FakeModels | None = None, **runs_options) -> tuple[Runs, FakeModels]:
         models = models or FakeModels()
         graph = build_graph(models, ProfileStore(pool), AsyncPostgresSaver(pool))
-        return Runs(pool, graph, lease_seconds=lease_seconds), models
+        return Runs(pool, graph, **runs_options), models
 
     return make
 
