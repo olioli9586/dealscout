@@ -5,10 +5,16 @@
 // hand-checked accepted values. Also records what each run cost and how much
 // work it did (API requests, web searches, fetches), from the usage event the
 // agent sends at the end of every run. Prints a per-company readout and writes
-// eval/results/<label>.json and eval/RESULTS.md.
+// eval/results/<label>.json, then eval/RESULTS.md from every saved result
+// (eval/report.mjs).
 //
-// Usage:  node eval/run-eval.mjs [base-url] [--label v1] [--max-usd 5]
+// Usage:  node eval/run-eval.mjs [base-url] [--label v1] [--max-usd 5] [--api v1|v2]
 //         (base-url defaults to production)
+//
+// --api v2 starts each company as a v2 run (POST /api/v2/runs, the LangGraph
+// agent behind the Next.js app) and grades the draft it stops at for
+// approval. The eval never approves, so no profile is saved and every run
+// starts without memory: runs stay comparable.
 //
 // --max-usd is a hard spend cap: no new company starts once the runs so far
 // cost that much, and a run that reports no cost stops the eval, because the
@@ -17,18 +23,21 @@
 
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { parseArgs } from "node:util";
+import { writeReport } from "./report.mjs";
 
 const { values: opts, positionals } = parseArgs({
   allowPositionals: true,
   options: {
     label: { type: "string", default: "v1" },
     "max-usd": { type: "string", default: "5" },
+    api: { type: "string", default: "v1" },
   },
 });
 const BASE = positionals[0] ?? "https://dealscout-gamma.vercel.app";
 const MAX_USD = Number(opts["max-usd"]);
 if (!Number.isFinite(MAX_USD) || MAX_USD <= 0) throw new Error("--max-usd must be a positive number");
 if (!/^[\w.-]+$/.test(opts.label)) throw new Error("--label may only use letters, digits, '.', '_' and '-'");
+if (!["v1", "v2"].includes(opts.api)) throw new Error("--api must be v1 or v2");
 const truth = JSON.parse(readFileSync(new URL("./ground-truth.json", import.meta.url)));
 
 async function research(company) {
@@ -63,6 +72,47 @@ async function research(company) {
   return { profile, usage, error };
 }
 
+// "planner claude-haiku-5-5 (low), researcher ..." from a v2 run's calls.
+function modelsOf(calls) {
+  const seen = new Map();
+  for (const c of calls) if (!seen.has(c.node)) seen.set(c.node, `${c.node} \`${c.model}\` (${c.effort ?? "?"})`);
+  return [...seen.values()].join(", ") || null;
+}
+
+async function researchV2(company) {
+  const res = await fetch(`${BASE}/api/v2/runs`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ company }),
+  });
+  const run = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(`HTTP ${res.status}: ${run.error ?? "no body"}`);
+  const usage = run.usage
+    ? {
+        model: modelsOf(run.usage.calls),
+        effort: null,
+        requests: run.usage.requests,
+        input_tokens: run.usage.input_tokens,
+        output_tokens: run.usage.output_tokens,
+        cache_creation_input_tokens: run.usage.cache_creation_input_tokens,
+        cache_read_input_tokens: run.usage.cache_read_input_tokens,
+        web_search_requests: run.usage.web_search_requests,
+        web_fetch_requests: run.usage.web_fetch_requests,
+        cost_usd: run.usage.cost_usd,
+      }
+    : null;
+  // The final pass of each branch: the claims the writer chose from.
+  const latest = new Map();
+  for (const v of run.verdicts ?? []) if ((latest.get(v.branch)?.attempt ?? 0) < v.attempt) latest.set(v.branch, v);
+  const claims = {
+    supported: [...latest.values()].reduce((s, v) => s + v.supported, 0),
+    unsupported: [...latest.values()].reduce((s, v) => s + v.unsupported, 0),
+  };
+  const error =
+    run.status === "awaiting_approval" && run.draft ? null : (run.error ?? `run ended with status ${run.status}`);
+  return { profile: run.draft ?? null, usage, error, run_id: run.id, plan: run.plan, claims };
+}
+
 const norm = (s) => String(s ?? "").toLowerCase();
 const graders = {
   website_domain: (p, accepted) => accepted.some((d) => norm(p.website).includes(d)),
@@ -82,7 +132,7 @@ for (const gt of truth.companies) {
   const started = Date.now();
   let run;
   try {
-    run = await research(gt.name);
+    run = await (opts.api === "v2" ? researchV2(gt.name) : research(gt.name));
   } catch (err) {
     run = { profile: null, usage: null, error: err.message };
   }
@@ -92,6 +142,7 @@ for (const gt of truth.companies) {
     usage: run.usage,
     fields: {},
   };
+  if (opts.api === "v2") Object.assign(row, { run_id: run.run_id, plan: run.plan, claims: run.claims });
   if (run.error) row.error = run.error;
   else {
     for (const [field, grade] of Object.entries(graders)) row.fields[field] = grade(run.profile, gt[field]);
@@ -112,19 +163,9 @@ if (stopped) console.log(`stopped early: ${stopped}`);
 
 const fields = Object.keys(graders);
 const graded = rows.filter((r) => r.profile);
-const perField = fields.map((f) => ({
-  field: f,
-  pass: graded.filter((r) => r.fields[f]).length,
-  total: graded.length,
-}));
-const totalPass = perField.reduce((s, x) => s + x.pass, 0);
-const totalCells = perField.reduce((s, x) => s + x.total, 0);
-const ran = rows.filter((r) => !r.skipped);
-const median = (xs) => {
-  const s = [...xs].sort((a, b) => a - b);
-  return s.length === 0 ? null : s.length % 2 ? s[(s.length - 1) / 2] : (s[s.length / 2 - 1] + s[s.length / 2]) / 2;
-};
-const config = ran.find((r) => r.usage)?.usage;
+const totalPass = graded.reduce((s, r) => s + fields.filter((f) => r.fields[f]).length, 0);
+const totalCells = graded.length * fields.length;
+const config = rows.find((r) => r.usage)?.usage;
 const date = new Date().toISOString().slice(0, 10);
 
 const resultsDir = new URL("./results/", import.meta.url);
@@ -134,10 +175,13 @@ writeFileSync(
   JSON.stringify(
     {
       label: opts.label,
+      api: opts.api,
       date,
       base: BASE,
-      model: config?.model ?? null,
-      effort: config?.effort ?? null,
+      // v1: one model and effort. v2: every node's model and effort.
+      ...(opts.api === "v2"
+        ? { models: config?.model ?? null }
+        : { model: config?.model ?? null, effort: config?.effort ?? null }),
       max_usd: MAX_USD,
       spent_usd: spent,
       stopped,
@@ -148,39 +192,6 @@ writeFileSync(
   ) + "\n",
 );
 
+writeReport();
 const usd = (x) => (typeof x === "number" ? `$${x.toFixed(3)}` : "—");
-let md = `# DealScout Accuracy Eval — ${opts.label}, ${date}
-
-Methodology (borrowed from [EvalBoard](https://github.com/olioli9586/evalboard)):
-hand-checked ground truth, mechanical field grading with accepted-value lists,
-every result reproducible via \`node eval/run-eval.mjs <base-url> --label ${opts.label}\`.
-Raw rows, profiles included: [results/${opts.label}.json](results/${opts.label}.json).
-
-Agent: ${config ? `\`${config.model}\`, effort \`${config.effort}\`` : "unknown (no usage reported)"}.
-
-**Overall: ${totalPass}/${totalCells} fields correct (${Math.round((100 * totalPass) / Math.max(1, totalCells))}%)**
-· ${ran.length} runs, ${rows.filter((r) => r.error).length} failed
-· median ${median(ran.map((r) => r.seconds)) ?? "—"} s per run
-· ${usd(spent)} total, median ${usd(median(ran.flatMap((r) => (typeof r.usage?.cost_usd === "number" ? [r.usage.cost_usd] : []))))} per run
-${stopped ? `\nStopped early: ${stopped}.\n` : ""}
-| company | website | founded | HQ city | run time | cost | API requests | searches | fetches |
-|---|---|---|---|---|---|---|---|---|
-`;
-for (const r of rows) {
-  const cell = (f) => (r.skipped ? "skipped" : r.error ? "⚠️ run failed" : r.fields[f] ? "✅" : "❌");
-  const u = r.usage;
-  md += `| ${r.name} | ${cell("website_domain")} | ${cell("founded_year")} | ${cell("hq_city")} | ${r.skipped ? "—" : r.seconds + "s"} | ${usd(u?.cost_usd)} | ${u?.requests ?? "—"} | ${u?.web_search_requests ?? "—"} | ${u?.web_fetch_requests ?? "—"} |\n`;
-}
-md += `\n| field | accuracy |\n|---|---|\n`;
-for (const x of perField) md += `| ${x.field} | ${x.pass}/${x.total} |\n`;
-md += `
-Notes:
-- Fields were chosen for *stability* (a website or founding year doesn't move);
-  volatile fields (employee counts, funding) need dated ground truth to grade fairly.
-- Cost is computed from the token and web-search counts the API reports on each
-  response (lib/pricing.ts); run time is wall clock as seen by this script.
-- Failures worth reading: when the agent misses, the profile usually shows *why*
-  (e.g. remote-first companies genuinely have ambiguous HQs).
-`;
-writeFileSync(new URL("./RESULTS.md", import.meta.url), md);
-console.log(`\n${totalPass}/${totalCells} fields correct, ${usd(spent)} spent — wrote eval/RESULTS.md and eval/results/${opts.label}.json`);
+console.log(`\n${totalPass}/${totalCells} fields correct, ${usd(spent)} spent — wrote eval/results/${opts.label}.json and eval/RESULTS.md`);
