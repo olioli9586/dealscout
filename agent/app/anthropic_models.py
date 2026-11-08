@@ -1,0 +1,379 @@
+"""The real model calls, through the Anthropic SDK directly (not LangChain's
+wrappers): LangGraph runs the workflow, and the SDK keeps the server-side web
+tools, pause_turn and the exact usage numbers that v1 already relies on.
+
+- planner: a cheap model picks the research branches, with structured output.
+- researcher: a short tool loop with the server-side web_search and web_fetch
+  tools; the claims come back through a strict tool, and the URLs the tools
+  returned are read from the response's result blocks.
+- verifier: the mechanical source check (app/verify.py), no model yet.
+- writer: builds the profile from the verified claims only, with structured
+  output; it never sees page text. The sources per field are added by code.
+"""
+
+import json
+import os
+import time
+from dataclasses import dataclass
+from datetime import date
+from typing import Literal
+
+from anthropic import AsyncAnthropic
+from anthropic.types import Message
+from pydantic import BaseModel
+
+from app.pricing import PRICES, response_cost
+from app.profile_schema import BRANCH_FIELDS, DERIVED_FIELDS, CompanyProfile, to_saved, unknown_profile
+from app.state import BRANCHES, Branch, BranchPlan, Claim, Finding, ResearchTask, Usage, Verdict
+from app.verify import check_sources
+
+Effort = Literal["low", "medium", "high"]
+
+# Per researcher pass. A pass is bounded by REQUESTS_PER_PASS requests of at
+# most RESEARCH_MAX_TOKENS output each; max_uses bounds the web tools per
+# request (searches run through dynamic filtering count per request, not per
+# turn), and max_content_tokens bounds what one fetched page adds.
+SEARCHES_PER_REQUEST = 3
+FETCHES_PER_REQUEST = 2
+FETCH_MAX_CONTENT_TOKENS = 8_000
+REQUESTS_PER_PASS = 6
+RESEARCH_MAX_TOKENS = 8_000
+PLANNER_MAX_TOKENS = 4_000
+WRITER_MAX_TOKENS = 8_000
+
+
+@dataclass(frozen=True)
+class ModelConfig:
+    # Haiku 5.5 throughout: the Day 3 sweep (eval/RESULTS.md) found Sonnet 5.5
+    # researchers cost about 4x as much and got fewer graded fields right.
+    planner: str = "claude-haiku-5-5"
+    researcher: str = "claude-haiku-5-5"
+    writer: str = "claude-haiku-5-5"
+    # For the researchers and the writer; the planner always runs at "low".
+    effort: Effort = "medium"
+
+    def __post_init__(self):
+        # A model with no price would make every budget check fail closed;
+        # refuse it at startup instead.
+        for model in (self.planner, self.researcher, self.writer):
+            if model not in PRICES:
+                raise ValueError(f"no price for model {model!r}; add it to app/pricing.py")
+        if self.effort not in ("low", "medium", "high"):
+            raise ValueError(f"effort must be low, medium or high, not {self.effort!r}")
+
+    @classmethod
+    def from_env(cls) -> "ModelConfig":
+        defaults = cls()
+        return cls(
+            planner=os.environ.get("AGENT_PLANNER_MODEL", defaults.planner),
+            researcher=os.environ.get("AGENT_RESEARCHER_MODEL", defaults.researcher),
+            writer=os.environ.get("AGENT_WRITER_MODEL", defaults.writer),
+            effort=os.environ.get("AGENT_EFFORT", defaults.effort),  # type: ignore[arg-type]
+        )
+
+
+class Meter:
+    """Adds up the usage of one node's requests into a Usage entry."""
+
+    def __init__(
+        self, node: str, model: str, effort: Effort, branch: Branch | None = None, attempt: int | None = None
+    ):
+        self.started = time.monotonic()
+        self.usage: Usage = {
+            "node": node,
+            "branch": branch,
+            "attempt": attempt,
+            "model": model,
+            "effort": effort,
+            "requests": 0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "web_search_requests": 0,
+            "web_fetch_requests": 0,
+            "cost_usd": 0.0,
+            "seconds": 0.0,
+        }
+
+    def add(self, response: Message) -> None:
+        u, usage = self.usage, response.usage
+        # Price what actually ran (a server-side fallback can change it).
+        model = response.model if response.model in PRICES else u["model"]
+        u["requests"] += 1
+        u["input_tokens"] += usage.input_tokens
+        u["output_tokens"] += usage.output_tokens
+        u["cache_creation_input_tokens"] += usage.cache_creation_input_tokens or 0
+        u["cache_read_input_tokens"] += usage.cache_read_input_tokens or 0
+        if usage.server_tool_use:
+            u["web_search_requests"] += usage.server_tool_use.web_search_requests
+            u["web_fetch_requests"] += usage.server_tool_use.web_fetch_requests
+        cost = response_cost(model, usage)
+        u["cost_usd"] = None if u["cost_usd"] is None or cost is None else u["cost_usd"] + cost
+
+    def done(self) -> list[Usage]:
+        self.usage["seconds"] = round(time.monotonic() - self.started, 2)
+        return [self.usage]
+
+
+# --- planner ---------------------------------------------------------------
+
+
+class PlannedBranch(BaseModel):
+    branch: Branch
+    hints: list[str]
+
+
+class PlanOutput(BaseModel):
+    branches: list[PlannedBranch]
+
+
+BRANCH_SCOPE: dict[Branch, str] = {
+    "business": "business and products: what the company does, its website, industry, headquarters, "
+    "founding year, size and how it makes money",
+    "funding": "funding and financials: funding rounds, investors, valuation, a public listing or an "
+    "acquisition, and fundraising signals",
+    "leadership": "leadership: the CEO and other key executives, and recent leadership changes",
+    "news": "news and deal signals: notable news from the last 12 months, and what an M&A or investment "
+    "team would care about (fundraising, acquisitions, layoffs, expansion, product launches)",
+}
+
+PLANNER_SYSTEM = """You plan company research for a deal-sourcing team. Researchers cover these areas:
+{areas}
+
+Pick the areas to research and give each 1 to 3 short web search queries. With no previous
+profile, pick every area unless one clearly doesn't apply to this company. With a previous profile,
+skip areas it already answers well and that rarely change, and focus on what may have changed."""
+
+
+# --- researcher ------------------------------------------------------------
+
+FIELD_HELP = {
+    name: (field.description or name.replace("_", " "))
+    for name, field in CompanyProfile.model_fields.items()
+    if name not in DERIVED_FIELDS
+} | {
+    # How to find these, beyond what the field means.
+    "website": "the official homepage URL; fetch the homepage and cite it",
+    "hq_location": "city, region and country of the main office, not a registered-agent or mailing address",
+}
+REPORTABLE_FIELDS = sorted(FIELD_HELP)
+
+REPORT_TOOL = {
+    "name": "report_findings",
+    "description": "Report your findings. Call exactly once, when your research is done. One claim per fact "
+    "(per item for list fields), each with the URL it came from and a short verbatim quote from that page "
+    "that supports it. An empty list if you found nothing you can support.",
+    "strict": True,
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "claims": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "field": {"type": "string", "enum": REPORTABLE_FIELDS},
+                        "value": {"type": "string"},
+                        "source_url": {"type": "string"},
+                        "quote": {"type": "string"},
+                    },
+                    "required": ["field", "value", "source_url", "quote"],
+                    "additionalProperties": False,
+                },
+            }
+        },
+        "required": ["claims"],
+        "additionalProperties": False,
+    },
+}
+
+RESEARCH_TOOLS = [
+    {"type": "web_search_20260209", "name": "web_search", "max_uses": SEARCHES_PER_REQUEST},
+    {
+        "type": "web_fetch_20260209",
+        "name": "web_fetch",
+        "max_uses": FETCHES_PER_REQUEST,
+        "max_content_tokens": FETCH_MAX_CONTENT_TOKENS,
+    },
+    REPORT_TOOL,
+]
+
+RESEARCHER_SYSTEM = f"""You are one researcher on a company-research team for deal sourcing. You cover one
+research area of one company: search the web, read the best sources, then call report_findings
+exactly once.
+
+Rules:
+- Work fast: at most {SEARCHES_PER_REQUEST} searches and {FETCHES_PER_REQUEST} page fetches, then report.
+- Each claim is one fact for one profile field, with the URL of the page it came from and a short
+  verbatim quote from that page.
+- Cite only URLs that your searches returned or that you fetched. Never write a URL from memory.
+- Prefer primary sources: the company's own site, filings, reputable press.
+- Leave out what you couldn't find. Never report "unknown" as a value."""
+
+NUDGE = "Now call report_findings with your claims (an empty list if you found none)."
+
+
+def research_prompt(task: ResearchTask) -> str:
+    fields = "\n".join(f"- {f}: {FIELD_HELP[f]}" for f in BRANCH_FIELDS[task["branch"]])
+    hints = "\n".join(f"- {h}" for h in task["hints"]) or "- (none)"
+    prompt = (
+        f"Today is {date.today().isoformat()}.\n"
+        f"Company: {task['company']}\n"
+        f"Your area: {BRANCH_SCOPE[task['branch']]}\n\n"
+        f"Fields to report:\n{fields}\n\n"
+        f"Search ideas from the planner:\n{hints}"
+    )
+    if task["retry_claims"]:
+        failed = "\n".join(f"- {c['field']}: {c['value']} ({c['source_url']})" for c in task["retry_claims"])
+        prompt += (
+            "\n\nThis is a second pass. These claims from the first pass cited a URL that no search or "
+            "fetch returned, so they couldn't be verified. Find a real source for each, or drop it:\n"
+            f"{failed}"
+        )
+    return prompt
+
+
+def tool_urls(response: Message) -> list[str]:
+    """Every URL the web tools returned in this response, in order."""
+    urls: list[str] = []
+    for block in response.content:
+        if block.type == "web_search_tool_result" and isinstance(block.content, list):
+            urls.extend(result.url for result in block.content)
+        elif block.type == "web_fetch_tool_result" and block.content.type == "web_fetch_result":
+            urls.append(block.content.url)
+    return urls
+
+
+# --- writer ----------------------------------------------------------------
+
+WRITER_SYSTEM = """You write a company profile for a deal-sourcing team from claims that researchers found
+and a checker verified against their sources.
+
+- Use only the claims. Write "unknown" (or an empty list) for any field no claim covers.
+- When claims disagree, prefer the more specific and more recent one from the more primary source.
+- List fields: one item per distinct fact, no duplicates.
+- confidence: high if the core fields (website, industry, HQ, founded year) are covered and the claims
+  agree, low if most fields are unknown, medium otherwise.
+- summary: 2-3 sentences, from the claims only."""
+
+
+class AnthropicModels:
+    def __init__(self, client: AsyncAnthropic, config: ModelConfig):
+        self.client = client
+        self.config = config
+
+    async def plan(self, company: str, previous: dict | None) -> tuple[list[BranchPlan], list[Usage]]:
+        meter = Meter("planner", self.config.planner, "low")
+        areas = "\n".join(f"- {b}: {scope}" for b, scope in BRANCH_SCOPE.items())
+        content = f"Company: {company}"
+        if previous:
+            content += f"\n\nPrevious profile:\n{json.dumps(previous, indent=1)}"
+        response = await self.client.messages.parse(
+            model=self.config.planner,
+            max_tokens=PLANNER_MAX_TOKENS,
+            system=PLANNER_SYSTEM.format(areas=areas),
+            messages=[{"role": "user", "content": content}],
+            output_config={"effort": "low"},
+            output_format=PlanOutput,
+        )
+        meter.add(response)
+        plan: list[BranchPlan] = []
+        if response.parsed_output is not None:
+            seen: set[str] = set()
+            for item in response.parsed_output.branches:
+                if item.branch not in seen:
+                    seen.add(item.branch)
+                    plan.append({"branch": item.branch, "hints": item.hints[:3]})
+        # A refusal or an empty plan would research nothing; research every
+        # area instead (the run budget still applies).
+        if not plan:
+            plan = [{"branch": b, "hints": []} for b in BRANCHES]
+        return plan, meter.done()
+
+    async def research(self, task: ResearchTask) -> tuple[Finding, list[Usage]]:
+        meter = Meter(
+            "researcher", self.config.researcher, self.config.effort, task["branch"], task["attempt"]
+        )
+        messages: list[dict] = [{"role": "user", "content": research_prompt(task)}]
+        sources: list[str] = []
+        claims: list[Claim] = []
+        container: str | None = None
+        for _ in range(REQUESTS_PER_PASS):
+            response = await self.client.messages.create(
+                model=self.config.researcher,
+                max_tokens=RESEARCH_MAX_TOKENS,
+                system=RESEARCHER_SYSTEM,
+                tools=RESEARCH_TOOLS,
+                messages=messages,
+                output_config={"effort": self.config.effort},
+                # Dynamic filtering runs in a code execution container; later
+                # requests in the loop must name the same one.
+                **({"container": container} if container else {}),
+            )
+            meter.add(response)
+            sources.extend(u for u in tool_urls(response) if u not in sources)
+            if response.container:
+                container = response.container.id
+            report = next(
+                (b for b in response.content if b.type == "tool_use" and b.name == "report_findings"), None
+            )
+            if report is not None:
+                # strict: true means the input matches the schema.
+                claims = [
+                    {
+                        "field": c["field"],
+                        "value": c["value"],
+                        "source_url": c["source_url"],
+                        "quote": c["quote"],
+                    }
+                    for c in report.input["claims"]
+                ]
+                break
+            if response.stop_reason == "refusal":
+                break
+            # Echo the turn back unchanged (thinking and result blocks included).
+            messages.append({"role": "assistant", "content": response.content})
+            if response.stop_reason != "pause_turn":
+                # It stopped without reporting (end_turn or max_tokens): ask once more.
+                messages.append({"role": "user", "content": NUDGE})
+        finding: Finding = {
+            "branch": task["branch"],
+            "attempt": task["attempt"],
+            "claims": claims,
+            "sources": sources,
+        }
+        return finding, meter.done()
+
+    async def verify(self, finding: Finding) -> tuple[Verdict, list[Usage]]:
+        return check_sources(finding), []
+
+    async def write(
+        self, company: str, verdicts: list[Verdict], previous: dict | None
+    ) -> tuple[dict, list[Usage]]:
+        # The writer sees field, value and URL, never the quotes or any page text.
+        claims = [
+            {"field": c["field"], "value": c["value"], "source_url": c["source_url"]}
+            for v in verdicts
+            for c in v["supported"]
+        ]
+        if not claims:
+            return to_saved(unknown_profile(company), verdicts), []
+        meter = Meter("writer", self.config.writer, self.config.effort)
+        response = await self.client.messages.parse(
+            model=self.config.writer,
+            max_tokens=WRITER_MAX_TOKENS,
+            system=WRITER_SYSTEM,
+            messages=[
+                {
+                    "role": "user",
+                    "content": f"Company: {company}\n\nVerified claims:\n{json.dumps(claims, indent=1)}",
+                }
+            ],
+            output_config={"effort": self.config.effort},
+            output_format=CompanyProfile,
+        )
+        meter.add(response)
+        if response.parsed_output is None:
+            raise RuntimeError(f"the writer returned no profile (stop reason {response.stop_reason})")
+        return to_saved(response.parsed_output, verdicts), meter.done()

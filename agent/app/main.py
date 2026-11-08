@@ -8,10 +8,12 @@ from contextlib import asynccontextmanager
 from typing import Annotated, Literal
 from uuid import UUID
 
+from anthropic import AsyncAnthropic
 from fastapi import Depends, FastAPI, HTTPException, Request
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 from pydantic import BaseModel, StringConstraints, model_validator
 
+from app.anthropic_models import AnthropicModels, ModelConfig
 from app.db import database_url, make_pool
 from app.fakes import FakeModels
 from app.graph import build_graph
@@ -29,7 +31,9 @@ def models_from_env() -> Models:
     kind = os.environ.get("AGENT_MODELS", "fake")
     if kind == "fake":
         return FakeModels.from_env()
-    raise RuntimeError(f"AGENT_MODELS={kind!r} is not supported (only 'fake' so far)")
+    if kind == "anthropic":
+        return AnthropicModels(AsyncAnthropic(), ModelConfig.from_env())
+    raise RuntimeError(f"AGENT_MODELS={kind!r} is not supported (use 'fake' or 'anthropic')")
 
 
 def usd_from_env(name: str) -> float | None:
