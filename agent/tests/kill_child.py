@@ -17,7 +17,9 @@ from app.runs import Runs
 async def main(url: str, run_id: str, log: str) -> None:
     pool = make_pool(url)
     await pool.open()
-    models = FakeModels(research_seconds={"leadership": 60}, log_path=Path(log))
+    # News finishes a little after business and funding, so a test that cuts
+    # the run too early sees news run twice.
+    models = FakeModels(research_seconds={"leadership": 60, "news": 0.3}, log_path=Path(log))
     runs = Runs(pool, build_graph(models, ProfileStore(pool), AsyncPostgresSaver(pool)), lease_seconds=1)
     await runs.start("Killed Co", run_id=run_id)
 

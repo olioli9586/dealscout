@@ -17,11 +17,18 @@ AGENT_DIR = Path(__file__).resolve().parent.parent
 
 
 async def findings_written(pool, run_id: str) -> int:
-    """Finished researchers of the step in progress (the step's pending writes)."""
+    """Finished researchers of the step in progress (the step's pending writes).
+
+    Only writes made by graph steps count: the run's input ({"findings": []})
+    is stored as a write on the input checkpoint too, and counting it would
+    let a test cut a run one researcher too early."""
     async with pool.connection() as conn:
         row = await (
             await conn.execute(
-                "select count(*) as n from checkpoint_writes where thread_id = %s and channel = 'findings'",
+                """select count(*) as n
+                   from checkpoint_writes w
+                   join checkpoints c using (thread_id, checkpoint_ns, checkpoint_id)
+                   where w.thread_id = %s and w.channel = 'findings' and c.metadata->>'source' = 'loop'""",
                 (run_id,),
             )
         ).fetchone()
@@ -59,7 +66,9 @@ async def test_a_crashed_branch_fails_the_run_and_resume_reruns_only_that_branch
 
 
 async def test_a_run_cut_off_mid_step_waits_for_its_lease_then_resumes(make_runs, pool):
-    runs, models = make_runs(FakeModels(research_seconds={"leadership": 30}), lease_seconds=1)
+    # News finishes a little after the others, so cutting the run before all
+    # three finished researchers are stored would show up as a news rerun.
+    runs, models = make_runs(FakeModels(research_seconds={"leadership": 30, "news": 0.3}), lease_seconds=1)
     run_id = str(uuid4())
     task = asyncio.create_task(runs.start("Acme Corp", run_id=run_id))
     await wait_for_findings(pool, run_id, 3, alive=lambda: not task.done())
