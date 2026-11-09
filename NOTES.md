@@ -495,6 +495,18 @@ ran the same 5 companies.
   were no failed claims.
 - The eval leaves its runs waiting for approval; nothing cleans them up.
 
+### Closed: production's model and effort (Day 1's open question)
+
+Production's `DEALSCOUT_MODEL` and `DEALSCOUT_EFFORT` are Secret variables,
+which Vercel makes write-only: nobody can read them, in the dashboard or
+with `vercel env pull`. Both were created on 2026-07-07, the day of the
+commit "Fit Sonnet runs inside the 300s function limit", which fits the
+Sonnet-at-medium switch the July notes describe but doesn't prove the
+exact model. So the baseline stays labeled by what was measured (v1 on
+Sonnet 4.6 at medium effort). At the merge (Day 9), set both again as
+Config variables (they aren't secrets), so production's model can be read
+from then on.
+
 ### Spend
 
 $8.09 of the $10 cap set for today, all local: smoke run $0.09, sweep 1
