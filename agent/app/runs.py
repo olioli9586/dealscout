@@ -211,7 +211,12 @@ def view(row: dict, values: dict, next_nodes: tuple[str, ...]) -> dict:
         "next": list(next_nodes),
         "plan": [p["branch"] for p in values.get("plan", [])],
         "findings": [
-            {"branch": f["branch"], "attempt": f["attempt"], "claims": len(f["claims"])}
+            {
+                "branch": f["branch"],
+                "attempt": f["attempt"],
+                "claims": len(f["claims"]),
+                "tool_errors": f.get("tool_errors", []),
+            }
             for f in values.get("findings", [])
         ],
         "verdicts": [

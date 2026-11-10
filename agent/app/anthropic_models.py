@@ -38,6 +38,9 @@ Effort = Literal["low", "medium", "high"]
 FETCHES_PER_REQUEST = 2
 FETCH_MAX_CONTENT_TOKENS = 8_000
 REQUESTS_PER_PASS = 6
+# Claims per report. A Day 4 news retry reported 20-odd long claims and ran
+# out of output tokens mid-report.
+MAX_CLAIMS = 10
 RESEARCH_MAX_TOKENS = 8_000
 PLANNER_MAX_TOKENS = 4_000
 VERIFIER_MAX_TOKENS = 8_000
@@ -225,14 +228,22 @@ exactly once.
 
 Rules:
 - Work fast: at most {searches} searches and {fetches} page fetches, then report.
+- Report at most {max_claims} claims: the most important facts for your fields.
 - Each claim is one fact for one profile field, with the URL of the page it came from and a short
   verbatim quote from that page.
+- The value says only what its quote says. A checker compares them and rejects a value that adds
+  anything the quote doesn't state: a date, an amount, a name, a background. Put more in the quote,
+  or leave it out of the value.
 - Cite only URLs that your searches returned or that you fetched. Never write a URL from memory.
 - web_fetch can only open a URL that one of your searches returned, so search first.
 - Prefer primary sources: the company's own site, filings, reputable press.
 - Leave out what you couldn't find. Never report "unknown" as a value."""
 
 NUDGE = "Now call report_findings with your claims (an empty list if you found none)."
+CUT_OFF = (
+    f"Your report was cut off at the output limit. Call report_findings again with at most {MAX_CLAIMS} "
+    "short claims."
+)
 
 
 # Prompt caching, two breakpoints. The explicit one ends the part every
@@ -243,7 +254,7 @@ NUDGE = "Now call report_findings with your claims (an empty list if you found n
 # conversation, which also caches the server's own search loop inside a
 # single request: each step reads what the previous one wrote.
 def researcher_system(searches: int) -> list[dict]:
-    text = RESEARCHER_SYSTEM.format(searches=searches, fetches=FETCHES_PER_REQUEST)
+    text = RESEARCHER_SYSTEM.format(searches=searches, fetches=FETCHES_PER_REQUEST, max_claims=MAX_CLAIMS)
     return [{"type": "text", "text": text, "cache_control": {"type": "ephemeral"}}]
 
 
@@ -270,6 +281,17 @@ def research_prompt(task: ResearchTask) -> str:
     elif task["attempt"] > 1:
         prompt += "\n\nThis is a second pass: the first pass reported no claims. Try different searches."
     return prompt
+
+
+def tool_errors(response: Message) -> list[str]:
+    """The error codes of web tool calls that failed in this response."""
+    errors: list[str] = []
+    for block in response.content:
+        if block.type == "web_search_tool_result" and not isinstance(block.content, list):
+            errors.append(f"web_search: {block.content.error_code}")
+        elif block.type == "web_fetch_tool_result" and block.content.type == "web_fetch_tool_result_error":
+            errors.append(f"web_fetch: {block.content.error_code}")
+    return errors
 
 
 def tool_urls(response: Message) -> list[str]:
@@ -302,7 +324,8 @@ field, with a short quote that a researcher copied from the cited web page. For 
 whether the quote on its own supports the value.
 
 - Supported: the quote states the value, possibly in other words or another format ("New York, NY"
-  supports "New York City, New York, United States").
+  supports "New York City, New York, United States", "COO" supports "Chief Operating Officer"), or the
+  value follows from it directly ("875 employees" supports "501-1000").
 - Not supported: the quote is about something else, is too vague, contradicts the value, or the value
   adds a detail the quote doesn't state (a street address, a number, a date, a name).
 - website: the cited URL counts as evidence too. A page on that domain whose quote (its title, say)
@@ -373,6 +396,7 @@ class AnthropicModels:
         )
         messages: list[dict] = [{"role": "user", "content": research_prompt(task)}]
         sources: list[str] = []
+        errors: list[str] = []
         claims: list[Claim] = []
         container: str | None = None
         for _ in range(REQUESTS_PER_PASS):
@@ -390,11 +414,30 @@ class AnthropicModels:
             )
             meter.add(response)
             sources.extend(u for u in tool_urls(response) if u not in sources)
+            errors.extend(tool_errors(response))
             if response.container:
                 container = response.container.id
             report = next(
                 (b for b in response.content if b.type == "tool_use" and b.name == "report_findings"), None
             )
+            if report is not None and response.stop_reason == "max_tokens":
+                # Cut off mid-report: strict only holds for a finished call, so
+                # the input is incomplete. Answer the call and ask again.
+                messages.append({"role": "assistant", "content": response.content})
+                messages.append(
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                                "type": "tool_result",
+                                "tool_use_id": report.id,
+                                "is_error": True,
+                                "content": CUT_OFF,
+                            }
+                        ],
+                    }
+                )
+                continue
             if report is not None:
                 # strict: true means the input matches the schema.
                 claims = [
@@ -419,6 +462,7 @@ class AnthropicModels:
             "attempt": task["attempt"],
             "claims": claims,
             "sources": sources,
+            "tool_errors": errors,
         }
         return finding, meter.done()
 

@@ -7,6 +7,7 @@ import pytest
 from anthropic.types import Message, Usage
 
 from app.anthropic_models import (
+    CUT_OFF,
     NO_ANSWER,
     NUDGE,
     REQUESTS_PER_PASS,
@@ -178,6 +179,21 @@ async def test_research_collects_tool_urls_follows_pause_turn_and_returns_the_re
     assert [c["field"] for c in verdict["unsupported"]] == ["founded_year"]
 
 
+async def test_research_records_the_errors_the_web_tools_returned():
+    failed = [
+        {"type": "server_tool_use", "id": "srvtoolu_9", "name": "web_search", "input": {"query": "q"}},
+        {
+            "type": "web_search_tool_result",
+            "tool_use_id": "srvtoolu_9",
+            "content": {"type": "web_search_tool_result_error", "error_code": "too_many_requests"},
+        },
+    ]
+    client = ScriptedClient(created=[message(failed + report(), "tool_use")])
+    finding, _ = await AnthropicModels(client, CONFIG).research(task())
+
+    assert finding["tool_errors"] == ["web_search: too_many_requests"] and finding["sources"] == []
+
+
 async def test_research_caches_the_shared_prefix_and_counts_what_caching_saved():
     client = ScriptedClient(created=[message(report(), "tool_use", cache_write=20_000, cache_read=30_000)])
     _, [u] = await AnthropicModels(client, CONFIG).research(task())
@@ -205,6 +221,24 @@ async def test_research_asks_again_when_the_model_stops_without_reporting():
 
     assert client.requests[1]["messages"][-1] == {"role": "user", "content": NUDGE}
     assert finding["claims"] == [] and usage[0]["requests"] == 2
+
+
+async def test_a_report_cut_off_at_the_output_limit_is_answered_and_asked_for_again():
+    cut_off = {"type": "tool_use", "id": "toolu_cut", "name": "report_findings", "input": {}}
+    client = ScriptedClient(
+        created=[
+            message(search_result("https://acme.com/") + [cut_off], "max_tokens"),
+            message(report(claim("website", "acme.com", "https://acme.com/")), "tool_use"),
+        ]
+    )
+    finding, usage = await AnthropicModels(client, CONFIG).research(task())
+
+    *_, assistant, answer = client.requests[1]["messages"]
+    assert assistant["role"] == "assistant"
+    assert answer["content"] == [
+        {"type": "tool_result", "tool_use_id": "toolu_cut", "is_error": True, "content": CUT_OFF}
+    ]
+    assert [c["field"] for c in finding["claims"]] == ["website"] and usage[0]["requests"] == 2
 
 
 async def test_research_gives_up_after_the_request_cap_with_no_claims():

@@ -119,11 +119,12 @@ Notes:
   response (lib/pricing.ts for v1, agent/app/pricing.py for v2, same table); run
   time is wall clock as seen by the eval script.
 - v2 "claims supported": claims that passed the verifier, over all claims the
-  researchers reported (the final pass of each branch). Day 3 runs had only
-  the source check (the cited URL must be one the run's web tools returned);
-  from Day 4 a model also checks that each quote supports its value. The
-  per-company cells say how many failed each check. v1 has no claims, so no
-  number.
+  researchers reported. Day 3 runs count each branch's final pass and had
+  only the source check (the cited URL must be one the run's web tools
+  returned). From Day 4 a model also checks that each quote supports its
+  value, and every pass counts, retries included, since the writer uses them
+  all. The per-company cells say how many failed each check. v1 has no
+  claims, so no number.
 - "saved by caching": 1 - cost / the same tokens priced with nothing cached.
   Caching doesn't change what the model does, so this is exact for those
   runs, not a comparison between two noisy runs.

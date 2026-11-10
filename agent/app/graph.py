@@ -124,7 +124,9 @@ def build_graph(models: Models, profiles: ProfileStore, checkpointer: BaseCheckp
 
     async def writer(state: RunState) -> dict:
         previous = state.get("previous")
-        verdicts = list(latest_per_branch(state["verdicts"]).values())
+        # Every pass, not just each branch's last: a retry adds claims, and
+        # mustn't drop what the first pass verified.
+        verdicts = state["verdicts"]
         draft, usage = await models.write(
             state["company"], verdicts, previous["profile"] if previous else None
         )

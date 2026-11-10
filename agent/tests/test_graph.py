@@ -128,6 +128,43 @@ async def test_a_weak_branch_gets_one_more_pass_with_its_unsupported_claims(make
     assert run["draft"]["funding_status"] == "Acme Corp funding_status"
 
 
+class BusinessFirstPass(FakeModels):
+    """The business branch's first pass cites a page it never saw for all
+    but its first `good` claims; its retry leaves out the website claim."""
+
+    def __init__(self, good: int):
+        super().__init__()
+        self.good = good
+
+    async def research(self, task):
+        finding, usage = await super().research(task)
+        if task["branch"] == "business" and task["attempt"] == 1:
+            for c in finding["claims"][self.good :]:
+                c["source_url"] = WEAK_URL
+        elif task["branch"] == "business":
+            finding["claims"] = [c for c in finding["claims"] if c["field"] != "website"]
+        return finding, usage
+
+
+async def test_a_retry_adds_to_what_the_first_pass_verified(make_runs):
+    # 1 of 7 supported: below the bar, so the branch is retried.
+    runs, models = make_runs(BusinessFirstPass(good=1))
+    run = await runs.start("Acme Corp")
+
+    assert research_calls(models)["business"] == [1, 2]
+    # The website came only from the first pass, and the draft keeps it.
+    assert run["draft"]["website"] == "Acme Corp website"
+    assert run["draft"]["industry"] == "Acme Corp industry"
+
+
+async def test_a_branch_with_most_claims_supported_is_not_retried(make_runs):
+    runs, models = make_runs(BusinessFirstPass(good=4))
+    run = await runs.start("Acme Corp")
+
+    assert research_calls(models)["business"] == [1]
+    assert run["draft"]["website"] == "Acme Corp website"
+
+
 async def test_retries_stop_after_the_cap_and_unsupported_claims_stay_out(make_runs):
     runs, models = make_runs(FakeModels(weak_passes={"news": 99}))
     run = await runs.start("Acme Corp")

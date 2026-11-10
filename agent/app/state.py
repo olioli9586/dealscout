@@ -7,8 +7,12 @@ Branch = Literal["business", "funding", "leadership", "news"]
 BRANCHES: tuple[Branch, ...] = ("business", "funding", "leadership", "news")
 
 # A branch whose share of supported claims is below this goes back for one
-# more pass, at most MAX_ATTEMPTS passes per branch in all.
-SUPPORT_BAR = 0.8
+# more pass, at most MAX_ATTEMPTS passes per branch in all. 0.8 when the
+# verifier only checked URLs (Day 3); once it also checked quotes, 0.8 sent
+# 16 of 20 branches back on the 5 eval companies, mostly branches with 6 or
+# 7 good claims out of 10, whose claims count anyway (the writer uses every
+# pass). A retry is for a branch that mostly failed.
+SUPPORT_BAR = 0.5
 MAX_ATTEMPTS = 2
 
 
@@ -51,6 +55,8 @@ class Finding(TypedDict):
     # Every URL the researcher's web tools returned (search results and
     # fetched pages), read from the API's result blocks, not from the model.
     sources: list[str]
+    # Error codes the web tools returned (e.g. too_many_requests), if any.
+    tool_errors: NotRequired[list[str]]
 
 
 class Verdict(TypedDict):

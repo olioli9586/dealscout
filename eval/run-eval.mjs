@@ -108,14 +108,13 @@ async function researchV2(company) {
         uncached_cost_usd: run.usage.uncached_cost_usd,
       }
     : null;
-  // The final pass of each branch: the claims the writer chose from.
-  const latest = new Map();
-  for (const v of run.verdicts ?? []) if ((latest.get(v.branch)?.attempt ?? 0) < v.attempt) latest.set(v.branch, v);
-  const final = [...latest.values()];
-  const rejectedBy = (check) => final.reduce((s, v) => s + (v.rejected ?? []).filter((r) => r.check === check).length, 0);
+  // Every pass of every branch: the writer chooses from all of them (from
+  // Day 4; Day 3 runs counted only each branch's last pass).
+  const passes = run.verdicts ?? [];
+  const rejectedBy = (check) => passes.reduce((s, v) => s + (v.rejected ?? []).filter((r) => r.check === check).length, 0);
   const claims = {
-    supported: final.reduce((s, v) => s + v.supported, 0),
-    unsupported: final.reduce((s, v) => s + v.unsupported, 0),
+    supported: passes.reduce((s, v) => s + v.supported, 0),
+    unsupported: passes.reduce((s, v) => s + v.unsupported, 0),
     // Why: the cited URL wasn't one the tools returned, or the quote doesn't support the value.
     rejected: { source: rejectedBy("source"), quote: rejectedBy("quote") },
   };
