@@ -380,6 +380,16 @@ async def test_the_writer_skips_the_model_when_nothing_was_verified():
     assert draft["website"] == "unknown" and usage == [] and client.requests == []
 
 
+async def test_the_search_limit_reaches_the_tool_and_the_prompt():
+    client = ScriptedClient(created=[message(report(), "tool_use")])
+    await AnthropicModels(client, ModelConfig(searches=1)).research(task())
+
+    request = client.requests[0]
+    [search] = [t for t in request["tools"] if t["name"] == "web_search"]
+    assert search["max_uses"] == 1
+    assert "at most 1 searches" in request["system"][0]["text"]
+
+
 def test_a_model_without_a_price_is_refused():
     with pytest.raises(ValueError, match="no price"):
         ModelConfig(researcher="claude-retired-model")

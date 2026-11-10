@@ -33,8 +33,8 @@ Effort = Literal["low", "medium", "high"]
 # Per researcher pass. A pass is bounded by REQUESTS_PER_PASS requests of at
 # most RESEARCH_MAX_TOKENS output each; max_uses bounds the web tools per
 # request (searches run through dynamic filtering count per request, not per
-# turn), and max_content_tokens bounds what one fetched page adds.
-SEARCHES_PER_REQUEST = 3
+# turn; how many searches is ModelConfig.searches), and max_content_tokens
+# bounds what one fetched page adds.
 FETCHES_PER_REQUEST = 2
 FETCH_MAX_CONTENT_TOKENS = 8_000
 REQUESTS_PER_PASS = 6
@@ -55,6 +55,9 @@ class ModelConfig:
     # For the researchers and the writer; the planner and the verifier always
     # run at "low".
     effort: Effort = "medium"
+    # web_search's max_uses per researcher request. Searches are most of a
+    # Haiku run's bill ($0.01 each).
+    searches: int = 3
 
     def __post_init__(self):
         # A model with no price would make every budget check fail closed;
@@ -64,6 +67,8 @@ class ModelConfig:
                 raise ValueError(f"no price for model {model!r}; add it to app/pricing.py")
         if self.effort not in ("low", "medium", "high"):
             raise ValueError(f"effort must be low, medium or high, not {self.effort!r}")
+        if not 1 <= self.searches <= 10:
+            raise ValueError(f"searches must be from 1 to 10, not {self.searches!r}")
 
     @classmethod
     def from_env(cls) -> "ModelConfig":
@@ -74,6 +79,7 @@ class ModelConfig:
             verifier=os.environ.get("AGENT_VERIFIER_MODEL", defaults.verifier),
             writer=os.environ.get("AGENT_WRITER_MODEL", defaults.writer),
             effort=os.environ.get("AGENT_EFFORT", defaults.effort),  # type: ignore[arg-type]
+            searches=int(os.environ.get("AGENT_SEARCHES", defaults.searches)),
         )
 
 
@@ -199,23 +205,26 @@ REPORT_TOOL = {
     },
 }
 
-RESEARCH_TOOLS = [
-    {"type": "web_search_20260209", "name": "web_search", "max_uses": SEARCHES_PER_REQUEST},
-    {
-        "type": "web_fetch_20260209",
-        "name": "web_fetch",
-        "max_uses": FETCHES_PER_REQUEST,
-        "max_content_tokens": FETCH_MAX_CONTENT_TOKENS,
-    },
-    REPORT_TOOL,
-]
 
-RESEARCHER_SYSTEM = f"""You are one researcher on a company-research team for deal sourcing. You cover one
+def research_tools(searches: int) -> list[dict]:
+    return [
+        {"type": "web_search_20260209", "name": "web_search", "max_uses": searches},
+        {
+            "type": "web_fetch_20260209",
+            "name": "web_fetch",
+            "max_uses": FETCHES_PER_REQUEST,
+            "max_content_tokens": FETCH_MAX_CONTENT_TOKENS,
+        },
+        REPORT_TOOL,
+    ]
+
+
+RESEARCHER_SYSTEM = """You are one researcher on a company-research team for deal sourcing. You cover one
 research area of one company: search the web, read the best sources, then call report_findings
 exactly once.
 
 Rules:
-- Work fast: at most {SEARCHES_PER_REQUEST} searches and {FETCHES_PER_REQUEST} page fetches, then report.
+- Work fast: at most {searches} searches and {fetches} page fetches, then report.
 - Each claim is one fact for one profile field, with the URL of the page it came from and a short
   verbatim quote from that page.
 - Cite only URLs that your searches returned or that you fetched. Never write a URL from memory.
@@ -225,6 +234,7 @@ Rules:
 
 NUDGE = "Now call report_findings with your claims (an empty list if you found none)."
 
+
 # Prompt caching, two breakpoints. The explicit one ends the part every
 # researcher sends unchanged (the tools, then this system prompt; the web
 # tools add a few thousand tokens of their own), so researchers and runs
@@ -232,9 +242,9 @@ NUDGE = "Now call report_findings with your claims (an empty list if you found n
 # automatic one (top-level cache_control) follows the end of the
 # conversation, which also caches the server's own search loop inside a
 # single request: each step reads what the previous one wrote.
-RESEARCHER_SYSTEM_BLOCKS = [
-    {"type": "text", "text": RESEARCHER_SYSTEM, "cache_control": {"type": "ephemeral"}}
-]
+def researcher_system(searches: int) -> list[dict]:
+    text = RESEARCHER_SYSTEM.format(searches=searches, fetches=FETCHES_PER_REQUEST)
+    return [{"type": "text", "text": text, "cache_control": {"type": "ephemeral"}}]
 
 
 def research_prompt(task: ResearchTask) -> str:
@@ -369,8 +379,8 @@ class AnthropicModels:
             response = await self.client.messages.create(
                 model=self.config.researcher,
                 max_tokens=RESEARCH_MAX_TOKENS,
-                system=RESEARCHER_SYSTEM_BLOCKS,
-                tools=RESEARCH_TOOLS,
+                system=researcher_system(self.config.searches),
+                tools=research_tools(self.config.searches),
                 messages=messages,
                 cache_control={"type": "ephemeral"},
                 output_config={"effort": self.config.effort},
