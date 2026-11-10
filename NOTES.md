@@ -533,3 +533,196 @@ node eval/run-eval.mjs http://localhost:3100 --api v2 --label v2-haiku --max-usd
   cheap experiments: fewer searches per researcher, and a direct
   `web_fetch` for Sonnet researchers. Each has a small cap; ask before
   anything bigger.
+
+## Day 4 (2026-11-09): the quote check, memory, caching, and what the first runs broke
+
+### Done
+
+- **The verifier's model check** (`app/anthropic_models.py`): after the
+  source check, Haiku 5.5 at low effort judges, in one call per finding,
+  whether each claim's quote supports its value. It writes its reason
+  before its verdict. A claim its answer leaves out, or a refused call,
+  counts as unsupported. Each rejected claim records which check failed
+  (`source` or `quote`) and why; the run view lists them, and a retry
+  prompt passes the reasons on (or says the first pass found nothing).
+- **Memory.** On a re-run, a field with no supported claim keeps the saved
+  version's value and sources (`carried_over` lists them) instead of
+  turning unknown: not finding a fact again isn't evidence it changed. The
+  writer sees the saved facts (not their sources) and is told to keep
+  their wording where claims confirm them. The planner sees them with the
+  date they were saved and may skip areas. The run view's `changes`
+  compares the saved version with the draft, or with the edit once there
+  is one, ignoring case, spacing and list order. Profiles that predate a
+  field (Day 2's fakes, or no `leadership`) read it as unknown.
+- **Prompt caching on the researcher**: an explicit breakpoint after the
+  tools and system prompt that every researcher sends, and the automatic
+  one at the end of the conversation. Each usage entry now carries
+  `uncached_cost_usd`, the same tokens priced with nothing cached, so the
+  saving is exact for each run rather than a comparison of two noisy runs.
+- **`AGENT_SEARCHES`**: the researcher's search limit per request (default
+  3, unchanged), for the experiment below.
+- **Eval**: each v2 row records the uncached cost, which check rejected
+  each claim, how many branches were retried, and the run's memory.
+  `--approve` saves each draft so the next eval of the same companies runs
+  with memory. RESULTS.md gains the matching columns and a memory table.
+- **Fixes from the first real runs** (next sections): values say only what
+  their quote says, at most 10 claims per report, a report cut off at
+  `max_tokens` is answered and asked for again, the writer uses every
+  pass, the retry bar is 50%, the verifier reasons before deciding, the
+  web tools take `strict` input, and findings record web tool errors with
+  what the call asked for.
+- **Tests**: 84 pytest (20 new) and the 85 vitest, unchanged. ruff clean.
+  The new graph tests were checked against the old behavior (the last
+  pass only, the 80% bar): each fails on it.
+
+### What the probes showed (about $0.07, before any full run)
+
+- **`web_fetch` only opens URLs that are already in the conversation**:
+  the user's message or an earlier search or fetch result. Anything else
+  fails with `url_not_in_prior_context`, and no setting allows any URL
+  (`url_sources` only narrows the set). Day 3's "fetch the homepage" hint
+  therefore failed whenever a search hadn't returned the homepage, which
+  likely explains Day 3's missing websites, Sonnet's included. It's also
+  an exfiltration guard to name on Day 7.
+- **Search results come back encrypted**, and Haiku reports through the
+  tool without writing cited text, so the only page text the code could
+  check a quote against is a fetched page (1 to 3 a run, some failing).
+  The quote check is therefore a model comparing quote and value. It
+  catches values that claim more than their quote; it can't catch a quote
+  the researcher made up.
+- **Haiku calls the web tools directly** (no dynamic filtering) and does a
+  whole pass in one request; caching still pays inside it, because the
+  server's own search loop reads what the previous step wrote (7k, then
+  14k tokens read within single requests).
+
+### The runs (5 companies, local agent and Next.js, all Haiku 5.5)
+
+| run | fields | median cost | median time | searches | retried branches | claims supported |
+|---|---|---|---|---|---|---|
+| Day 3, URL check only (`v2-haiku`) | 14/15 | $0.127 | 27 s | 47 | 0 | 241/242 |
+| 1. quote check as first written | 11/12, 1 run crashed | $0.229 | 63 s | 89 | 15 | 98/211 |
+| 2. + researcher prompt, cut-off fix | 13/15 | $0.217 | 59 s | 78 | 16 | 111/155 |
+| 3. + every pass, 50% bar | 11/15 | $0.146 | 50 s | 58 | 6 | 137/207 |
+| **4. + reason first, strict web tools (`v2-day4`)** | **14/15** | **$0.132** | **46 s** | 57 | 3 | 151/210 |
+| memory re-run from run 3's profiles | 13/15 | $0.098 | 53 s | 45 | 6 | 95/153 |
+| run 4 with one search per request | 12/15 | $0.069 | 49 s | 25 | 5 | 150/214 |
+
+Runs 1 to 3 are in `eval/results/day4/`. Runs 1 and 2 count claims on
+each branch's final pass (as Day 3 did); the rest count every pass. The
+memory run used run 4's code without `strict` on the web tools.
+Caching saved 5.3% in run 4 and the memory run, and 16.7% with one search.
+
+### What the runs show
+
+- **The URL check alone said nothing; the quote check does.** In run 4 the
+  URL check rejected none of 210 claims and the quote check rejected 59
+  (28%). Day 3's 241/242 measured only that models cite pages their
+  searches returned.
+- **The first runs broke in five ways, each now fixed and tested:**
+  - Values claimed more than their quotes (dates, investors, career
+    history). Vercel's news pass had 2 of 16 claims supported; with "the
+    value says only what its quote says" in the prompt, 8 of 10.
+  - A news retry listing 17 failed claims crashed the run: its report had
+    no `claims`. Most likely it hit the 8,000-token output cap mid-report
+    (strict only holds for a finished call); the raw response wasn't kept.
+  - The writer used only each branch's last pass, so a retry replaced the
+    first pass: Datadog lost a verified HQ and Airbnb its funding status.
+  - The 80% retry bar sent 16 of 20 branches back, doubling searches and
+    cost; 9 of the 16 already had 60% or more of their claims supported.
+  - Haiku's verdicts at low effort contradicted its own reasons ("supported
+    actually" on a rejected claim) and rejected a city because the quote
+    also had the street. With the reason first, two replays of run 3's 207
+    claims supported 146 and 143 (from 137), and the first fixed all four
+    core-field misses, for $0.01 each. Medium effort supported 135 for 50%
+    more; with no per-claim ground truth, low stays.
+- **Passes that reported nothing had a cause**: Haiku sometimes sent
+  `web_search {"params": {"query": ...}}`, rejected as `invalid_tool_input`;
+  after three, the search limit was spent. Run 2 had 6 passes with no
+  searches and no claims (it didn't record tool errors yet); run 3 had 3,
+  all after `invalid_tool_input`, and so did 2 in the memory run. Run 4,
+  with `strict` on the web tools, had none.
+- **Run 4 against Day 3: same fields, same cost, slower.** 14/15 both;
+  $0.132 against $0.127 median. The verifier's tokens are $0.01 over 5 runs.
+  The extra time (46 s against 27 s) most likely comes from the verifier
+  step, the retries and 10 more searches; it wasn't broken down.
+- **Caching saves little on Haiku**: 5.3%, because searches are 82% of
+  the bill and Haiku's tokens are cheap. With Sonnet researchers (input
+  20x the price) it would matter far more; not measured today.
+- **Memory works, and "what changed" is noisy.** Re-running from saved
+  profiles, the planner skipped areas in 4 of 5 companies and the re-runs
+  cost 21% less ($0.55 against $0.70; Vercel 56% less, Datadog 43%).
+  Carried-over fields came through intact. But of 10 single-value
+  changes, 4 were real fills (unknown to found), 1 a real move (market
+  cap), and 5 were rewordings or a different fact picked ("AI safety and
+  research" to "Artificial intelligence"). List fields changed on every
+  run, because each run picks different news items. "Keep the saved
+  wording" isn't enough on Haiku.
+- **One search per request halves the cost and loses websites**: 12/15,
+  missing two websites and Vercel's HQ. The business researcher can't find
+  the homepage and the rest in one search. The default stays at 3.
+- **Still small and tuned.** Re-verifying the same claims twice moved the
+  count by 3. The prompt fixes were made after reading these 5 companies'
+  failures. Day 8's 50 companies is the test.
+
+### Decisions and why
+
+- **A strict quote standard**: a value that adds anything its quote
+  doesn't state is rejected, and the researcher is told so. Looser checks
+  were what Day 3's 100% measured.
+- **The writer uses every pass; retries only below 50% support.** A retry
+  is for a branch that mostly failed, not for polishing a good one.
+- **Carry-over is per field.** A list field found again is replaced whole,
+  so a leadership list found with fewer names drops the rest (and shows
+  as a change).
+- **`changes` is computed by code**, deterministic and tested; the cost is
+  the rewording noise above.
+- **Caching only on the researcher.** The planner, verifier and writer send
+  short prompts once per run or per branch, probably near or under the
+  512-token minimum; not measured.
+- **The Sonnet direct-fetch experiment wasn't run.** The fetch rule above
+  explains the homepage misses for both models, and the budget went to
+  fixing what the first runs broke.
+
+### Known gaps
+
+- Researchers still add street addresses to HQ values: 3 rejections today,
+  including Airbnb's miss in run 4. "No street address" in the field hint
+  is the likely fix; not made, because it couldn't be measured today.
+- "What changed" is noisy (above). Options: count fills separately, report
+  only added list items, or have the writer name the fields that changed
+  in fact.
+- A made-up quote that supports its value passes. For fetched pages, code
+  could check the quote against the page text.
+- The verifier reads the quotes, which are page text: an injection path
+  for Day 7. The writer still sees no page text.
+- A retry claim from a Day 3 checkpoint has no reason; resuming such a run
+  into a retry would fail. Only old local runs have one.
+- The eval leaves its runs waiting for approval (Day 3, still open).
+
+### Preview
+
+They added `ANTHROPIC_API_KEY` to Preview (Secret, all Preview branches).
+`AGENT_MODELS` is still unset there, so Preview runs the fakes until Day 5.
+
+### Spend
+
+$4.66 of the $5 cap set for today: full runs $4.37 (runs 1 to 3 $1.08,
+$0.98, $0.70; memory $0.55; run 4 $0.70; one search $0.36), probes and
+replays $0.29. The agent's daily cap was set each time so its runs plus
+the probes stayed under $5.
+
+### Run it locally (real models)
+
+As on Day 3. Add `--approve` to an eval to save its drafts (the next eval
+of the same companies then runs with memory; `delete from profiles` in
+the dev database for memory-free runs again), and `AGENT_SEARCHES=1` to
+the agent for one search per request.
+
+### Next
+
+- Day 5: the UI (v2 run page; approve or edit, with `changes`,
+  `carried_over` and the rejected claims and their reasons shown; run
+  history), real models on the deployed preview (`AGENT_MODELS=anthropic`
+  and a daily cap there: their OK), kill and resume on the preview.
+- Small, each with a measured run: the HQ street-address hint, and
+  per-area search limits (more for business, one for the others).
