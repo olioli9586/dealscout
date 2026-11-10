@@ -5,10 +5,12 @@ import {
   HISTORY_MAX,
   branchProgress,
   fromForm,
+  launch,
   listRuns,
   readHistory,
   remember,
   startRun,
+  starts,
   toForm,
   type RunView,
   type V2Profile,
@@ -57,6 +59,14 @@ describe("api calls", () => {
     expect([err.message, err.status]).toEqual(["Daily demo limit reached", 429]);
     const [url, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
     expect([url, JSON.parse(String(init.body))]).toEqual(["/api/v2/runs", { company: "Ramp", id: A }]);
+  });
+
+  it("launches a run under a new id, remembers it, and keeps the request for the run page", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Response.json({ error: "The agent is unreachable" }, { status: 503 })));
+    const storage = memoryStorage();
+    const id = launch("Ramp", storage);
+    expect(readHistory(storage)).toEqual([id]);
+    await expect(starts.get(id)).rejects.toMatchObject({ status: 503 });
   });
 
   it("asks for nothing when the history is empty", async () => {

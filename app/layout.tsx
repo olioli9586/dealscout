@@ -63,6 +63,9 @@ export default function RootLayout({
               <Link href="/batch" className="transition hover:text-ink">
                 Batch
               </Link>
+              <Link href="/v2" className="transition hover:text-ink">
+                v2
+              </Link>
               <a
                 href="https://github.com/olioli9586/dealscout"
                 className="transition hover:text-ink"

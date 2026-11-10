@@ -110,6 +110,26 @@ export const decideRun = (id: string, decision: Decision) =>
 export const listRuns = (ids: string[]) =>
   ids.length ? call<RunSummary[]>(`/api/v2/runs?ids=${ids.join(",")}`) : Promise.resolve([]);
 
+/**
+ * Starts launched from this tab, by run id. The start request holds the
+ * graph's whole run (up to the approval step), so the page that launched it
+ * moves on to the run page at once; the run page finds the request here to
+ * show its error (a 429, say) instead of waiting for a run that never began.
+ */
+export const starts = new Map<string, Promise<RunView>>();
+
+/** Starts a run under a new id, remembers it, and returns the id at once. */
+export function launch(company: string, storage: Pick<Storage, "getItem" | "setItem">): string {
+  const id = crypto.randomUUID();
+  remember(storage, id);
+  const started = startRun(company, id);
+  // The run page attaches its own handlers; this only keeps an early
+  // failure from being reported as unhandled before it does.
+  started.catch(() => {});
+  starts.set(id, started);
+  return id;
+}
+
 // --- history ----------------------------------------------------------------
 
 export const HISTORY_KEY = "dealscout-v2-history";
