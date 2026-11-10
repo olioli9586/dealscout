@@ -5,12 +5,12 @@ hand-checked ground truth, mechanical field grading with accepted-value lists,
 every result reproducible via `node eval/run-eval.mjs <base-url> --label <label> [--api v2]`.
 Raw rows, profiles included: `eval/results/<label>.json`.
 
-| label | agent | date | fields correct | failed runs | median time | median cost | total cost | claims supported |
-|---|---|---|---|---|---|---|---|---|
-| v1 | v1: `claude-sonnet-4-6`, effort `medium` | 2026-11-06 | 15/15 (100%) | 0/5 | 212 s | $0.242 | $1.198 | — |
-| v2-haiku | v2: planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), writer `claude-haiku-5-5` (medium) | 2026-11-08 | 14/15 (93%) | 0/5 | 27 s | $0.127 | $0.603 | 241/242 (100%) |
-| v2-haiku-sonnet-writer | v2: planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), writer `claude-sonnet-5-5` (medium) | 2026-11-08 | 13/15 (87%) | 0/5 | 39 s | $0.162 | $0.812 | 239/241 (99%) |
-| v2-sonnet | v2: planner `claude-haiku-5-5` (low), researcher `claude-sonnet-5-5` (medium), writer `claude-sonnet-5-5` (medium) | 2026-11-08 | 9/15 (60%) | 0/5 | 48 s | $0.531 | $2.703 | 64/64 (100%) |
+| label | agent | date | fields correct | failed runs | median time | median cost | total cost | saved by caching | claims supported | retried branches |
+|---|---|---|---|---|---|---|---|---|---|---|
+| v1 | v1: `claude-sonnet-4-6`, effort `medium` | 2026-11-06 | 15/15 (100%) | 0/5 | 212 s | $0.242 | $1.198 | — | — | — |
+| v2-haiku | v2: planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), writer `claude-haiku-5-5` (medium) | 2026-11-08 | 14/15 (93%) | 0/5 | 27 s | $0.127 | $0.603 | — | 241/242 (100%) | — |
+| v2-haiku-sonnet-writer | v2: planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), writer `claude-sonnet-5-5` (medium) | 2026-11-08 | 13/15 (87%) | 0/5 | 39 s | $0.162 | $0.812 | — | 239/241 (99%) | — |
+| v2-sonnet | v2: planner `claude-haiku-5-5` (low), researcher `claude-sonnet-5-5` (medium), writer `claude-sonnet-5-5` (medium) | 2026-11-08 | 9/15 (60%) | 0/5 | 48 s | $0.531 | $2.703 | — | 64/64 (100%) | — |
 
 ## v1
 
@@ -74,8 +74,15 @@ Notes:
 - Cost is computed from the token and web-search counts the API reports on each
   response (lib/pricing.ts for v1, agent/app/pricing.py for v2, same table); run
   time is wall clock as seen by the eval script.
-- v2 "claims supported": claims whose source URL is one the run's web tools
-  actually returned, over all claims the researchers reported (the final pass
-  of each branch). v1 has no claims, so no number.
+- v2 "claims supported": claims that passed the verifier, over all claims the
+  researchers reported (the final pass of each branch). Day 3 runs had only
+  the source check (the cited URL must be one the run's web tools returned);
+  from Day 4 a model also checks that each quote supports its value. The
+  per-company cells say how many failed each check. v1 has no claims, so no
+  number.
+- "saved by caching": 1 - cost / the same tokens priced with nothing cached.
+  Caching doesn't change what the model does, so this is exact for those
+  runs, not a comparison between two noisy runs.
+- "retried branches": research passes after the first, over all runs.
 - Failures worth reading: when the agent misses, the profile usually shows *why*
   (e.g. remote-first companies genuinely have ambiguous HQs).

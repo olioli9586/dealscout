@@ -26,6 +26,12 @@ function summarize(result) {
   const withClaims = ran.filter((r) => r.claims);
   const supported = withClaims.reduce((s, r) => s + r.claims.supported, 0);
   const claims = withClaims.reduce((s, r) => s + r.claims.supported + r.claims.unsupported, 0);
+  // Caching: actual cost against the same tokens priced uncached, over the
+  // runs that report both (Day 4 on).
+  const priced = ran.filter((r) => typeof r.usage?.cost_usd === "number" && typeof r.usage?.uncached_cost_usd === "number");
+  const cost = priced.reduce((s, r) => s + r.usage.cost_usd, 0);
+  const uncached = priced.reduce((s, r) => s + r.usage.uncached_cost_usd, 0);
+  const withRetries = ran.filter((r) => typeof r.retries === "number");
   return {
     pass,
     cells,
@@ -34,7 +40,16 @@ function summarize(result) {
     medianSeconds: median(ran.map((r) => r.seconds)),
     medianCost: median(costs),
     claims: withClaims.length ? `${supported}/${claims} (${pct(supported, claims)})` : "—",
+    cacheSaved: priced.length && uncached > 0 ? `${(100 * (1 - cost / uncached)).toFixed(1)}%` : "—",
+    retries: withRetries.length ? withRetries.reduce((s, r) => s + r.retries, 0) : "—",
   };
+}
+
+// "40/52 (5 source, 7 quote)": supported over all, and why the rest failed.
+function claimsCell(c) {
+  if (!c) return "—";
+  const why = c.rejected ? ` (${c.rejected.source} source, ${c.rejected.quote} quote)` : "";
+  return `${c.supported}/${c.supported + c.unsupported}${c.unsupported ? why : ""}`;
 }
 
 function agent(result) {
@@ -56,12 +71,12 @@ hand-checked ground truth, mechanical field grading with accepted-value lists,
 every result reproducible via \`node eval/run-eval.mjs <base-url> --label <label> [--api v2]\`.
 Raw rows, profiles included: \`eval/results/<label>.json\`.
 
-| label | agent | date | fields correct | failed runs | median time | median cost | total cost | claims supported |
-|---|---|---|---|---|---|---|---|---|
+| label | agent | date | fields correct | failed runs | median time | median cost | total cost | saved by caching | claims supported | retried branches |
+|---|---|---|---|---|---|---|---|---|---|---|
 `;
   for (const r of results) {
     const s = summarize(r);
-    md += `| ${r.label} | ${r.api === "v2" ? "v2" : "v1"}: ${agent(r)} | ${r.date} | ${s.pass}/${s.cells} (${pct(s.pass, s.cells)}) | ${s.failed}/${s.ran} | ${s.medianSeconds ?? "—"} s | ${usd(s.medianCost)} | ${usd(r.spent_usd)} | ${s.claims} |\n`;
+    md += `| ${r.label} | ${r.api === "v2" ? "v2" : "v1"}: ${agent(r)} | ${r.date} | ${s.pass}/${s.cells} (${pct(s.pass, s.cells)}) | ${s.failed}/${s.ran} | ${s.medianSeconds ?? "—"} s | ${usd(s.medianCost)} | ${usd(r.spent_usd)} | ${s.cacheSaved} | ${s.claims} | ${s.retries} |\n`;
   }
 
   for (const r of results) {
@@ -75,12 +90,25 @@ Raw rows, profiles included: \`eval/results/<label>.json\`.
     for (const row of r.rows) {
       const cell = (f) => (row.skipped ? "skipped" : row.error ? "⚠️ run failed" : row.fields[f] ? "✅" : "❌");
       const u = row.usage;
-      const claims = row.claims ? `${row.claims.supported}/${row.claims.supported + row.claims.unsupported}` : "—";
-      md += `| ${row.name} | ${FIELDS.map(cell).join(" | ")} | ${row.skipped ? "—" : row.seconds + "s"} | ${usd(u?.cost_usd)} | ${u?.requests ?? "—"} | ${u?.web_search_requests ?? "—"} | ${u?.web_fetch_requests ?? "—"} | ${claims} |\n`;
+      md += `| ${row.name} | ${FIELDS.map(cell).join(" | ")} | ${row.skipped ? "—" : row.seconds + "s"} | ${usd(u?.cost_usd)} | ${u?.requests ?? "—"} | ${u?.web_search_requests ?? "—"} | ${u?.web_fetch_requests ?? "—"} | ${claimsCell(row.claims)} |\n`;
     }
     md += `\n${s.pass}/${s.cells} fields correct. `;
     md += FIELDS.map((f) => `${f}: ${r.rows.filter((x) => x.profile && x.fields[f]).length}/${r.rows.filter((x) => x.profile).length}`).join(", ");
     md += ".\n";
+    const remembered = r.rows.filter((row) => row.memory?.previous_version);
+    if (remembered.length) {
+      md += `
+Memory: these runs started from a saved profile.
+
+| company | from version | areas researched | carried over | changed fields |
+|---|---|---|---|---|
+`;
+      for (const row of remembered) {
+        const m = row.memory;
+        const changed = m.changes?.length ? m.changes.map((c) => c.field).join(", ") : "none";
+        md += `| ${row.name} | ${m.previous_version} | ${row.plan?.join(", ") || "—"} | ${m.carried_over.join(", ") || "none"} | ${changed} |\n`;
+      }
+    }
   }
 
   md += `
@@ -90,9 +118,16 @@ Notes:
 - Cost is computed from the token and web-search counts the API reports on each
   response (lib/pricing.ts for v1, agent/app/pricing.py for v2, same table); run
   time is wall clock as seen by the eval script.
-- v2 "claims supported": claims whose source URL is one the run's web tools
-  actually returned, over all claims the researchers reported (the final pass
-  of each branch). v1 has no claims, so no number.
+- v2 "claims supported": claims that passed the verifier, over all claims the
+  researchers reported (the final pass of each branch). Day 3 runs had only
+  the source check (the cited URL must be one the run's web tools returned);
+  from Day 4 a model also checks that each quote supports its value. The
+  per-company cells say how many failed each check. v1 has no claims, so no
+  number.
+- "saved by caching": 1 - cost / the same tokens priced with nothing cached.
+  Caching doesn't change what the model does, so this is exact for those
+  runs, not a comparison between two noisy runs.
+- "retried branches": research passes after the first, over all runs.
 - Failures worth reading: when the agent misses, the profile usually shows *why*
   (e.g. remote-first companies genuinely have ambiguous HQs).
 `;

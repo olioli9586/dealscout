@@ -8,13 +8,16 @@
 // eval/results/<label>.json, then eval/RESULTS.md from every saved result
 // (eval/report.mjs).
 //
-// Usage:  node eval/run-eval.mjs [base-url] [--label v1] [--max-usd 5] [--api v1|v2]
+// Usage:  node eval/run-eval.mjs [base-url] [--label v1] [--max-usd 5] [--api v1|v2] [--approve]
 //         (base-url defaults to production)
 //
 // --api v2 starts each company as a v2 run (POST /api/v2/runs, the LangGraph
 // agent behind the Next.js app) and grades the draft it stops at for
-// approval. The eval never approves, so no profile is saved and every run
-// starts without memory: runs stay comparable.
+// approval. By default the eval never approves, so no profile is saved and
+// every run starts without memory: runs stay comparable. --approve saves
+// each draft as it is, so the next eval of the same companies runs with
+// memory (that is how the memory runs were made; clear the profiles table
+// afterwards for memory-free runs again).
 //
 // --max-usd is a hard spend cap: no new company starts once the runs so far
 // cost that much, and a run that reports no cost stops the eval, because the
@@ -31,6 +34,7 @@ const { values: opts, positionals } = parseArgs({
     label: { type: "string", default: "v1" },
     "max-usd": { type: "string", default: "5" },
     api: { type: "string", default: "v1" },
+    approve: { type: "boolean", default: false },
   },
 });
 const BASE = positionals[0] ?? "https://dealscout-gamma.vercel.app";
@@ -38,6 +42,7 @@ const MAX_USD = Number(opts["max-usd"]);
 if (!Number.isFinite(MAX_USD) || MAX_USD <= 0) throw new Error("--max-usd must be a positive number");
 if (!/^[\w.-]+$/.test(opts.label)) throw new Error("--label may only use letters, digits, '.', '_' and '-'");
 if (!["v1", "v2"].includes(opts.api)) throw new Error("--api must be v1 or v2");
+if (opts.approve && opts.api !== "v2") throw new Error("--approve is for --api v2 runs");
 const truth = JSON.parse(readFileSync(new URL("./ground-truth.json", import.meta.url)));
 
 async function research(company) {
@@ -99,18 +104,41 @@ async function researchV2(company) {
         web_search_requests: run.usage.web_search_requests,
         web_fetch_requests: run.usage.web_fetch_requests,
         cost_usd: run.usage.cost_usd,
+        // The same tokens priced with nothing cached: what caching saved.
+        uncached_cost_usd: run.usage.uncached_cost_usd,
       }
     : null;
   // The final pass of each branch: the claims the writer chose from.
   const latest = new Map();
   for (const v of run.verdicts ?? []) if ((latest.get(v.branch)?.attempt ?? 0) < v.attempt) latest.set(v.branch, v);
+  const final = [...latest.values()];
+  const rejectedBy = (check) => final.reduce((s, v) => s + (v.rejected ?? []).filter((r) => r.check === check).length, 0);
   const claims = {
-    supported: [...latest.values()].reduce((s, v) => s + v.supported, 0),
-    unsupported: [...latest.values()].reduce((s, v) => s + v.unsupported, 0),
+    supported: final.reduce((s, v) => s + v.supported, 0),
+    unsupported: final.reduce((s, v) => s + v.unsupported, 0),
+    // Why: the cited URL wasn't one the tools returned, or the quote doesn't support the value.
+    rejected: { source: rejectedBy("source"), quote: rejectedBy("quote") },
   };
+  // Every pass, retries included: how often the verifier sent a branch back.
+  const retries = (run.verdicts ?? []).filter((v) => v.attempt > 1).length;
   const error =
     run.status === "awaiting_approval" && run.draft ? null : (run.error ?? `run ended with status ${run.status}`);
-  return { profile: run.draft ?? null, usage, error, run_id: run.id, plan: run.plan, claims };
+  const memory = {
+    previous_version: run.previous_version ?? null,
+    changes: run.changes ?? null,
+    carried_over: run.draft?.carried_over ?? [],
+  };
+  if (opts.approve && !error) {
+    const res = await fetch(`${BASE}/api/v2/runs/${run.id}/decision`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "approve" }),
+    });
+    const saved = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(`approve: HTTP ${res.status}: ${saved.error ?? "no body"}`);
+    memory.saved_version = saved.saved_version;
+  }
+  return { profile: run.draft ?? null, usage, error, run_id: run.id, plan: run.plan, claims, retries, memory };
 }
 
 const norm = (s) => String(s ?? "").toLowerCase();
@@ -142,7 +170,14 @@ for (const gt of truth.companies) {
     usage: run.usage,
     fields: {},
   };
-  if (opts.api === "v2") Object.assign(row, { run_id: run.run_id, plan: run.plan, claims: run.claims });
+  if (opts.api === "v2")
+    Object.assign(row, {
+      run_id: run.run_id,
+      plan: run.plan,
+      claims: run.claims,
+      retries: run.retries,
+      memory: run.memory,
+    });
   if (run.error) row.error = run.error;
   else {
     for (const [field, grade] of Object.entries(graders)) row.fields[field] = grade(run.profile, gt[field]);
