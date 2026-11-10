@@ -99,6 +99,27 @@ class Runs:
         snapshot = await self.graph.aget_state(self._config(run_id))
         return view(row, snapshot.values, snapshot.next)
 
+    async def summaries(self, run_ids: list[str]) -> list[dict]:
+        """The runs table rows for these ids, newest first, without reading
+        their checkpoints (for the history list)."""
+        async with self.pool.connection() as conn:
+            rows = await (
+                await conn.execute(f"{ROW} where id = any(%s::uuid[]) order by created_at desc", (run_ids,))
+            ).fetchall()
+        return [
+            {
+                "id": r["id"],
+                "company": r["company"],
+                "status": r["status"],
+                "resumable": r["resumable"],
+                "error": r["error"],
+                "created_at": iso(r["created_at"]),
+                "updated_at": iso(r["updated_at"]),
+                "cost_usd": r["cost_usd"],
+            }
+            for r in rows
+        ]
+
     async def spent_today(self) -> float:
         """USD recorded by runs started in the last 24 hours; infinite if any
         cost is unknown."""

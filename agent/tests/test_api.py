@@ -139,3 +139,46 @@ def test_real_models_get_a_daily_cap_even_when_none_is_set(monkeypatch):
     monkeypatch.setenv("AGENT_RUN_BUDGET_USD", "0.75")
     runs = runs_from_env(None, None)
     assert (runs.daily_usd, runs.run_budget_usd) == (5.0, 0.75)
+
+
+async def test_the_caller_may_choose_the_run_id_once(client):
+    run_id = str(uuid4())
+    started = await client.post("/runs", json={"company": "Acme Corp", "id": run_id})
+    assert started.status_code == 201 and started.json()["id"] == run_id
+
+    again = await client.post("/runs", json={"company": "Other Co", "id": run_id})
+    assert again.status_code == 409
+    assert (await client.get(f"/runs/{run_id}")).json()["company"] == "Acme Corp"
+
+
+async def test_the_history_reads_the_runs_it_names_newest_first(client):
+    first = (await client.post("/runs", json={"company": "First Co"})).json()
+    second = (await client.post("/runs", json={"company": "Second Co"})).json()
+    await client.post("/runs", json={"company": "Not asked for"})
+
+    res = await client.get("/runs", params={"ids": f"{first['id']},{second['id']},{uuid4()}"})
+    assert res.status_code == 200
+    rows = res.json()
+    # An id with no run is left out.
+    assert [r["company"] for r in rows] == ["Second Co", "First Co"]
+    assert rows[0]["status"] == "awaiting_approval" and rows[0]["resumable"] is False
+    assert set(rows[0]) == {
+        "id",
+        "company",
+        "status",
+        "resumable",
+        "error",
+        "created_at",
+        "updated_at",
+        "cost_usd",
+    }
+
+
+@pytest.mark.parametrize("ids", ["not-a-uuid", ",".join(str(uuid4()) for _ in range(101))])
+async def test_the_history_refuses_bad_or_too_many_ids(client, ids):
+    assert (await client.get("/runs", params={"ids": ids})).status_code == 422
+
+
+async def test_there_is_no_list_of_every_run(client):
+    await client.post("/runs", json={"company": "Acme Corp"})
+    assert (await client.get("/runs")).status_code == 422

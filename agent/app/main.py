@@ -9,8 +9,9 @@ from typing import Annotated, Literal
 from uuid import UUID
 
 from anthropic import AsyncAnthropic
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import Depends, FastAPI, HTTPException, Query, Request
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
+from psycopg import errors
 from pydantic import BaseModel, StringConstraints, model_validator
 
 from app.anthropic_models import AnthropicModels, ModelConfig
@@ -93,6 +94,13 @@ RunsDep = Annotated[Runs, Depends(get_runs)]
 
 class StartRun(BaseModel):
     company: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=200)]
+    # The caller may pick the run's id, so it can open the run page and
+    # follow progress while this request is still running the graph.
+    id: UUID | None = None
+
+
+# How many runs one GET /runs?ids= may ask for.
+MAX_IDS = 100
 
 
 class DecisionIn(BaseModel):
@@ -120,9 +128,24 @@ async def health(request: Request) -> dict:
 @app.post("/runs", status_code=201)
 async def start_run(body: StartRun, runs: RunsDep) -> dict:
     try:
-        return await runs.start(body.company)
+        return await runs.start(body.company, str(body.id) if body.id else None)
     except SpendCapReached as err:
         raise HTTPException(429, str(err)) from err
+    except errors.UniqueViolation as err:
+        raise HTTPException(409, "a run with this id already exists") from err
+
+
+@app.get("/runs")
+async def list_runs(runs: RunsDep, ids: Annotated[str, Query(max_length=MAX_IDS * 37)]) -> list[dict]:
+    """The runs with these ids (comma-separated), newest first: the run
+    history, which the browser keeps. There is no way to list every run."""
+    try:
+        wanted = [str(UUID(i)) for i in ids.split(",") if i.strip()]
+    except ValueError as err:
+        raise HTTPException(422, "ids must be comma-separated run ids") from err
+    if len(wanted) > MAX_IDS:
+        raise HTTPException(422, f"ask for at most {MAX_IDS} runs at once")
+    return await runs.summaries(wanted)
 
 
 @app.get("/runs/{run_id}")
