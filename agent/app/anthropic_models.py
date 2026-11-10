@@ -284,13 +284,15 @@ def research_prompt(task: ResearchTask) -> str:
 
 
 def tool_errors(response: Message) -> list[str]:
-    """The error codes of web tool calls that failed in this response."""
+    """The web tool calls that failed in this response: the error code and
+    what the call asked for."""
+    asked = {b.id: json.dumps(b.input)[:200] for b in response.content if b.type == "server_tool_use"}
     errors: list[str] = []
     for block in response.content:
         if block.type == "web_search_tool_result" and not isinstance(block.content, list):
-            errors.append(f"web_search: {block.content.error_code}")
+            errors.append(f"web_search: {block.content.error_code} {asked.get(block.tool_use_id, '')}")
         elif block.type == "web_fetch_tool_result" and block.content.type == "web_fetch_tool_result_error":
-            errors.append(f"web_fetch: {block.content.error_code}")
+            errors.append(f"web_fetch: {block.content.error_code} {asked.get(block.tool_use_id, '')}")
     return errors
 
 
@@ -310,9 +312,12 @@ def tool_urls(response: Message) -> list[str]:
 
 class QuoteCheck(BaseModel):
     claim: int
-    supported: bool
-    # Why not, when it isn't supported.
+    # Before the verdict, so the model writes its comparison first and
+    # decides from it (fields are generated in schema order). With the
+    # verdict first, Haiku once wrote "supported actually" as the reason
+    # for a claim it had just marked unsupported.
     reason: str
+    supported: bool
 
 
 class QuoteChecks(BaseModel):
@@ -325,14 +330,17 @@ whether the quote on its own supports the value.
 
 - Supported: the quote states the value, possibly in other words or another format ("New York, NY"
   supports "New York City, New York, United States", "COO" supports "Chief Operating Officer"), or the
-  value follows from it directly ("875 employees" supports "501-1000").
+  value follows from it directly ("875 employees" supports "501-1000"). A quote may say more than the
+  value: a quote with a full street address supports a value with just the city.
 - Not supported: the quote is about something else, is too vague, contradicts the value, or the value
   adds a detail the quote doesn't state (a street address, a number, a date, a name).
 - website: the cited URL counts as evidence too. A page on that domain whose quote (its title, say)
   shows it is the company's own site supports it.
 - Judge only the quote against the value, not what you know about the company.
-- Answer for every claim, by its number. For a claim that isn't supported, give the reason in a few
-  words; otherwise leave the reason empty."""
+- Answer for every claim, by its number: first the reason (in a few words, what the quote states
+  against what the value says), then whether it is supported."""
+
+VERIFIER_EFFORT: Effort = "low"
 
 # Claims the model's answer leaves out count as unsupported (fail closed).
 NO_ANSWER = "the checker gave no answer for it"
@@ -471,7 +479,9 @@ class AnthropicModels:
         passed = verdict["supported"]
         if not passed:
             return verdict, []
-        meter = Meter("verifier", self.config.verifier, "low", finding["branch"], finding["attempt"])
+        meter = Meter(
+            "verifier", self.config.verifier, VERIFIER_EFFORT, finding["branch"], finding["attempt"]
+        )
         numbered = [
             {
                 "claim": i,
@@ -487,7 +497,7 @@ class AnthropicModels:
             max_tokens=VERIFIER_MAX_TOKENS,
             system=VERIFIER_SYSTEM,
             messages=[{"role": "user", "content": f"Claims:\n{json.dumps(numbered, indent=1)}"}],
-            output_config={"effort": "low"},
+            output_config={"effort": VERIFIER_EFFORT},
             output_format=QuoteChecks,
         )
         meter.add(response)

@@ -191,7 +191,8 @@ async def test_research_records_the_errors_the_web_tools_returned():
     client = ScriptedClient(created=[message(failed + report(), "tool_use")])
     finding, _ = await AnthropicModels(client, CONFIG).research(task())
 
-    assert finding["tool_errors"] == ["web_search: too_many_requests"] and finding["sources"] == []
+    assert finding["tool_errors"] == ['web_search: too_many_requests {"query": "q"}']
+    assert finding["sources"] == []
 
 
 async def test_research_caches_the_shared_prefix_and_counts_what_caching_saved():
