@@ -20,6 +20,7 @@ from langgraph.graph.state import CompiledStateGraph
 from langgraph.types import Command
 from psycopg_pool import AsyncConnectionPool
 
+from app.profile_schema import diff_profiles
 from app.profiles import company_key
 from app.state import Decision, Usage, spent
 
@@ -193,6 +194,12 @@ def summarize(usage: list[Usage]) -> dict:
 def view(row: dict, values: dict, next_nodes: tuple[str, ...]) -> dict:
     """What the API returns for a run: the row plus a summary of its state."""
     previous = values.get("previous")
+    draft = values.get("draft")
+    decision = values.get("decision", {})
+    # What changed since the saved version this run started from: in the
+    # draft, or in the edited profile once a person has edited it.
+    current = decision["profile"] if decision.get("action") == "edit" else draft
+    changes = diff_profiles(previous["profile"], current) if previous and current else None
     return {
         "id": row["id"],
         "company": row["company"],
@@ -227,8 +234,9 @@ def view(row: dict, values: dict, next_nodes: tuple[str, ...]) -> dict:
             }
             for v in values.get("verdicts", [])
         ],
-        "draft": values.get("draft"),
+        "draft": draft,
         "previous_version": previous["version"] if previous else None,
+        "changes": changes,
         "saved_version": values.get("saved_version"),
         "budget_usd": row["budget_usd"],
         "usage": summarize(values.get("usage", [])),

@@ -335,6 +335,44 @@ async def test_the_writer_sees_claims_not_quotes_and_code_adds_the_sources():
     assert usage[0]["node"] == "writer"
 
 
+async def test_the_writer_sees_the_saved_facts_and_keeps_the_ones_not_found_again():
+    supported = [claim("website", "acme.com", "https://acme.com/")]
+    verdicts = [{"branch": "business", "attempt": 1, "supported": supported, "unsupported": []}]
+    previous = unknown_profile("Acme").model_dump() | {
+        "website": "acme.com",
+        "founded_year": "1999",
+        "sources": {"founded_year": ["https://saved.example/"]},
+        "carried_over": [],
+    }
+    written = CompanyProfile(**(unknown_profile("Acme").model_dump() | {"website": "acme.com"}))
+    client = ScriptedClient(parsed=[Parsed(written)])
+
+    draft, _ = await AnthropicModels(client, CONFIG).write("Acme", verdicts, previous)
+
+    sent = client.requests[0]["messages"][0]["content"]
+    assert "Previous profile" in sent and '"founded_year": "1999"' in sent
+    # The models see facts, not what code added to them.
+    assert "saved.example" not in sent and "carried_over" not in sent
+    assert draft["founded_year"] == "1999" and draft["carried_over"] == ["founded_year"]
+
+
+async def test_the_planner_sees_the_saved_version_and_its_date():
+    planned = PlanOutput.model_validate({"branches": [{"branch": "news", "hints": ["acme news"]}]})
+    client = ScriptedClient(parsed=[Parsed(planned)])
+    previous = {
+        "version": 3,
+        "saved_at": "2026-10-01T12:00:00+00:00",
+        "profile": unknown_profile("Acme").model_dump()
+        | {"sources": {"website": ["https://saved.example/"]}},
+    }
+
+    plan, _ = await AnthropicModels(client, CONFIG).plan("Acme", previous)
+
+    sent = client.requests[0]["messages"][0]["content"]
+    assert "version 3, saved 2026-10-01" in sent and "saved.example" not in sent
+    assert plan == [{"branch": "news", "hints": ["acme news"]}]
+
+
 async def test_the_writer_skips_the_model_when_nothing_was_verified():
     client = ScriptedClient()
     draft, usage = await AnthropicModels(client, CONFIG).write("Acme", [], None)

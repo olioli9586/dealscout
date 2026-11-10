@@ -24,7 +24,7 @@ from anthropic.types import Message
 from pydantic import BaseModel
 
 from app.pricing import PRICES, response_cost
-from app.profile_schema import BRANCH_FIELDS, DERIVED_FIELDS, CompanyProfile, to_saved, unknown_profile
+from app.profile_schema import BRANCH_FIELDS, DERIVED_FIELDS, CompanyProfile, facts, to_saved, unknown_profile
 from app.state import BRANCHES, Branch, BranchPlan, Claim, Finding, ResearchTask, Usage, Verdict
 from app.verify import check_sources
 
@@ -150,7 +150,8 @@ PLANNER_SYSTEM = """You plan company research for a deal-sourcing team. Research
 
 Pick the areas to research and give each 1 to 3 short web search queries. With no previous
 profile, pick every area unless one clearly doesn't apply to this company. With a previous profile,
-skip areas it already answers well and that rarely change, and focus on what may have changed."""
+skip areas it already answers well and that rarely change, and focus on what may have changed since
+the date it was saved."""
 
 
 # --- researcher ------------------------------------------------------------
@@ -314,7 +315,10 @@ and a checker verified against their sources.
 - List fields: one item per distinct fact, no duplicates.
 - confidence: high if the core fields (website, industry, HQ, founded year) are covered and the claims
   agree, low if most fields are unknown, medium otherwise.
-- summary: 2-3 sentences, from the claims only."""
+- summary: 2-3 sentences, from the claims (and the previous profile, if one is given).
+- A previous profile, if given, was approved by a person earlier. Where a claim confirms one of its
+  facts, keep its wording, so that only real changes show up as changes. Where a claim says something
+  different or newer, use the claim."""
 
 
 class AnthropicModels:
@@ -325,9 +329,12 @@ class AnthropicModels:
     async def plan(self, company: str, previous: dict | None) -> tuple[list[BranchPlan], list[Usage]]:
         meter = Meter("planner", self.config.planner, "low")
         areas = "\n".join(f"- {b}: {scope}" for b, scope in BRANCH_SCOPE.items())
-        content = f"Company: {company}"
+        content = f"Company: {company}\nToday: {date.today().isoformat()}"
         if previous:
-            content += f"\n\nPrevious profile:\n{json.dumps(previous, indent=1)}"
+            content += (
+                f"\n\nPrevious profile (version {previous['version']}, saved {previous['saved_at'][:10]}):\n"
+                f"{json.dumps(facts(previous['profile']), indent=1)}"
+            )
         response = await self.client.messages.parse(
             model=self.config.planner,
             max_tokens=PLANNER_MAX_TOKENS,
@@ -456,22 +463,20 @@ class AnthropicModels:
             for c in v["supported"]
         ]
         if not claims:
-            return to_saved(unknown_profile(company), verdicts), []
+            return to_saved(unknown_profile(company), verdicts, previous), []
         meter = Meter("writer", self.config.writer, self.config.effort)
+        content = f"Company: {company}\n\nVerified claims:\n{json.dumps(claims, indent=1)}"
+        if previous:
+            content += f"\n\nPrevious profile:\n{json.dumps(facts(previous), indent=1)}"
         response = await self.client.messages.parse(
             model=self.config.writer,
             max_tokens=WRITER_MAX_TOKENS,
             system=WRITER_SYSTEM,
-            messages=[
-                {
-                    "role": "user",
-                    "content": f"Company: {company}\n\nVerified claims:\n{json.dumps(claims, indent=1)}",
-                }
-            ],
+            messages=[{"role": "user", "content": content}],
             output_config={"effort": self.config.effort},
             output_format=CompanyProfile,
         )
         meter.add(response)
         if response.parsed_output is None:
             raise RuntimeError(f"the writer returned no profile (stop reason {response.stop_reason})")
-        return to_saved(response.parsed_output, verdicts), meter.done()
+        return to_saved(response.parsed_output, verdicts, previous), meter.done()

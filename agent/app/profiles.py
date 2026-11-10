@@ -17,16 +17,23 @@ class ProfileStore:
         self.pool = pool
 
     async def latest(self, key: str) -> dict | None:
-        """The newest saved version: {"version", "run_id", "profile"}, or None."""
+        """The newest saved version: {"version", "run_id", "saved_at", "profile"}, or None."""
         async with self.pool.connection() as conn:
             row = await (
                 await conn.execute(
-                    """select version, run_id::text, profile from profiles
+                    """select version, run_id::text, created_at, profile from profiles
                        where company_key = %s order by version desc limit 1""",
                     (key,),
                 )
             ).fetchone()
-        return dict(row) if row else None
+        if row is None:
+            return None
+        return {
+            "version": row["version"],
+            "run_id": row["run_id"],
+            "saved_at": row["created_at"].isoformat(),
+            "profile": row["profile"],
+        }
 
     async def save(self, run_id: str, key: str, profile: dict) -> int:
         """Stores the profile as the company's next version; returns its number.

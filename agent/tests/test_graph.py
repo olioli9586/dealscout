@@ -57,6 +57,30 @@ async def test_approving_saves_version_1_and_the_next_run_remembers_it(make_runs
     assert (await runs.decide(second["id"], {"action": "approve"}))["saved_version"] == 2
 
 
+async def test_a_rerun_keeps_what_it_did_not_verify_again_and_reports_what_changed(make_runs):
+    runs, _ = make_runs()
+    first = await runs.start("Acme Corp")
+    await runs.decide(first["id"], {"action": "approve"})
+    assert first["changes"] is None
+
+    # The second run finds a new HQ, and its news branch never verifies.
+    runs, _ = make_runs(FakeModels(values={"hq_location": "Boston"}, weak_passes={"news": 9}))
+    second = await runs.start("Acme Corp")
+
+    draft = second["draft"]
+    assert draft["recent_news"] == first["draft"]["recent_news"]
+    assert draft["sources"]["recent_news"] == ["https://example.com/news"]
+    assert draft["carried_over"] == ["recent_news"]
+    assert second["changes"] == [
+        {"field": "hq_location", "before": "Acme Corp hq_location", "after": "Boston"}
+    ]
+
+    # An edit is compared with the saved version too.
+    edited = draft | {"hq_location": "Boston, MA", "industry": "Robots"}
+    after_edit = await runs.decide(second["id"], {"action": "edit", "profile": edited})
+    assert [c["field"] for c in after_edit["changes"]] == ["industry", "hq_location"]
+
+
 async def test_an_edit_saves_the_edited_profile(make_runs, pool):
     runs, _ = make_runs()
     run = await runs.start("Acme Corp")

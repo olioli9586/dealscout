@@ -10,6 +10,8 @@ The knobs exist for tests and for the kill test on a deployed preview:
   to test the run budget without spending anything.
 - log_path: append "start <branch> <attempt>" / "done ..." lines, so a test
   can count calls made in another process.
+- values: what a claim says for a field, instead of "<company> <field>",
+  so a later run can find something different.
 """
 
 import asyncio
@@ -52,12 +54,14 @@ class FakeModels:
         fail_once: set[str] = frozenset(),
         costs: dict[str, float] | None = None,
         log_path: Path | None = None,
+        values: dict[str, str] | None = None,
     ):
         self.research_seconds = research_seconds or {}
         self.weak_passes = weak_passes or {}
         self.fail_once = set(fail_once)
         self.costs = costs or {}
         self.log_path = log_path
+        self.values = values or {}
         self.calls: list[tuple[str, str, int]] = []
         self.tasks: list[ResearchTask] = []
 
@@ -92,7 +96,7 @@ class FakeModels:
         claims: list[Claim] = [
             {
                 "field": field,
-                "value": f"{task['company']} {field}",
+                "value": self.values.get(field, f"{task['company']} {field}"),
                 "source_url": WEAK_URL if weak else page,
                 "quote": f"{task['company']} {field}",
             }
@@ -117,5 +121,5 @@ class FakeModels:
                     fields[claim["field"]].append(claim["value"])
                 elif fields[claim["field"]] == "unknown":
                     fields[claim["field"]] = claim["value"]
-        profile = to_saved(CompanyProfile(**fields), verdicts)
+        profile = to_saved(CompanyProfile(**fields), verdicts, previous)
         return profile, [fake_usage("writer", self.costs.get("write", 0.0))]

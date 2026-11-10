@@ -55,8 +55,7 @@ def build_graph(models: Models, profiles: ProfileStore, checkpointer: BaseCheckp
         return {"previous": await profiles.latest(state["company_key"])}
 
     async def planner(state: RunState) -> dict:
-        previous = state.get("previous")
-        plan, usage = await models.plan(state["company"], previous["profile"] if previous else None)
+        plan, usage = await models.plan(state["company"], state.get("previous"))
         return {"plan": plan, "usage": usage}
 
     def fan_out(state: RunState) -> list[Send] | str:

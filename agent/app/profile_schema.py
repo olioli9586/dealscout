@@ -3,9 +3,14 @@ and the source URLs behind each field.
 
 One Pydantic model is the schema for three things: the writer's structured
 output, the fakes, and the API's check on an edited profile.
+
+Memory: when a company was saved before, a field this run verified nothing
+for keeps the saved value (to_saved), and diff_profiles reports what
+changed between the saved version and the new draft.
 """
 
-from typing import Literal
+import re
+from typing import Literal, TypedDict
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -59,6 +64,20 @@ class SavedProfile(CompanyProfile):
     An edited profile may leave sources out."""
 
     sources: dict[str, list[str]] = Field(default_factory=dict)
+    # Fields copied from the previous version because this run verified
+    # nothing for them (the planner skipped their area, or no claim held up).
+    carried_over: list[str] = Field(default_factory=list)
+
+
+def value_of(profile: dict, name: str) -> str | list[str]:
+    """A field's value; unknown if the profile predates the field (Day 2's
+    fakes saved a different shape, and leadership came on Day 3)."""
+    return profile.get(name, [] if name in LIST_FIELDS else "unknown")
+
+
+def facts(saved: dict) -> dict:
+    """A saved profile without what code added: what the models are shown."""
+    return {name: value_of(saved, name) for name in CompanyProfile.model_fields}
 
 
 def unknown_profile(company: str) -> CompanyProfile:
@@ -85,11 +104,19 @@ def unknown_profile(company: str) -> CompanyProfile:
 DERIVED_FIELDS = frozenset({"company_name", "confidence", "summary"})
 
 
-def to_saved(profile: CompanyProfile, verdicts: list[Verdict]) -> dict:
+def is_unknown(value: str | list[str]) -> bool:
+    return value in ("unknown", [])
+
+
+def to_saved(profile: CompanyProfile, verdicts: list[Verdict], previous: dict | None = None) -> dict:
     """The profile to store: the writer's fields, with every field that no
     supported claim backs reset to unknown (output validation: the writer
     can't add facts the researchers didn't verify), plus, per field, the URLs
-    of the supported claims for it, in the order they were found."""
+    of the supported claims for it, in the order they were found.
+
+    With a previous saved version, a field this run has no supported claim
+    for keeps the previous value and sources instead of becoming unknown:
+    not finding a fact again isn't evidence that it changed."""
     sources: dict[str, list[str]] = {}
     for verdict in verdicts:
         for claim in verdict["supported"]:
@@ -97,6 +124,42 @@ def to_saved(profile: CompanyProfile, verdicts: list[Verdict]) -> dict:
             if claim["source_url"] not in urls:
                 urls.append(claim["source_url"])
     fields = profile.model_dump()
-    for name in fields.keys() - DERIVED_FIELDS - sources.keys():
-        fields[name] = [] if name in LIST_FIELDS else "unknown"
-    return SavedProfile(**fields, sources=sources).model_dump()
+    carried: list[str] = []
+    for name in CompanyProfile.model_fields:
+        if name in DERIVED_FIELDS or name in sources:
+            continue
+        if previous and not is_unknown(value_of(previous, name)):
+            fields[name] = value_of(previous, name)
+            sources[name] = previous.get("sources", {}).get(name, [])
+            carried.append(name)
+        else:
+            fields[name] = [] if name in LIST_FIELDS else "unknown"
+    return SavedProfile(**fields, sources=sources, carried_over=carried).model_dump()
+
+
+class Change(TypedDict):
+    field: str
+    before: str | list[str]
+    after: str | list[str]
+
+
+def _same(a: str | list[str], b: str | list[str]) -> bool:
+    """Equal up to case, spacing and the order of list items."""
+
+    def norm(text: str) -> str:
+        return re.sub(r"\s+", " ", text).strip().casefold()
+
+    if isinstance(a, list) and isinstance(b, list):
+        return {norm(x) for x in a} == {norm(x) for x in b}
+    return isinstance(a, str) and isinstance(b, str) and norm(a) == norm(b)
+
+
+def diff_profiles(before: dict, after: dict) -> list[Change]:
+    """The fact fields whose value differs between two profiles, in schema
+    order. The derived fields (name, confidence, summary) are left out:
+    they're rewritten every run."""
+    return [
+        {"field": name, "before": value_of(before, name), "after": value_of(after, name)}
+        for name in CompanyProfile.model_fields
+        if name not in DERIVED_FIELDS and not _same(value_of(before, name), value_of(after, name))
+    ]
