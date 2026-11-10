@@ -160,8 +160,11 @@ FIELD_HELP = {
     for name, field in CompanyProfile.model_fields.items()
     if name not in DERIVED_FIELDS
 } | {
-    # How to find these, beyond what the field means.
-    "website": "the official homepage URL; fetch the homepage and cite it",
+    # How to find these, beyond what the field means. web_fetch refuses a
+    # URL that no search returned (url_not_in_prior_context), so "fetch the
+    # homepage" (Day 3) failed whenever the homepage wasn't a search result.
+    "website": "the official homepage URL; search for the company's official site and cite the homepage "
+    "itself when your results include it",
     "hq_location": "city, region and country of the main office, not a registered-agent or mailing address",
 }
 REPORTABLE_FIELDS = sorted(FIELD_HELP)
@@ -215,6 +218,7 @@ Rules:
 - Each claim is one fact for one profile field, with the URL of the page it came from and a short
   verbatim quote from that page.
 - Cite only URLs that your searches returned or that you fetched. Never write a URL from memory.
+- web_fetch can only open a URL that one of your searches returned, so search first.
 - Prefer primary sources: the company's own site, filings, reputable press.
 - Leave out what you couldn't find. Never report "unknown" as a value."""
 
@@ -290,6 +294,8 @@ whether the quote on its own supports the value.
   supports "New York City, New York, United States").
 - Not supported: the quote is about something else, is too vague, contradicts the value, or the value
   adds a detail the quote doesn't state (a street address, a number, a date, a name).
+- website: the cited URL counts as evidence too. A page on that domain whose quote (its title, say)
+  shows it is the company's own site supports it.
 - Judge only the quote against the value, not what you know about the company.
 - Answer for every claim, by its number. For a claim that isn't supported, give the reason in a few
   words; otherwise leave the reason empty."""
@@ -406,7 +412,13 @@ class AnthropicModels:
             return verdict, []
         meter = Meter("verifier", self.config.verifier, "low", finding["branch"], finding["attempt"])
         numbered = [
-            {"claim": i, "field": c["field"], "value": c["value"], "quote": c["quote"]}
+            {
+                "claim": i,
+                "field": c["field"],
+                "value": c["value"],
+                "url": c["source_url"],
+                "quote": c["quote"],
+            }
             for i, c in enumerate(passed)
         ]
         response = await self.client.messages.parse(
