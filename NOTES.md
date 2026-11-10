@@ -726,3 +726,119 @@ the agent for one search per request.
   and a daily cap there: their OK), kill and resume on the preview.
 - Small, each with a measured run: the HQ street-address hint, and
   per-area search limits (more for business, one for the others).
+
+## Day 5 (2026-11-09): the UI, real models on the preview, kill and resume there
+
+### Done
+
+- **Agent API**: `POST /runs` takes an optional id chosen by the caller (a
+  reused id is a 409), and `GET /runs?ids=` returns those runs' rows,
+  newest first. There is no list of every run: the history lives in the
+  browser, as in EvalBoard. The Next.js routes pass both on (UUIDs only,
+  at most 100 ids).
+- **`lib/v2-client.ts`**: the run view's types, API calls that keep the HTTP
+  status, the history in localStorage, each branch's passes from the
+  checkpointed state, and the edit form, which keeps a field's sources only
+  if the edit left its value unchanged and drops `carried_over`.
+- **`/v2`**: start a run (the browser picks the id and opens the run page at
+  once, while its start request runs the graph) and "Your runs".
+- **`/v2/runs/[id]`**: while a request drives the run, the page polls the
+  checkpointed state every 1.5 s: the plan, each branch's passes
+  (researching, verifying, how many claims verified), the rejected claims
+  with which check failed and why, and web tool errors. Then the draft,
+  with each field's sources, "kept from vN" on carried-over fields and
+  what changed since the saved version; Approve, Edit or Reject; Resume
+  for a cut-off or failed run; cost per step. Links are only made for
+  http(s) sources (an edit can put any string there, and memory carries it
+  into later runs). Run pages aren't indexed.
+- **Preview runs real models**: `AGENT_MODELS=anthropic` and
+  `AGENT_DAILY_USD=3` (their OK, Config type so they stay readable).
+- **Tests**: 89 pytest (5 new) and 100 vitest (15 new). Every commit
+  passes on its own.
+
+### Checked in a browser (local, fake models)
+
+Headless Chrome against the local agent on fakes: start, live progress,
+the draft, an edit saved as version 1, the history row, a second run of
+the same company showing "Researched before" and the edited HQ under
+what changed, and a reject. Then a kill: the agent process was killed
+mid-research and the page said "The agent is unreachable"; with the agent
+back and the lease expired (set in the dev database instead of waiting
+330 s), the page showed "Cut off" and Resume finished the run to a draft.
+
+Not checked in a browser on the preview: Vercel Authentication needs a
+fresh OIDC token in the browser, the one in `.env.local` expired in July,
+and pulling a fresh one was blocked by auto mode. They can open the
+preview in their own browser, logged in to Vercel.
+
+### On the deployed preview (through its API, `vercel curl`)
+
+- **A real run** of Ramp: 57 s, $0.138, the news branch retried once, 15 of
+  44 claims rejected, approved as version 1.
+- **A second Ramp run whose client hung up after 15 s** went on and reached
+  approval at 58 s ($0.111). It started from version 1, researched
+  funding, news and leadership, and carried over the 7 business fields.
+- **What cuts a request on Vercel, and what doesn't.** A client hanging up
+  doesn't. Deleting the deployment mid-run doesn't either: a run on a
+  deleted deployment finished, and its client even got the answer. The
+  300 s limit does. A fake run with 320 s researchers was cut at 301 s
+  (HTTP 504), stayed "running" with no findings, became resumable when
+  its 330 s lease ran out, and Resume on another deployment finished it
+  in 42 s. That is the case the design is for. From outside, a step's
+  findings only show once the whole step has finished, so Day 2's local
+  SIGKILL tests remain the evidence that finished researchers aren't run
+  again.
+- How: throwaway redeploys of the PR's preview, built while Preview briefly
+  had `AGENT_MODELS=fake` and `FAKE_RESEARCH_SECONDS` (40, then 320). The
+  settings were put back after each build and the throwaways deleted; the
+  PR's own preview was never rebuilt.
+
+### Blocked: the Anthropic API usage limit
+
+The fourth real run on the preview failed at the planner: "You have
+reached your specified API usage limits. You will regain access on
+2026-12-01 at 00:00 UTC." That is the spend limit set in the Anthropic
+Console, reached this month; every call with this key fails until then,
+and likely anything else on the same account. Days 6 to 8 need real runs
+(real traces, the injection tests, the 50-company eval): their call
+whether to raise the limit or work on what the fakes allow until Dec 1.
+
+### Decisions and why
+
+- **Live progress by polling the checkpointed state, not streaming.** Every
+  step is already in Postgres (durability "sync"), so the page reads what
+  the run stored: no stream to keep open, and a reopened page catches up.
+  The cost: a step shows only once it has finished, at 1.5 s polls.
+- **The browser picks the run id**, so it can open the run page while its
+  start request runs the graph. The request lives on across client-side
+  navigation, and on Vercel even if the tab closes.
+- **History in the browser**, as in EvalBoard: a public demo shouldn't list
+  everyone's runs.
+- **Preview variables as Config.** The CLI makes new variables Secret
+  (write-only) on this project unless told `--no-sensitive`: production's
+  unreadable `DEALSCOUT_MODEL` came from the same default.
+
+### Known gaps
+
+- On a public deployment, anyone with a run's link can approve or edit its
+  draft, and an approved profile is what every later run of that company
+  starts from. Fine behind Vercel Authentication on Preview; production
+  needs a gate (an admin token, like EvalBoard's labels) before the Day 9
+  merge.
+- The run page shows a retry pass only once its finding is in.
+- One throwaway redeploy failed to build and was deleted before its log was
+  read; the next identical redeploy built fine. Cause unknown.
+- Preview runs left waiting for approval: Brex, the second Ramp run,
+  Killtest Co and Timeout Co.
+
+### Spend
+
+Preview: $0.36 of the $3 cap (three real runs; the fourth was refused by
+the usage limit; the kill tests used the fakes). No local real-model calls.
+
+### Next
+
+- Their call first: the API usage limit (raise it, or wait until
+  2026-12-01).
+- Day 6: tracing (Langfuse) and MCP both ways. Both can be built and tested
+  on the fakes; real traces and the screenshot need the API.
