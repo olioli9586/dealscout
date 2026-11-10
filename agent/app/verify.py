@@ -1,15 +1,17 @@
 """The verifier's mechanical check, shared by the fakes and the real models.
 
-A claim is supported only if its source URL is one the researcher's web
-tools actually returned in this run (Finding.sources comes from the API's
-result blocks, not from the model), so a claim can't cite a page the run
-never saw. Checking that the quote supports the claim is a model call,
-added on Day 4.
+A claim passes only if its source URL is one the researcher's web tools
+actually returned in this run (Finding.sources comes from the API's result
+blocks, not from the model), so a claim can't cite a page the run never saw.
+The real verifier then asks a model whether each passing claim's quote
+supports its value (app/anthropic_models.py).
 """
 
 from urllib.parse import urlsplit
 
 from app.state import Finding, Verdict
+
+NOT_SEEN = "it cites a URL that none of the searches or fetches returned"
 
 
 def normalize_url(url: str) -> str:
@@ -30,6 +32,8 @@ def check_sources(finding: Finding) -> Verdict:
         "unsupported": [],
     }
     for claim in finding["claims"]:
-        key = "supported" if normalize_url(claim["source_url"]) in seen else "unsupported"
-        verdict[key].append(claim)
+        if normalize_url(claim["source_url"]) in seen:
+            verdict["supported"].append(claim)
+        else:
+            verdict["unsupported"].append({**claim, "check": "source", "reason": NOT_SEEN})
     return verdict

@@ -6,10 +6,18 @@ from dataclasses import dataclass, field
 import pytest
 from anthropic.types import Message, Usage
 
-from app.anthropic_models import NUDGE, REQUESTS_PER_PASS, AnthropicModels, ModelConfig, PlanOutput
+from app.anthropic_models import (
+    NO_ANSWER,
+    NUDGE,
+    REQUESTS_PER_PASS,
+    AnthropicModels,
+    ModelConfig,
+    PlanOutput,
+    QuoteChecks,
+)
 from app.profile_schema import CompanyProfile, unknown_profile
-from app.state import ResearchTask
-from app.verify import check_sources, normalize_url
+from app.state import Finding, ResearchTask
+from app.verify import NOT_SEEN, check_sources, normalize_url
 
 SONNET = "claude-sonnet-5-5"
 # Sonnet rates make the cost assertions easy to check by hand.
@@ -209,13 +217,88 @@ async def test_research_gives_up_after_the_request_cap_with_no_claims():
     assert usage[0]["requests"] == REQUESTS_PER_PASS
 
 
-async def test_a_retry_pass_names_the_claims_that_failed():
-    failed = claim("founded_year", "1999", "https://made.up/")
+async def test_a_retry_pass_names_the_claims_that_failed_and_why():
+    failed = claim("founded_year", "1999", "https://made.up/") | {"check": "source", "reason": NOT_SEEN}
     client = ScriptedClient(created=[message(report(), "tool_use")])
     await AnthropicModels(client, CONFIG).research(task(attempt=2, retry_claims=[failed]))
 
     prompt = client.requests[0]["messages"][0]["content"]
-    assert "second pass" in prompt and "founded_year: 1999 (https://made.up/)" in prompt
+    assert "second pass" in prompt
+    assert f"founded_year: 1999 (https://made.up/). Rejected because {NOT_SEEN}" in prompt
+
+
+async def test_a_retry_after_a_pass_with_no_claims_says_so():
+    client = ScriptedClient(created=[message(report(), "tool_use")])
+    await AnthropicModels(client, CONFIG).research(task(attempt=2))
+
+    assert "the first pass reported no claims" in client.requests[0]["messages"][0]["content"]
+
+
+def finding(*claims: dict, sources: list[str]) -> Finding:
+    return {"branch": "business", "attempt": 1, "claims": list(claims), "sources": sources}
+
+
+async def test_the_verifier_asks_the_model_only_about_claims_from_pages_the_run_saw():
+    website = claim("website", "acme.com", "https://acme.com/")
+    founded = claim("founded_year", "1999", "https://acme.com/about") | {"quote": "Acme was founded in 1999"}
+    hq = claim("hq_location", "Austin, Texas, USA (1 Main St)", "https://acme.com/about")
+    made_up = claim("employee_count", "51-200", "https://made.up/")
+    checks = QuoteChecks.model_validate(
+        {
+            "checks": [
+                {"claim": 0, "supported": True, "reason": ""},
+                {"claim": 1, "supported": True, "reason": ""},
+                {"claim": 2, "supported": False, "reason": "the street address isn't in the quote"},
+            ]
+        }
+    )
+    client = ScriptedClient(parsed=[Parsed(checks)])
+
+    verdict, [u] = await AnthropicModels(client, CONFIG).verify(
+        finding(website, founded, hq, made_up, sources=["https://acme.com/", "https://acme.com/about"])
+    )
+
+    sent = client.requests[0]["messages"][0]["content"]
+    assert "Acme was founded in 1999" in sent and "made.up" not in sent
+    assert client.requests[0]["output_format"] is QuoteChecks
+    assert verdict["supported"] == [website, founded]
+    assert [(c["field"], c["check"], c["reason"]) for c in verdict["unsupported"]] == [
+        ("employee_count", "source", NOT_SEEN),
+        ("hq_location", "quote", "the quote doesn't support it (the street address isn't in the quote)"),
+    ]
+    assert (u["node"], u["branch"], u["model"], u["effort"]) == (
+        "verifier",
+        "business",
+        "claude-haiku-5-5",
+        "low",
+    )
+
+
+async def test_a_claim_the_checker_leaves_out_or_refuses_is_unsupported():
+    claims = [
+        claim("website", "acme.com", "https://acme.com/"),
+        claim("industry", "Software", "https://acme.com/"),
+    ]
+    sources = ["https://acme.com/"]
+    partial = QuoteChecks.model_validate({"checks": [{"claim": 0, "supported": True, "reason": ""}]})
+    client = ScriptedClient(parsed=[Parsed(partial), Parsed(None, stop_reason="refusal")])
+    models = AnthropicModels(client, CONFIG)
+
+    verdict, _ = await models.verify(finding(*claims, sources=sources))
+    assert [c["field"] for c in verdict["supported"]] == ["website"]
+    assert [(c["field"], c["reason"]) for c in verdict["unsupported"]] == [("industry", NO_ANSWER)]
+
+    refused, _ = await models.verify(finding(*claims, sources=sources))
+    assert refused["supported"] == [] and len(refused["unsupported"]) == 2
+
+
+async def test_the_verifier_skips_the_model_when_no_url_checks_out():
+    client = ScriptedClient()
+    verdict, usage = await AnthropicModels(client, CONFIG).verify(
+        finding(claim("website", "acme.com", "https://made.up/"), sources=[])
+    )
+
+    assert usage == [] and client.requests == [] and len(verdict["unsupported"]) == 1
 
 
 async def test_the_plan_drops_repeats_and_falls_back_to_every_branch():

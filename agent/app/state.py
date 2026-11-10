@@ -24,6 +24,15 @@ class Claim(TypedDict):
     quote: str
 
 
+class Rejected(Claim):
+    """A claim the verifier couldn't support, and why."""
+
+    # Which check failed: the cited URL wasn't one the tools returned, or the
+    # quote doesn't support the value.
+    check: Literal["source", "quote"]
+    reason: str
+
+
 class ResearchTask(TypedDict):
     """What one researcher gets (sent to it with Send, not read from the state)."""
 
@@ -32,7 +41,7 @@ class ResearchTask(TypedDict):
     hints: list[str]
     attempt: int
     # On a retry: the claims the verifier couldn't support last time.
-    retry_claims: list[Claim]
+    retry_claims: list[Rejected]
 
 
 class Finding(TypedDict):
@@ -48,7 +57,7 @@ class Verdict(TypedDict):
     branch: Branch
     attempt: int
     supported: list[Claim]
-    unsupported: list[Claim]
+    unsupported: list[Rejected]
 
 
 class Usage(TypedDict):

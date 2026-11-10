@@ -92,7 +92,13 @@ async def test_a_weak_branch_gets_one_more_pass_with_its_unsupported_claims(make
     retry = [t for t in models.tasks if t["attempt"] == 2]
     assert [t["branch"] for t in retry] == ["funding"]
     assert {c["field"] for c in retry[0]["retry_claims"]} == {"funding_status", "deal_signals"}
-    assert all(c["source_url"] == WEAK_URL for c in retry[0]["retry_claims"])
+    assert all(c["source_url"] == WEAK_URL and c["check"] == "source" for c in retry[0]["retry_claims"])
+    # The run view lists what was rejected, and why.
+    [first] = [v for v in run["verdicts"] if (v["branch"], v["attempt"]) == ("funding", 1)]
+    assert [(r["field"], r["check"]) for r in first["rejected"]] == [
+        ("funding_status", "source"),
+        ("deal_signals", "source"),
+    ]
     # The second pass is supported, so its claims reach the draft.
     assert run["status"] == "awaiting_approval"
     assert run["draft"]["funding_status"] == "Acme Corp funding_status"

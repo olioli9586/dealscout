@@ -6,7 +6,8 @@ tools, pause_turn and the exact usage numbers that v1 already relies on.
 - researcher: a short tool loop with the server-side web_search and web_fetch
   tools; the claims come back through a strict tool, and the URLs the tools
   returned are read from the response's result blocks.
-- verifier: the mechanical source check (app/verify.py), no model yet.
+- verifier: the mechanical source check (app/verify.py), then a cheap model
+  checks that each remaining claim's quote supports its value.
 - writer: builds the profile from the verified claims only, with structured
   output; it never sees page text. The sources per field are added by code.
 """
@@ -39,6 +40,7 @@ FETCH_MAX_CONTENT_TOKENS = 8_000
 REQUESTS_PER_PASS = 6
 RESEARCH_MAX_TOKENS = 8_000
 PLANNER_MAX_TOKENS = 4_000
+VERIFIER_MAX_TOKENS = 8_000
 WRITER_MAX_TOKENS = 8_000
 
 
@@ -48,14 +50,16 @@ class ModelConfig:
     # researchers cost about 4x as much and got fewer graded fields right.
     planner: str = "claude-haiku-5-5"
     researcher: str = "claude-haiku-5-5"
+    verifier: str = "claude-haiku-5-5"
     writer: str = "claude-haiku-5-5"
-    # For the researchers and the writer; the planner always runs at "low".
+    # For the researchers and the writer; the planner and the verifier always
+    # run at "low".
     effort: Effort = "medium"
 
     def __post_init__(self):
         # A model with no price would make every budget check fail closed;
         # refuse it at startup instead.
-        for model in (self.planner, self.researcher, self.writer):
+        for model in (self.planner, self.researcher, self.verifier, self.writer):
             if model not in PRICES:
                 raise ValueError(f"no price for model {model!r}; add it to app/pricing.py")
         if self.effort not in ("low", "medium", "high"):
@@ -67,6 +71,7 @@ class ModelConfig:
         return cls(
             planner=os.environ.get("AGENT_PLANNER_MODEL", defaults.planner),
             researcher=os.environ.get("AGENT_RESEARCHER_MODEL", defaults.researcher),
+            verifier=os.environ.get("AGENT_VERIFIER_MODEL", defaults.verifier),
             writer=os.environ.get("AGENT_WRITER_MODEL", defaults.writer),
             effort=os.environ.get("AGENT_EFFORT", defaults.effort),  # type: ignore[arg-type]
         )
@@ -238,12 +243,17 @@ def research_prompt(task: ResearchTask) -> str:
         f"Search ideas from the planner:\n{hints}"
     )
     if task["retry_claims"]:
-        failed = "\n".join(f"- {c['field']}: {c['value']} ({c['source_url']})" for c in task["retry_claims"])
-        prompt += (
-            "\n\nThis is a second pass. These claims from the first pass cited a URL that no search or "
-            "fetch returned, so they couldn't be verified. Find a real source for each, or drop it:\n"
-            f"{failed}"
+        failed = "\n".join(
+            f"- {c['field']}: {c['value']} ({c['source_url']}). Rejected because {c['reason']}"
+            for c in task["retry_claims"]
         )
+        prompt += (
+            "\n\nThis is a second pass. A checker couldn't verify these claims from the first pass. For "
+            "each, find a source you actually searched or fetched with a quote that states the value, "
+            f"or drop it:\n{failed}"
+        )
+    elif task["attempt"] > 1:
+        prompt += "\n\nThis is a second pass: the first pass reported no claims. Try different searches."
     return prompt
 
 
@@ -256,6 +266,36 @@ def tool_urls(response: Message) -> list[str]:
         elif block.type == "web_fetch_tool_result" and block.content.type == "web_fetch_result":
             urls.append(block.content.url)
     return urls
+
+
+# --- verifier --------------------------------------------------------------
+
+
+class QuoteCheck(BaseModel):
+    claim: int
+    supported: bool
+    # Why not, when it isn't supported.
+    reason: str
+
+
+class QuoteChecks(BaseModel):
+    checks: list[QuoteCheck]
+
+
+VERIFIER_SYSTEM = """You check claims for a company-research team. Each claim is a value for one profile
+field, with a short quote that a researcher copied from the cited web page. For each claim, decide
+whether the quote on its own supports the value.
+
+- Supported: the quote states the value, possibly in other words or another format ("New York, NY"
+  supports "New York City, New York, United States").
+- Not supported: the quote is about something else, is too vague, contradicts the value, or the value
+  adds a detail the quote doesn't state (a street address, a number, a date, a name).
+- Judge only the quote against the value, not what you know about the company.
+- Answer for every claim, by its number. For a claim that isn't supported, give the reason in a few
+  words; otherwise leave the reason empty."""
+
+# Claims the model's answer leaves out count as unsupported (fail closed).
+NO_ANSWER = "the checker gave no answer for it"
 
 
 # --- writer ----------------------------------------------------------------
@@ -360,7 +400,39 @@ class AnthropicModels:
         return finding, meter.done()
 
     async def verify(self, finding: Finding) -> tuple[Verdict, list[Usage]]:
-        return check_sources(finding), []
+        verdict = check_sources(finding)
+        passed = verdict["supported"]
+        if not passed:
+            return verdict, []
+        meter = Meter("verifier", self.config.verifier, "low", finding["branch"], finding["attempt"])
+        numbered = [
+            {"claim": i, "field": c["field"], "value": c["value"], "quote": c["quote"]}
+            for i, c in enumerate(passed)
+        ]
+        response = await self.client.messages.parse(
+            model=self.config.verifier,
+            max_tokens=VERIFIER_MAX_TOKENS,
+            system=VERIFIER_SYSTEM,
+            messages=[{"role": "user", "content": f"Claims:\n{json.dumps(numbered, indent=1)}"}],
+            output_config={"effort": "low"},
+            output_format=QuoteChecks,
+        )
+        meter.add(response)
+        answers: dict[int, QuoteCheck] = {}
+        for check in response.parsed_output.checks if response.parsed_output else []:
+            answers.setdefault(check.claim, check)
+        verdict["supported"] = []
+        for i, claim in enumerate(passed):
+            answer = answers.get(i)
+            if answer is not None and answer.supported:
+                verdict["supported"].append(claim)
+            elif answer is None:
+                verdict["unsupported"].append({**claim, "check": "quote", "reason": NO_ANSWER})
+            else:
+                why = f" ({answer.reason.strip()})" if answer.reason.strip() else ""
+                reason = f"the quote doesn't support it{why}"
+                verdict["unsupported"].append({**claim, "check": "quote", "reason": reason})
+        return verdict, meter.done()
 
     async def write(
         self, company: str, verdicts: list[Verdict], previous: dict | None

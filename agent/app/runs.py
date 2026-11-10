@@ -213,6 +213,17 @@ def view(row: dict, values: dict, next_nodes: tuple[str, ...]) -> dict:
                 "attempt": v["attempt"],
                 "supported": len(v["supported"]),
                 "unsupported": len(v["unsupported"]),
+                # Day 3 verdicts have no check or reason: only the source check existed.
+                "rejected": [
+                    {
+                        "field": c["field"],
+                        "value": c["value"],
+                        "source_url": c["source_url"],
+                        "check": c.get("check", "source"),
+                        "reason": c.get("reason"),
+                    }
+                    for c in v["unsupported"]
+                ],
             }
             for v in values.get("verdicts", [])
         ],
