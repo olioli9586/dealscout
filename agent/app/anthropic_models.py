@@ -210,13 +210,17 @@ REPORT_TOOL = {
 
 
 def research_tools(searches: int) -> list[dict]:
+    # strict on the web tools too: Haiku sometimes wrapped its search input
+    # as {"params": {"query": ...}}, which the API rejects as
+    # invalid_tool_input; a pass whose searches all failed reported nothing.
     return [
-        {"type": "web_search_20260209", "name": "web_search", "max_uses": searches},
+        {"type": "web_search_20260209", "name": "web_search", "max_uses": searches, "strict": True},
         {
             "type": "web_fetch_20260209",
             "name": "web_fetch",
             "max_uses": FETCHES_PER_REQUEST,
             "max_content_tokens": FETCH_MAX_CONTENT_TOKENS,
+            "strict": True,
         },
         REPORT_TOOL,
     ]

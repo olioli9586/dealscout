@@ -422,6 +422,8 @@ async def test_the_search_limit_reaches_the_tool_and_the_prompt():
     request = client.requests[0]
     [search] = [t for t in request["tools"] if t["name"] == "web_search"]
     assert search["max_uses"] == 1
+    # Every tool's input is schema-checked, the web tools' included.
+    assert all(t["strict"] for t in request["tools"])
     assert "at most 1 searches" in request["system"][0]["text"]
 
 
