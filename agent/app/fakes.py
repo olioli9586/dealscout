@@ -38,6 +38,7 @@ def fake_usage(node: str, cost: float, branch: Branch | None = None, attempt: in
         "web_search_requests": 0,
         "web_fetch_requests": 0,
         "cost_usd": cost,
+        "uncached_cost_usd": cost,
         "seconds": 0.0,
     }
 

@@ -17,7 +17,14 @@ CONFIG = ModelConfig(researcher=SONNET, writer=SONNET)
 
 
 def message(
-    content: list[dict], stop_reason: str, *, searches: int = 0, fetches: int = 0, **extra
+    content: list[dict],
+    stop_reason: str,
+    *,
+    searches: int = 0,
+    fetches: int = 0,
+    cache_write: int = 0,
+    cache_read: int = 0,
+    **extra,
 ) -> Message:
     return Message.model_validate(
         {
@@ -31,6 +38,8 @@ def message(
             "usage": {
                 "input_tokens": 10_000,
                 "output_tokens": 1_000,
+                "cache_creation_input_tokens": cache_write,
+                "cache_read_input_tokens": cache_read,
                 "server_tool_use": {"web_search_requests": searches, "web_fetch_requests": fetches},
             },
             **extra,
@@ -159,6 +168,22 @@ async def test_research_collects_tool_urls_follows_pause_turn_and_returns_the_re
     verdict = check_sources(finding)
     assert [c["field"] for c in verdict["supported"]] == ["website"]
     assert [c["field"] for c in verdict["unsupported"]] == ["founded_year"]
+
+
+async def test_research_caches_the_shared_prefix_and_counts_what_caching_saved():
+    client = ScriptedClient(created=[message(report(), "tool_use", cache_write=20_000, cache_read=30_000)])
+    _, [u] = await AnthropicModels(client, CONFIG).research(task())
+
+    request = client.requests[0]
+    # One breakpoint after the shared tools and system prompt, one automatic
+    # one at the end of the conversation.
+    assert request["system"][-1]["cache_control"] == {"type": "ephemeral"}
+    assert request["cache_control"] == {"type": "ephemeral"}
+    assert (u["cache_creation_input_tokens"], u["cache_read_input_tokens"]) == (20_000, 30_000)
+    # Sonnet 5.5: 10k in at $2, 20k written at $2.50, 30k read at $0.10, 1k out at $10.
+    assert u["cost_usd"] == pytest.approx(0.02 + 0.05 + 0.003 + 0.01)
+    # Uncached, all 60k prompt tokens would have been $2 input.
+    assert u["uncached_cost_usd"] == pytest.approx(0.12 + 0.01)
 
 
 async def test_research_asks_again_when_the_model_stops_without_reporting():

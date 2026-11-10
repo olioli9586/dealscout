@@ -49,8 +49,12 @@ class ResponseUsage(Protocol):
     server_tool_use: ServerToolUsage | None
 
 
-def response_cost(model: str, usage: ResponseUsage) -> float | None:
-    """Cost of one response in USD, or None for a model with no known price."""
+def response_cost(model: str, usage: ResponseUsage, *, uncached: bool = False) -> float | None:
+    """Cost of one response in USD, or None for a model with no known price.
+
+    uncached=True prices the same response as if nothing had been cached
+    (every prompt token at the input rate): caching doesn't change what the
+    model does, so the difference is exactly what caching saved."""
     rates = PRICES.get(model)
     if rates is None:
         return None
@@ -59,6 +63,8 @@ def response_cost(model: str, usage: ResponseUsage) -> float | None:
     prompt = usage.input_tokens + cache_write + cache_read
     if model == "claude-haiku-5-5" and prompt > HAIKU_LONG_AFTER:
         rates = HAIKU_LONG
+    if uncached:
+        rates = rates._replace(cache_write=rates.input, cache_read=rates.input)
     tokens = (
         usage.input_tokens * rates.input
         + cache_write * rates.cache_write

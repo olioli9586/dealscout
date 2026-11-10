@@ -69,6 +69,9 @@ class Usage(TypedDict):
     web_fetch_requests: int
     # USD; None if a response came from a model with no known price.
     cost_usd: float | None
+    # What the same requests would have cost with nothing cached (see
+    # app/pricing.py). Entries from before caching (Day 3) don't have it.
+    uncached_cost_usd: NotRequired[float | None]
     seconds: float
 
 

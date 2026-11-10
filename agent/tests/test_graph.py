@@ -2,9 +2,9 @@ import json
 
 import pytest
 
-from app.fakes import WEAK_URL, FakeModels
+from app.fakes import WEAK_URL, FakeModels, fake_usage
 from app.profile_schema import SavedProfile, unknown_profile
-from app.runs import SpendCapReached
+from app.runs import SpendCapReached, summarize
 from tests.conftest import research_calls
 
 
@@ -129,6 +129,16 @@ async def test_every_node_reports_its_usage_and_the_run_totals_it(make_runs, poo
     async with pool.connection() as conn:
         row = await (await conn.execute("select cost_usd from runs where id = %s", (run["id"],))).fetchone()
     assert row["cost_usd"] == pytest.approx(usage["cost_usd"])
+
+
+def test_the_summary_prices_an_entry_from_before_caching_the_same_uncached():
+    before = fake_usage("researcher", 0.2, "news", 1)
+    del before["uncached_cost_usd"]
+    cached = fake_usage("writer", 0.1) | {"uncached_cost_usd": 0.3}
+
+    summary = summarize([before, cached])
+    assert summary["cost_usd"] == pytest.approx(0.3)
+    assert summary["uncached_cost_usd"] == pytest.approx(0.5)
 
 
 async def test_a_retry_runs_only_if_the_budget_left_pays_for_another_pass(make_runs):

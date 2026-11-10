@@ -19,6 +19,18 @@ def test_prices_every_token_kind_and_each_web_search():
     assert response_cost("claude-sonnet-4-6", usage) == pytest.approx(0.4125, abs=1e-10)
 
 
+def test_uncached_prices_every_prompt_token_at_the_input_rate():
+    usage = Usage(
+        input_tokens=100_000,
+        output_tokens=2_000,
+        cache_creation_input_tokens=10_000,
+        cache_read_input_tokens=50_000,
+        server_tool_use=ServerToolUsage(web_search_requests=3, web_fetch_requests=2),
+    )
+    # 160k prompt tokens x $3 + 2k x $15 per MTok, plus the same 3 searches.
+    assert response_cost("claude-sonnet-4-6", usage, uncached=True) == pytest.approx(0.54, abs=1e-10)
+
+
 def test_treats_missing_cache_and_tool_fields_as_zero():
     assert response_cost("claude-opus-5-5", Usage(input_tokens=1_000_000, output_tokens=0)) == 4
 

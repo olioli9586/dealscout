@@ -180,9 +180,12 @@ def summarize(usage: list[Usage]) -> dict:
         "web_search_requests",
         "web_fetch_requests",
     )
+    # An entry from before caching cost the same uncached.
+    uncached = spent([{**u, "cost_usd": u.get("uncached_cost_usd", u["cost_usd"])} for u in usage])
     return {
         **{k: sum(u[k] for u in usage) for k in keys},
         "cost_usd": None if total == float("inf") else total,
+        "uncached_cost_usd": None if uncached == float("inf") else uncached,
         "calls": usage,
     }
 

@@ -93,6 +93,7 @@ class Meter:
             "web_search_requests": 0,
             "web_fetch_requests": 0,
             "cost_usd": 0.0,
+            "uncached_cost_usd": 0.0,
             "seconds": 0.0,
         }
 
@@ -108,8 +109,9 @@ class Meter:
         if usage.server_tool_use:
             u["web_search_requests"] += usage.server_tool_use.web_search_requests
             u["web_fetch_requests"] += usage.server_tool_use.web_fetch_requests
-        cost = response_cost(model, usage)
-        u["cost_usd"] = None if u["cost_usd"] is None or cost is None else u["cost_usd"] + cost
+        for key, uncached in (("cost_usd", False), ("uncached_cost_usd", True)):
+            cost = response_cost(model, usage, uncached=uncached)
+            u[key] = None if u[key] is None or cost is None else u[key] + cost
 
     def done(self) -> list[Usage]:
         self.usage["seconds"] = round(time.monotonic() - self.started, 2)
@@ -213,6 +215,17 @@ Rules:
 
 NUDGE = "Now call report_findings with your claims (an empty list if you found none)."
 
+# Prompt caching, two breakpoints. The explicit one ends the part every
+# researcher sends unchanged (the tools, then this system prompt; the web
+# tools add a few thousand tokens of their own), so researchers and runs
+# that start within 5 minutes of each other read it from the cache. The
+# automatic one (top-level cache_control) follows the end of the
+# conversation, which also caches the server's own search loop inside a
+# single request: each step reads what the previous one wrote.
+RESEARCHER_SYSTEM_BLOCKS = [
+    {"type": "text", "text": RESEARCHER_SYSTEM, "cache_control": {"type": "ephemeral"}}
+]
+
 
 def research_prompt(task: ResearchTask) -> str:
     fields = "\n".join(f"- {f}: {FIELD_HELP[f]}" for f in BRANCH_FIELDS[task["branch"]])
@@ -303,9 +316,10 @@ class AnthropicModels:
             response = await self.client.messages.create(
                 model=self.config.researcher,
                 max_tokens=RESEARCH_MAX_TOKENS,
-                system=RESEARCHER_SYSTEM,
+                system=RESEARCHER_SYSTEM_BLOCKS,
                 tools=RESEARCH_TOOLS,
                 messages=messages,
+                cache_control={"type": "ephemeral"},
                 output_config={"effort": self.config.effort},
                 # Dynamic filtering runs in a code execution container; later
                 # requests in the loop must name the same one.
