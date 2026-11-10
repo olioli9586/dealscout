@@ -5,10 +5,12 @@ const RUN = "0b6f3b5e-6a4e-4a8e-9a43-3f1e2d9c7b10";
 const fetchMock = vi.fn();
 
 function request(url: string, init?: RequestInit): NextRequest {
-  return new Request(`http://localhost${url}`, {
+  const req = new Request(`http://localhost${url}`, {
     headers: { "content-type": "application/json", "x-forwarded-for": "9.9.9.9" },
     ...init,
-  }) as unknown as NextRequest;
+  });
+  // The GET handler reads nextUrl, which a plain Request doesn't have.
+  return Object.assign(req, { nextUrl: new URL(req.url) }) as unknown as NextRequest;
 }
 
 const params = (id: string) => ({ params: Promise.resolve({ id }) });
@@ -38,7 +40,20 @@ describe("v2 routes", () => {
     expect(agentCall()).toEqual({ url: "https://agent.internal/runs", method: "POST", body: { company: "Ramp" } });
   });
 
-  it.each([["{nope"], [JSON.stringify({ company: "  " })], [JSON.stringify({ company: "x".repeat(201) })]])(
+  it("passes on the run id the browser chose", async () => {
+    const { POST } = await import("@/app/api/v2/runs/route");
+    const body = JSON.stringify({ company: "Ramp", id: RUN });
+    expect((await POST(request("/api/v2/runs", { method: "POST", body }))).status).toBe(200);
+    expect(agentCall().body).toEqual({ company: "Ramp", id: RUN });
+  });
+
+  it.each([
+    ["{nope"],
+    [JSON.stringify({ company: "  " })],
+    [JSON.stringify({ company: "x".repeat(201) })],
+    [JSON.stringify({ company: "Ramp", id: "../health" })],
+    [JSON.stringify({ company: "Ramp", id: 7 })],
+  ])(
     "rejects %s without spending the quota",
     async (body) => {
       const { POST } = await import("@/app/api/v2/runs/route");
@@ -71,6 +86,19 @@ describe("v2 routes", () => {
       { url: `https://agent.internal/runs/${RUN}/resume`, method: "POST", body: {} },
       { url: `https://agent.internal/runs/${RUN}/decision`, method: "POST", body: edit },
     ]);
+  });
+
+  it("reads the history's runs by id, and nothing else", async () => {
+    const { GET } = await import("@/app/api/v2/runs/route");
+    const other = "1c2d3e4f-5a6b-4c7d-8e9f-0a1b2c3d4e5f";
+    await GET(request(`/api/v2/runs?ids=${RUN},${other}`));
+    expect(agentCall()).toEqual({ url: `https://agent.internal/runs?ids=${RUN},${other}`, method: "GET", body: null });
+
+    expect(await (await GET(request("/api/v2/runs"))).json()).toEqual([]);
+    expect((await GET(request(`/api/v2/runs?ids=${RUN},x`))).status).toBe(400);
+    const tooMany = Array.from({ length: 101 }, () => RUN).join(",");
+    expect((await GET(request(`/api/v2/runs?ids=${tooMany}`))).status).toBe(400);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
   it("answers 404 for an id that isn't a UUID, without calling the agent", async () => {
