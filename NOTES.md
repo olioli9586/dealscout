@@ -1076,7 +1076,7 @@ $0.127 whose funding_status includes "Form D for Databricks, Inc. filed
 2026-08-27 shows total amount sold of $241,204,249 USD", cited to sec.gov:
 the agent reaches the EDGAR server from Vercel.
 
-### Results: the funding researcher with and without EDGAR (`eval/edgar.py`)
+### Results: the funding researcher with and without EDGAR (`eval/edgar.py`, `eval/results/edgar/`)
 
 Only the funding researcher and the verifier, on 10 companies (6 private
 US, 2 public US, 2 outside the US), twice:

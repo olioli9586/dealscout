@@ -8,9 +8,10 @@ person to read.
 
 Usage, from the repo root:
   PYTHONPATH=agent uv run --project agent --env-file .env.local \\
-    python eval/edgar.py [--only "Ramp,Revolut"] [--label edgar-funding]
+    python eval/edgar.py [--only "Ramp,Revolut"] [--label run-3]
 
-Writes eval/results/<label>.json.
+Writes eval/results/edgar/<label>.json (not a whole-run eval, so kept out
+of RESULTS.md, like eval/results/replays/).
 """
 
 import argparse
@@ -94,7 +95,7 @@ async def main(companies: list[str], label: str) -> None:
         print(f"{name:8}: claims supported {supported}/{claims}, citing sec.gov {sec}, ${cost:.3f}")
     total = sum(r["cost_usd"] for r in rows)
     print(f"${total:.3f} in all")
-    path = HERE / "results" / f"{label}.json"
+    path = HERE / "results" / "edgar" / f"{label}.json"
     path.write_text(json.dumps({"label": label, "cost_usd": total, "rows": rows}, indent=2) + "\n")
     print(f"wrote {path}")
 
@@ -102,7 +103,7 @@ async def main(companies: list[str], label: str) -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--only", help="comma-separated company names")
-    parser.add_argument("--label", default="edgar-funding")
+    parser.add_argument("--label", required=True)
     args = parser.parse_args()
     names = args.only.split(",") if args.only else COMPANIES
     asyncio.run(main(names, args.label))
