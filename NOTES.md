@@ -1228,18 +1228,24 @@ Langfuse's API:
   the run's cost.
 - The test profiles the three runs saved were deleted from the dev database.
 
-### Waiting on them
+### Finished later the same day
 
-- The trace screenshot for the README (Langfuse needs their login).
-- The `ANTHROPIC_API_KEY` repository secret for the scheduled eval, and
-  whether it should stay on after the credits expire on 2026-11-16 (it
-  would fail weekly without credit).
-- Production, their explicit OK first: v2 needs a production database, the
-  agent's settings (`AGENT_MODELS`, `AGENT_DAILY_USD`), `V2_ADMIN_TOKEN`, and
-  `DEALSCOUT_MODEL` / `DEALSCOUT_EFFORT` re-created as Config. Without a
-  database, `/v2` on production answers 503 "DATABASE_URL is not set"; v1
-  is unaffected.
-- The merge (they run `gh pr merge`).
+- **The scheduled eval skips instead of failing** when the API refuses a
+  one-token test request (checked locally: 200 with the real key, 401 with
+  a bad one), so it won't go red every week once the credits run out.
+- **The README's trace figure** (`docs/trace/`) is drawn from the Databricks
+  trace's data through Langfuse's API: Langfuse's page needs their login.
+
+### Blocked for me, so theirs (the auto-mode classifier)
+
+- Creating the production database (`vercel integration add neon ... -e
+  production`): "Secret-Store Writes".
+- Adding `AGENT_MODELS` and `AGENT_DAILY_USD` to Production: "Modify
+  Shared Resources".
+- So, for them, in order: the production database, the agent's production
+  settings, `V2_ADMIN_TOKEN` (generated into `.env.admin.local`, which
+  Next.js doesn't load), the repository secret, then the merge. After it:
+  one production run to check, and one manual eval run in CI.
 
 ### Spend
 
