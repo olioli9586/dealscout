@@ -1201,8 +1201,8 @@ on Ramp locally $0.10 and Databricks on the preview $0.13). Since
 
 ### Tracing on (their Langfuse keys, EU region)
 
-Two traced runs locally (start, then approve), read back through Langfuse's
-API:
+Three traced runs locally (start, then approve), read back through
+Langfuse's API:
 
 - **Vanta**: 34 observations, but every model request was there twice: the
   Anthropic SDK (2.6) traces its own requests with OpenTelemetry, and
@@ -1223,7 +1223,10 @@ API:
   The trace id is now `create_trace_id(seed=run_id)`, a SHA-256 of the run
   id. Today's two traced runs sent theirs; both live only in the local
   database.
-- The test profiles both runs saved were deleted from the dev database.
+- **Databricks**, with the hashed trace id: 29 observations, 14 generations
+  for 14 model requests (a branch was retried), Langfuse's total $0.1462 =
+  the run's cost.
+- The test profiles the three runs saved were deleted from the dev database.
 
 ### Waiting on them
 
@@ -1240,5 +1243,5 @@ API:
 
 ### Spend
 
-Day 9: $0.84 (the 5 originals $0.63, two traced runs $0.21). Since
-2026-11-10: $38.79.
+Day 9: $0.99 (the 5 originals $0.63, three traced runs $0.36). Since
+2026-11-10: $38.94.
