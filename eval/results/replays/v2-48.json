@@ -1,0 +1,1064 @@
+{
+  "label": "v2-48",
+  "fields_before": 132,
+  "fields_after": 136,
+  "cost_usd": 0.1752163,
+  "rows": [
+    {
+      "name": "Anthropic",
+      "run_id": "5bde1e2e-8f2a-45a8-a098-d464bfdedfcc",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 32,
+      "claims": 46,
+      "cost_usd": 0.0034138,
+      "profile": {
+        "website": "www.anthropic.com",
+        "founded_year": "2021",
+        "hq_location": "San Francisco, California, United States"
+      }
+    },
+    {
+      "name": "Vercel",
+      "run_id": "32078b75-18cb-43be-8de1-4f38900c0309",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 25,
+      "claims": 47,
+      "cost_usd": 0.0038168000000000004,
+      "profile": {
+        "website": "vercel.com",
+        "founded_year": "2015",
+        "hq_location": "San Francisco, California, USA"
+      }
+    },
+    {
+      "name": "Airbnb",
+      "run_id": "38597944-596a-4ca0-938f-da0d140ded79",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 24,
+      "claims": 36,
+      "cost_usd": 0.0031012,
+      "profile": {
+        "website": "airbnb.com",
+        "founded_year": "2008",
+        "hq_location": "San Francisco, California, United States"
+      }
+    },
+    {
+      "name": "Shopify",
+      "run_id": "88f85f93-e974-4473-ac48-f2e9ef164e95",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 23,
+      "claims": 35,
+      "cost_usd": 0.0031627,
+      "profile": {
+        "website": "shopify.com",
+        "founded_year": "2006",
+        "hq_location": "Ottawa, Ontario, Canada"
+      }
+    },
+    {
+      "name": "Datadog",
+      "run_id": "b5bcd9a2-9bfa-40ae-bdfd-2a9e3acf3350",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 31,
+      "claims": 45,
+      "cost_usd": 0.0039717,
+      "profile": {
+        "website": "datadoghq.com",
+        "founded_year": "2010",
+        "hq_location": "New York, New York, United States"
+      }
+    },
+    {
+      "name": "Cloudflare",
+      "run_id": "51a526a3-c46c-462d-8845-1e5879084fb2",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 32,
+      "claims": 45,
+      "cost_usd": 0.0038764000000000003,
+      "profile": {
+        "website": "https://www.cloudflare.com",
+        "founded_year": "2009",
+        "hq_location": "San Francisco, California"
+      }
+    },
+    {
+      "name": "Twilio",
+      "run_id": "e4168841-904d-4ccd-a389-52e5fee5f49a",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 24,
+      "claims": 35,
+      "cost_usd": 0.0030597999999999997,
+      "profile": {
+        "website": "twilio.com",
+        "founded_year": "2008",
+        "hq_location": "San Francisco, California, United States"
+      }
+    },
+    {
+      "name": "HubSpot",
+      "run_id": "33863742-abab-460b-8786-563fbe755f1a",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 23,
+      "claims": 34,
+      "cost_usd": 0.0030893,
+      "profile": {
+        "website": "https://www.hubspot.com/",
+        "founded_year": "2006",
+        "hq_location": "Cambridge, Massachusetts, United States"
+      }
+    },
+    {
+      "name": "Duolingo",
+      "run_id": "f0431b37-a015-4842-85a2-174f47e43251",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 21,
+      "claims": 32,
+      "cost_usd": 0.0028751000000000002,
+      "profile": {
+        "website": "https://www.duolingo.com",
+        "founded_year": "2011",
+        "hq_location": "Pittsburgh, Pennsylvania, United States"
+      }
+    },
+    {
+      "name": "Toast",
+      "run_id": "48231076-2b56-4570-af6d-20861e402f84",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": false
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 26,
+      "claims": 36,
+      "cost_usd": 0.0031047,
+      "profile": {
+        "website": "toasttab.com",
+        "founded_year": "2011",
+        "hq_location": "Boston, Massachusetts, United States"
+      }
+    },
+    {
+      "name": "Etsy",
+      "run_id": "62ccaefa-d0ee-436a-9818-5dc87e9294ba",
+      "before": {
+        "website_domain": false,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": false,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 25,
+      "claims": 40,
+      "cost_usd": 0.003955500000000001,
+      "profile": {
+        "website": "unknown",
+        "founded_year": "2005",
+        "hq_location": "Brooklyn, New York"
+      }
+    },
+    {
+      "name": "Robinhood",
+      "run_id": "206e3eec-908a-4268-a4d2-b7c83d8fb859",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 35,
+      "claims": 48,
+      "cost_usd": 0.004462000000000001,
+      "profile": {
+        "website": "https://robinhood.com/us/en/",
+        "founded_year": "2013",
+        "hq_location": "Menlo Park, California, United States"
+      }
+    },
+    {
+      "name": "DoorDash",
+      "run_id": "5d516115-29ac-47eb-acbb-9e6d94452353",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": false
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 25,
+      "claims": 33,
+      "cost_usd": 0.0030673000000000002,
+      "profile": {
+        "website": "doordash.com",
+        "founded_year": "2013",
+        "hq_location": "San Francisco, California, United States"
+      }
+    },
+    {
+      "name": "Rivian",
+      "run_id": "458b557b-bc47-4335-a75c-4a7e5da7b063",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 33,
+      "claims": 46,
+      "cost_usd": 0.0042571,
+      "profile": {
+        "website": "rivian.com",
+        "founded_year": "2009",
+        "hq_location": "Irvine, California, United States"
+      }
+    },
+    {
+      "name": "Samsara",
+      "run_id": "2dccb9f2-23ed-4257-837b-c50d62d36cf3",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": false
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 35,
+      "claims": 48,
+      "cost_usd": 0.0042463,
+      "profile": {
+        "website": "samsara.com",
+        "founded_year": "2015",
+        "hq_location": "San Francisco, California, United States"
+      }
+    },
+    {
+      "name": "MongoDB",
+      "run_id": "deffaa66-ac83-449b-bbce-80ef69be48e6",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 26,
+      "claims": 36,
+      "cost_usd": 0.0029915000000000002,
+      "profile": {
+        "website": "https://www.mongodb.com/",
+        "founded_year": "2007",
+        "hq_location": "New York, New York, United States"
+      }
+    },
+    {
+      "name": "Okta",
+      "run_id": "a86222c6-cc10-4548-948f-2bf4e21484ca",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": false
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 34,
+      "claims": 45,
+      "cost_usd": 0.0039466,
+      "profile": {
+        "website": "okta.com",
+        "founded_year": "2009",
+        "hq_location": "San Francisco, California, United States"
+      }
+    },
+    {
+      "name": "Spotify",
+      "run_id": "8216186f-6071-42d4-aa55-356229cdb89c",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 29,
+      "claims": 45,
+      "cost_usd": 0.0039872,
+      "profile": {
+        "website": "spotify.com",
+        "founded_year": "2006",
+        "hq_location": "Stockholm, Sweden"
+      }
+    },
+    {
+      "name": "Adyen",
+      "run_id": "b035de11-8a3e-48c9-8772-589a36a6d1b5",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 31,
+      "claims": 48,
+      "cost_usd": 0.003746,
+      "profile": {
+        "website": "https://www.adyen.com/",
+        "founded_year": "2006",
+        "hq_location": "Amsterdam, Netherlands"
+      }
+    },
+    {
+      "name": "Wise",
+      "run_id": "3b3e9ce8-a0d9-4896-b2c2-e1f99cab8b2b",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 26,
+      "claims": 36,
+      "cost_usd": 0.0031782,
+      "profile": {
+        "website": "https://wise.com/us/",
+        "founded_year": "2011",
+        "hq_location": "London, United Kingdom"
+      }
+    },
+    {
+      "name": "Klarna",
+      "run_id": "b0b5a997-d92e-46f3-936f-7a096e940cf4",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 26,
+      "claims": 37,
+      "cost_usd": 0.0033143,
+      "profile": {
+        "website": "klarna.com",
+        "founded_year": "2005",
+        "hq_location": "Stockholm, Stockholms Lan, Sweden"
+      }
+    },
+    {
+      "name": "Canva",
+      "run_id": "f4b01211-42f6-4ab4-afda-8bf7f105ca86",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": false
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": false
+      },
+      "supported": 24,
+      "claims": 36,
+      "cost_usd": 0.0031939000000000004,
+      "profile": {
+        "website": "canva.com",
+        "founded_year": "2013",
+        "hq_location": "Surry Hills, New South Wales, Australia"
+      }
+    },
+    {
+      "name": "Revolut",
+      "run_id": "5c882097-7483-430c-975f-0a466ed9f40e",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 37,
+      "claims": 51,
+      "cost_usd": 0.0041783,
+      "profile": {
+        "website": "https://www.revolut.com/",
+        "founded_year": "2015",
+        "hq_location": "London, England, United Kingdom"
+      }
+    },
+    {
+      "name": "Monzo",
+      "run_id": "802f99e6-76a2-4b02-83fb-2de020387d77",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 22,
+      "claims": 37,
+      "cost_usd": 0.0030261,
+      "profile": {
+        "website": "monzo.com",
+        "founded_year": "2015",
+        "hq_location": "London, England, United Kingdom"
+      }
+    },
+    {
+      "name": "N26",
+      "run_id": "8de9d1e6-efce-4b0e-b393-3660b408a4c4",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 32,
+      "claims": 53,
+      "cost_usd": 0.0043363,
+      "profile": {
+        "website": "https://n26.com",
+        "founded_year": "2013",
+        "hq_location": "Berlin, Berlin, Germany"
+      }
+    },
+    {
+      "name": "Celonis",
+      "run_id": "6bfbbb85-8c55-4e39-9744-f10db208fd70",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": false
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": false
+      },
+      "supported": 26,
+      "claims": 38,
+      "cost_usd": 0.0030732,
+      "profile": {
+        "website": "celonis.com",
+        "founded_year": "2011",
+        "hq_location": "unknown"
+      }
+    },
+    {
+      "name": "Mistral AI",
+      "run_id": "be2d5db3-a96f-4f31-abcb-10684aae0a20",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 37,
+      "claims": 47,
+      "cost_usd": 0.0039642,
+      "profile": {
+        "website": "mistral.ai",
+        "founded_year": "2023",
+        "hq_location": "Paris, France"
+      }
+    },
+    {
+      "name": "Cohere",
+      "run_id": "494ff879-8d10-4f6c-9cee-83fb21a7d7bb",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 32,
+      "claims": 46,
+      "cost_usd": 0.0045486,
+      "profile": {
+        "website": "https://cohere.com",
+        "founded_year": "2019",
+        "hq_location": "Toronto, Canada"
+      }
+    },
+    {
+      "name": "Nubank",
+      "run_id": "3cac6730-05b6-4e2c-86cf-7a3a4fe001b7",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": false
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": false
+      },
+      "supported": 24,
+      "claims": 35,
+      "cost_usd": 0.0034477,
+      "profile": {
+        "website": "https://nubank.com.br",
+        "founded_year": "2013",
+        "hq_location": "unknown"
+      }
+    },
+    {
+      "name": "Grab",
+      "run_id": "bdbca9a1-b0ac-4c5a-a872-eaaf3671744c",
+      "before": {
+        "website_domain": false,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": false,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 29,
+      "claims": 52,
+      "cost_usd": 0.0046234,
+      "profile": {
+        "website": "unknown",
+        "founded_year": "2012",
+        "hq_location": "one-north, Singapore"
+      }
+    },
+    {
+      "name": "Brex",
+      "run_id": "a543f4f5-8982-4430-9b59-dc1485f0c056",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 26,
+      "claims": 35,
+      "cost_usd": 0.0030457,
+      "profile": {
+        "website": "https://www.brex.com",
+        "founded_year": "2017",
+        "hq_location": "San Francisco, California, United States"
+      }
+    },
+    {
+      "name": "Ramp",
+      "run_id": "3289de77-7e2c-48ee-bef1-21ebb281f773",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 29,
+      "claims": 46,
+      "cost_usd": 0.0040131,
+      "profile": {
+        "website": "ramp.com",
+        "founded_year": "2019",
+        "hq_location": "New York, New York, United States"
+      }
+    },
+    {
+      "name": "Plaid",
+      "run_id": "64b94eee-1cf4-4f74-8f88-438f121c0228",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 36,
+      "claims": 46,
+      "cost_usd": 0.0043341000000000005,
+      "profile": {
+        "website": "plaid.com",
+        "founded_year": "2013",
+        "hq_location": "San Francisco, California, United States"
+      }
+    },
+    {
+      "name": "Rippling",
+      "run_id": "864b69cf-06cd-4460-b7b7-016aa01c3081",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": false,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 25,
+      "claims": 36,
+      "cost_usd": 0.0032318,
+      "profile": {
+        "website": "unknown",
+        "founded_year": "2016",
+        "hq_location": "San Francisco, California, United States"
+      }
+    },
+    {
+      "name": "Vanta",
+      "run_id": "f4bcdce9-afd0-4581-932e-561535af7ae1",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 25,
+      "claims": 35,
+      "cost_usd": 0.0032057000000000006,
+      "profile": {
+        "website": "www.vanta.com",
+        "founded_year": "2018",
+        "hq_location": "San Francisco, California, United States"
+      }
+    },
+    {
+      "name": "Retool",
+      "run_id": "7841b97b-7d9d-4430-b480-116a7cde5589",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 33,
+      "claims": 40,
+      "cost_usd": 0.0034075000000000004,
+      "profile": {
+        "website": "https://retool.com/",
+        "founded_year": "2017",
+        "hq_location": "San Francisco, California, United States"
+      }
+    },
+    {
+      "name": "Figma",
+      "run_id": "53746294-9af6-499d-836e-9d27ba84c047",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 30,
+      "claims": 50,
+      "cost_usd": 0.0039959999999999996,
+      "profile": {
+        "website": "https://www.figma.com/",
+        "founded_year": "2012",
+        "hq_location": "San Francisco, California, United States"
+      }
+    },
+    {
+      "name": "Notion",
+      "run_id": "e5e416a4-84a2-4bb2-bb58-f5a79274cdef",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 33,
+      "claims": 41,
+      "cost_usd": 0.00351,
+      "profile": {
+        "website": "notion.com",
+        "founded_year": "2013",
+        "hq_location": "San Francisco, California, United States"
+      }
+    },
+    {
+      "name": "Databricks",
+      "run_id": "ef055b14-558e-45dd-b4e6-02a503227410",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 36,
+      "claims": 49,
+      "cost_usd": 0.0041443,
+      "profile": {
+        "website": "databricks.com",
+        "founded_year": "2013",
+        "hq_location": "San Francisco, California, United States"
+      }
+    },
+    {
+      "name": "Scale AI",
+      "run_id": "33596c8c-faa1-4d5a-b0b6-645cc6193364",
+      "before": {
+        "website_domain": true,
+        "founded_year": false,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": false,
+        "hq_city": true
+      },
+      "supported": 22,
+      "claims": 36,
+      "cost_usd": 0.0035602000000000003,
+      "profile": {
+        "website": "scale.com",
+        "founded_year": "unknown",
+        "hq_location": "San Francisco, CA, United States"
+      }
+    },
+    {
+      "name": "Anduril",
+      "run_id": "77598e15-0cbe-4638-92d5-92f79f342512",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 36,
+      "claims": 47,
+      "cost_usd": 0.0034709,
+      "profile": {
+        "website": "https://www.anduril.com/",
+        "founded_year": "2017",
+        "hq_location": "Costa Mesa, California, U.S."
+      }
+    },
+    {
+      "name": "Perplexity",
+      "run_id": "4e1bd7e1-c381-4484-92ae-7a686c55d3c7",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 36,
+      "claims": 45,
+      "cost_usd": 0.0037730999999999997,
+      "profile": {
+        "website": "https://www.perplexity.ai/",
+        "founded_year": "2022",
+        "hq_location": "San Francisco, California"
+      }
+    },
+    {
+      "name": "Gusto",
+      "run_id": "b100c116-4736-4ed6-ac87-f6c797fac5c5",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 29,
+      "claims": 45,
+      "cost_usd": 0.0045103,
+      "profile": {
+        "website": "gusto.com",
+        "founded_year": "2011",
+        "hq_location": "San Francisco, California, United States"
+      }
+    },
+    {
+      "name": "Modal",
+      "run_id": "494673d7-c0e8-4a0f-959b-61687ba9972f",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 27,
+      "claims": 36,
+      "cost_usd": 0.0035793,
+      "profile": {
+        "website": "modal.com",
+        "founded_year": "2021",
+        "hq_location": "New York, NY, United States"
+      }
+    },
+    {
+      "name": "Replit",
+      "run_id": "4b32f91a-447c-438d-8bd8-a4dfbc09288a",
+      "before": {
+        "website_domain": false,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 28,
+      "claims": 38,
+      "cost_usd": 0.0034476999999999997,
+      "profile": {
+        "website": "replit.com",
+        "founded_year": "2016",
+        "hq_location": "Foster City, California, United States"
+      }
+    },
+    {
+      "name": "Harvey",
+      "run_id": "12d727b3-f580-488c-80db-7cac03a0c336",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 34,
+      "claims": 49,
+      "cost_usd": 0.0043955,
+      "profile": {
+        "website": "https://www.harvey.ai/",
+        "founded_year": "2022",
+        "hq_location": "San Francisco, California, United States"
+      }
+    },
+    {
+      "name": "Hex",
+      "run_id": "f2829249-a7ca-41e6-b0f6-a96841b70e02",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "supported": 25,
+      "claims": 31,
+      "cost_usd": 0.0030039,
+      "profile": {
+        "website": "https://hex.tech",
+        "founded_year": "2019",
+        "hq_location": "San Francisco, California, United States"
+      }
+    },
+    {
+      "name": "Glean",
+      "run_id": "40ac7fee-730d-4c91-85a7-3a0184ed490c",
+      "before": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": false
+      },
+      "after": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": false
+      },
+      "supported": 34,
+      "claims": 43,
+      "cost_usd": 0.0035719999999999997,
+      "profile": {
+        "website": "https://www.glean.com/",
+        "founded_year": "2019",
+        "hq_location": "San Francisco, CA, US"
+      }
+    }
+  ]
+}

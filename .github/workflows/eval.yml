@@ -1,0 +1,141 @@
+name: eval
+# The v2 agent eval against the real Anthropic API, on a schedule and by
+# hand. It spends money: the 5 original companies cost about $0.65, all 48
+# about $6. The spend is capped three ways: run-eval.mjs starts no company
+# once the runs so far reach MAX_USD, the agent refuses runs past the same
+# daily cap (each job gets a fresh database, so the cap covers this job
+# alone), and each run stops researching at its own $1.50 budget. Worst
+# case: MAX_USD plus one run. Nothing runs without the ANTHROPIC_API_KEY
+# repository secret, or when the API refuses a one-token test request (an
+# account with no credit left, say): the job is then skipped with a
+# warning, not failed, since that's not a regression.
+
+on:
+  schedule:
+    # Mondays 09:17 UTC.
+    - cron: "17 9 * * 1"
+  workflow_dispatch:
+    inputs:
+      companies:
+        description: The 5 original companies, or all 48
+        type: choice
+        options: [originals, all]
+        default: originals
+      max_usd:
+        description: Hard spend cap in USD
+        default: "1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: eval
+  cancel-in-progress: false
+
+jobs:
+  # Secrets can't be read in a job's `if`, so this job checks the key.
+  key:
+    runs-on: ubuntu-latest
+    outputs:
+      ready: ${{ steps.check.outputs.ready }}
+    steps:
+      - id: check
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::notice::No ANTHROPIC_API_KEY repository secret, so the eval is skipped."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          code=$(curl -s -o reply.json -w '%{http_code}' https://api.anthropic.com/v1/messages \
+            -H "x-api-key: $ANTHROPIC_API_KEY" -H "anthropic-version: 2023-06-01" -H "content-type: application/json" \
+            -d '{"model":"claude-haiku-5-5","max_tokens":1,"messages":[{"role":"user","content":"hi"}]}')
+          if [ "$code" = 200 ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::The API refused a test request (HTTP $code: $(jq -r '.error.message // empty' reply.json)), so the eval is skipped."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  eval:
+    needs: key
+    if: needs.key.outputs.ready == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: dealscout_eval
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      # Inputs reach the scripts through the environment, never pasted into them.
+      COMPANIES: ${{ inputs.companies || 'originals' }}
+      MAX_USD: ${{ inputs.max_usd || '1' }}
+      LABEL: ci-${{ github.run_number }}
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/dealscout_eval
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+      - run: npm install --no-audit --no-fund
+      - run: npm run build
+      - run: uv sync --locked --extra dev
+        working-directory: agent
+      - run: uv run python -m app.migrate
+        working-directory: agent
+
+      - name: Start the agent (real models) and the app
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AGENT_MODELS: anthropic
+        run: |
+          (cd agent && AGENT_DAILY_USD="$MAX_USD" nohup uv run uvicorn app.main:app --port 8001 > ../agent.log 2>&1 &)
+          AGENT_URL=http://127.0.0.1:8001 DEMO_DAILY_LIMIT=1000 nohup npm start -- --port 3100 > app.log 2>&1 &
+          for i in $(seq 1 60); do
+            curl -sf http://localhost:3100/api/v2/health > /dev/null && exit 0
+            sleep 2
+          done
+          echo "The app or the agent didn't start."; tail -50 agent.log app.log; exit 1
+
+      - name: Run the eval
+        run: |
+          if [ "$COMPANIES" = all ]; then
+            set -- --concurrency 4
+          else
+            set -- --only "Anthropic,Vercel,Airbnb,Shopify,Datadog"
+          fi
+          node eval/run-eval.mjs http://localhost:3100 --api v2 --label "$LABEL" --max-usd "$MAX_USD" \
+            --min-share 0.85 "$@"
+
+      - name: Summary
+        if: always()
+        run: |
+          if [ -f "eval/results/$LABEL.json" ]; then
+            awk -v h="## $LABEL" '$0 == h { p = 1; print; next } p && /^(## |Notes:)/ { exit } p' eval/RESULTS.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No result was written." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ env.LABEL }}
+          path: |
+            eval/results/${{ env.LABEL }}.json
+            agent.log
+            app.log
+          if-no-files-found: ignore

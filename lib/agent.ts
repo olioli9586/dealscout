@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { responseCost } from "@/lib/pricing";
 
 // ---------------------------------------------------------------------------
 // DealScout research agent
@@ -31,13 +32,29 @@ export interface CompanyProfile {
   summary: string;
 }
 
+/** Totals over every API response in one run. */
+export interface RunUsage {
+  model: string;
+  effort: string;
+  requests: number;
+  input_tokens: number;
+  output_tokens: number;
+  cache_creation_input_tokens: number;
+  cache_read_input_tokens: number;
+  web_search_requests: number;
+  web_fetch_requests: number;
+  /** USD; null once any response came from a model with no known price. */
+  cost_usd: number | null;
+}
+
 export type AgentEvent =
   | { type: "status"; message: string }
   | { type: "thinking"; text: string }
   | { type: "text"; text: string }
   | { type: "profile"; profile: CompanyProfile }
   | { type: "done" }
-  | { type: "error"; message: string };
+  | { type: "error"; message: string }
+  | { type: "usage"; usage: RunUsage };
 
 const MODEL = process.env.DEALSCOUT_MODEL ?? "claude-opus-4-8";
 const FALLBACK_MODEL = "claude-opus-4-8";
@@ -99,6 +116,46 @@ const tools: Anthropic.Messages.ToolUnion[] = [
 export async function runResearchAgent(
   company: string,
   emit: (event: AgentEvent) => void,
+): Promise<void> {
+  const usage: RunUsage = {
+    model: MODEL,
+    effort: EFFORT,
+    requests: 0,
+    input_tokens: 0,
+    output_tokens: 0,
+    cache_creation_input_tokens: 0,
+    cache_read_input_tokens: 0,
+    web_search_requests: 0,
+    web_fetch_requests: 0,
+    cost_usd: 0,
+  };
+  try {
+    await research(company, emit, usage);
+  } finally {
+    // The last event of every run, failed ones included, so the eval can
+    // record what each run cost. Requests that failed mid-stream report no
+    // usage and are not counted.
+    emit({ type: "usage", usage });
+  }
+}
+
+function addUsage(total: RunUsage, model: string, usage: Anthropic.Usage) {
+  total.model = model;
+  total.requests += 1;
+  total.input_tokens += usage.input_tokens;
+  total.output_tokens += usage.output_tokens;
+  total.cache_creation_input_tokens += usage.cache_creation_input_tokens ?? 0;
+  total.cache_read_input_tokens += usage.cache_read_input_tokens ?? 0;
+  total.web_search_requests += usage.server_tool_use?.web_search_requests ?? 0;
+  total.web_fetch_requests += usage.server_tool_use?.web_fetch_requests ?? 0;
+  const cost = responseCost(model, usage);
+  total.cost_usd = total.cost_usd === null || cost === null ? null : total.cost_usd + cost;
+}
+
+async function research(
+  company: string,
+  emit: (event: AgentEvent) => void,
+  usage: RunUsage,
 ): Promise<void> {
   const client = new Anthropic();
 
@@ -168,6 +225,7 @@ export async function runResearchAgent(
       }
       throw err;
     }
+    addUsage(usage, model, response.usage);
     // Echo the assistant turn back verbatim (thinking blocks included) so the
     // next request in the loop is valid.
     messages.push({ role: "assistant", content: response.content });

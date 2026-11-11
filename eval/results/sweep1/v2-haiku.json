@@ -1,0 +1,788 @@
+{
+  "label": "v2-haiku",
+  "api": "v2",
+  "date": "2026-11-08",
+  "base": "http://localhost:3100",
+  "models": "planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), writer `claude-haiku-5-5` (medium)",
+  "max_usd": 1,
+  "spent_usd": 0.6062426,
+  "stopped": null,
+  "rows": [
+    {
+      "name": "Anthropic",
+      "seconds": 40,
+      "usage": {
+        "model": "planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), writer `claude-haiku-5-5` (medium)",
+        "effort": null,
+        "requests": 6,
+        "input_tokens": 161314,
+        "output_tokens": 18566,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 9,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.11541439999999999
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "run_id": "25bebff3-5770-46d2-b17c-30d90d58d4d5",
+      "plan": [
+        "business",
+        "funding",
+        "leadership",
+        "news"
+      ],
+      "claims": {
+        "supported": 61,
+        "unsupported": 0
+      },
+      "profile": {
+        "company_name": "Anthropic",
+        "website": "anthropic.com",
+        "industry": "Artificial intelligence (AI research and frontier models, with the Claude model family as its main offering)",
+        "hq_location": "San Francisco, California, USA",
+        "founded_year": "2021 (incorporated January 2021)",
+        "employee_count": "5,001-10,000 (about 5,300 employees as of September 30, 2026)",
+        "business_model": "Anthropic earns revenue mainly from usage-based access to its Claude models through its API and cloud partners, plus subscriptions to its consumer and team products, with usage-based sales roughly 80% of revenue in H1 2026.",
+        "products_services": [
+          "Claude model family (Opus, Sonnet, Haiku tiers)",
+          "Claude chatbot apps",
+          "Claude Code coding assistant",
+          "Cowork agent product",
+          "Developer API for building applications on Claude models"
+        ],
+        "funding_status": "Privately held, venture-backed public benefit corporation with no public listing yet; latest primary round was a $65B Series H at a $965B post-money valuation (May 28, 2026); total funding raised exceeds $125B including a $2.5B credit line; a trust elects part of its board and no single investor controls it",
+        "leadership": [
+          "Dario Amodei, Co-Founder and Chief Executive Officer",
+          "Daniela Amodei, Co-Founder, President and Chair of the Board",
+          "Jared Kaplan, Co-Founder and Chief Science Officer",
+          "Sam McCandlish, Co-Founder and Chief Architect",
+          "Rahul Patil, Chief Technology Officer (joined October 2025, succeeding Sam McCandlish in the role)",
+          "Krishna Rao, Chief Financial Officer",
+          "Ami Vora, Chief Product Officer (took over product organisation from Mike Krieger in January 2026)",
+          "Paul Smith, Chief Commercial Officer",
+          "Chris Ciauri, Managing Director of International",
+          "Jack Clark, Head of Public Benefit",
+          "Mike Krieger, co-lead of Anthropic Labs (stepped down as Chief Product Officer, January 2026)",
+          "Ben Mann, co-lead of Anthropic Labs"
+        ],
+        "recent_news": [
+          "May 28, 2026: Closed a $65B Series H at a $965B post-money valuation, co-led by Capital Group, Coatue, D1, GIC, ICONIQ and XN",
+          "Per the Series H announcement, run-rate revenue passed $47B in early May 2026",
+          "Oct 26, 2026: Filed a Form S-1 registration statement with the SEC for a proposed IPO",
+          "Jun 1, 2026: Confidentially submitted a draft S-1 to the SEC for a public listing, with listing reported as potentially as early as fall 2026 (not confirmed)",
+          "Feb 12, 2026: Closed a $30B Series G at a $380B post-money valuation, led by Coatue and GIC, with Microsoft and Nvidia also participating",
+          "Apr 2026: Signed a new agreement with Google and Broadcom for multiple gigawatts of next-generation TPU capacity, its largest compute commitment to date, with capacity expected from 2027",
+          "Amended its November 2025 Microsoft agreement; now intends to spend at least $44.9B with Microsoft between November 2026 and May 2033",
+          "Nov 8, 2026 (FT report): Reportedly agreed a deal worth about $3.4B for commitments on 1.7 GW of gas-fired generators from supplier OnePWR, without acquiring it",
+          "Oct 2026 (reported): In talks with UK neocloud Nscale for a second data-center capacity lease at a 460 MW West Virginia site, potentially worth around $45B; Anthropic declined to comment",
+          "Oct 2026: Acquired Mithril Medicine to advance drug discovery for pediatric rare diseases",
+          "May 18, 2026: Acquired Stainless, per an acquisitions tracker listing",
+          "Oct 23, 2026: Partnered with Hg to launch an AI consultancy arm",
+          "Oct 1, 2026: Barclays expanding its strategic collaboration with Anthropic to integrate enterprise AI across its global operations",
+          "Mar 12, 2026: Committed an initial $100M for 2026 to the Claude Partner Network",
+          "Apr 24, 2026: NEC will deploy Claude to 30,000 employees and become Anthropic's first Japan-based global partner",
+          "May 14, 2026: Committed $200M in grants, Claude usage credits and technical support with the Gates Foundation over four years",
+          "Jun 12, 2026: Announced a partnership with Tata Consultancy Services (TCS) to bring Claude to regulated industries",
+          "Feb 17, 2026: Agreed with Infosys to build AI agents for telecom, financial services, manufacturing and other regulated industries",
+          "H1 2026 overseas revenue exceeded $4.5B, per S-1 coverage",
+          "Announced 100 new roles in EMEA (London and Dublin) and first Asia office in Tokyo"
+        ],
+        "deal_signals": [
+          "Series H (May 2026): $65B, co-led by Capital Group, Coatue, D1, GIC, ICONIQ and XN, with significant participation from Blackstone, Brookfield, Baillie Gifford and others; includes $15B of previously committed hyperscaler money (incl. $5B from Amazon)",
+          "Series H reported as led by Altimeter, Dragoneer, Greenoaks and Sequoia (conflicting lead attribution)",
+          "Series G (Feb 2026): about $30B at $380B post-money valuation, led by GIC and Coatue",
+          "Feb 2026 employee tender offer of roughly $5-6B at about a $350B valuation",
+          "Series F (Sep 2025): $13B at $183B valuation, co-led by ICONIQ, Fidelity and Lightspeed",
+          "Series E (Mar 2025): $3.5B at $61.5B post-money, led by Lightspeed",
+          "Apr 2026: Amazon strategic investment, $5B committed now with up to $20B more",
+          "IPO reportedly being prepared, with reports saying an offering could value the company above $2 trillion; reportedly as early as November 2026",
+          "Latest round came as leading AI model makers prepare to go public",
+          "Latest acquisition reported as Bun (Dec 2, 2025)",
+          "Latest recorded revenue of about $47B, disclosed alongside the Series H",
+          "Reported discussions of a potential roughly $10B compute lease with Meta (not confirmed)",
+          "Future undiscounted lease obligations rose from $50.2B at year-end 2025 to $321.4B by mid-2026, per the S-1",
+          "Expects to spend more than $500B over the next 10 years on AI infrastructure, per a Reuters report cited by CNBC"
+        ],
+        "confidence": "medium",
+        "summary": "Anthropic is a San Francisco-based AI research company and public benefit corporation, founded in 2021, whose main offering is the Claude model family sold mainly through usage-based API access. It raised a $65B Series H at a $965B post-money valuation in May 2026, has reportedly filed a draft S-1 for a possible IPO, and is pursuing large compute and infrastructure commitments.",
+        "sources": {
+          "website": [
+            "https://en.wikipedia.org/wiki/Anthropic"
+          ],
+          "industry": [
+            "https://en.wikipedia.org/wiki/Anthropic"
+          ],
+          "hq_location": [
+            "https://www.britannica.com/money/Anthropic-PBC"
+          ],
+          "founded_year": [
+            "https://en.wikipedia.org/wiki/Anthropic"
+          ],
+          "employee_count": [
+            "https://explodingtopics.com/blog/anthropic-employees"
+          ],
+          "business_model": [
+            "https://thestrategystory.com/blog/anthropic-business-model-in-2026/"
+          ],
+          "products_services": [
+            "https://en.wikipedia.org/wiki/Anthropic"
+          ],
+          "funding_status": [
+            "https://www.anthropic.com/news/series-h",
+            "https://www.revenuememo.com/p/anthropic-funding"
+          ],
+          "deal_signals": [
+            "https://www.anthropic.com/news/series-h",
+            "https://www.anthropic.com/news/anthropic-raises-30-billion-series-g-funding-380-billion-post-money-valuation",
+            "https://sacra.com/c/anthropic/",
+            "https://www.bloomberg.com/news/articles/2025-09-02/anthropic-completes-new-funding-round-at-183-billion-valuation",
+            "https://www.anthropic.com/news/anthropic-raises-series-e-at-usd61-5b-post-money-valuation",
+            "https://www.revenuememo.com/p/anthropic-funding",
+            "https://smartasset.com/investing/anthropic-ipo",
+            "https://www.cnbc.com/2026/05/28/anthropic-open-ai-startup-value.html",
+            "https://www.cbinsights.com/company/anthropic/financials",
+            "https://multiples.vc/private-comps/anthropic",
+            "https://www.leverageshares.com/us/anthropic-ipo-tracker/",
+            "https://fortune.com/2026/06/01/anthropic-confidentially-files-ipo-965-billion-valuation/",
+            "https://www.eweek.com/news/anthropic-labs-expansion/",
+            "https://www.unleash.ai/artificial-intelligence/news/anthropic-appoints-ex-google-salesforce-exec-as-md-of-international-as-it-drives-global-expansion",
+            "https://www.investing.com/news/stock-market-news/anthropic-reportedly-strikes-34-billion-deal-for-gasfired-power-at-data-centres-5010208",
+            "https://www.cnbc.com/2026/10/26/anthropic-ipo-live-updates-ai-s-1-filing.html",
+            "https://cnbc.com/2026/11/08/anthropic-generator-deal-ai-data-centers.html"
+          ],
+          "leadership": [
+            "https://www.unifygtm.com/insights/executives/anthropic-ceo",
+            "https://derrick-app.com/company/anthropic",
+            "https://techcrunch.com/2025/10/02/anthropic-hires-new-cto-with-focus-on-ai-infrastructure",
+            "https://www.bizkonnect.ai/companies/anthropicresearch",
+            "https://www.gend.co/blog/anthropic-labs-exec-reshuffle-2026",
+            "https://www.unleash.ai/artificial-intelligence/news/anthropic-appoints-ex-google-salesforce-exec-as-md-of-international-as-it-drives-global-expansion",
+            "https://www.autumn.ai/resources/anthropic/people",
+            "https://www.eweek.com/news/anthropic-labs-expansion/"
+          ],
+          "recent_news": [
+            "https://www.anthropic.com/news/series-h",
+            "https://www.anthropic.com/news",
+            "https://www.cnbc.com/2026/02/12/anthropic-closes-30-billion-funding-round-at-380-billion-valuation.html",
+            "https://www.anthropic.com/news/google-broadcom-partnership-compute",
+            "https://www.cnbc.com/2026/10/26/anthropic-ipo-live-updates-ai-s-1-filing.html",
+            "https://cnbc.com/2026/11/08/anthropic-generator-deal-ai-data-centers.html",
+            "https://www.cnbc.com/2026/10/20/anthropic-nscale-data-center-deal.html",
+            "https://tracxn.com/d/acquisitions/acquisitions-by-anthropic/__SzoxXDMin-NK5tKB7ks8yHr6S9Mz68pjVCzFEcGFZ08",
+            "https://www.anthropic.com/news/claude-partner-network",
+            "https://www.anthropic.com/news/partnerships"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Vercel",
+      "seconds": 39,
+      "usage": {
+        "model": "planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), writer `claude-haiku-5-5` (medium)",
+        "effort": null,
+        "requests": 6,
+        "input_tokens": 216541,
+        "output_tokens": 18706,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 9,
+        "web_fetch_requests": 2,
+        "cost_usd": 0.12100709999999999
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "run_id": "6e748c45-21a1-4540-afec-6999c0b1fe40",
+      "plan": [
+        "business",
+        "funding",
+        "leadership",
+        "news"
+      ],
+      "claims": {
+        "supported": 53,
+        "unsupported": 0
+      },
+      "profile": {
+        "company_name": "Vercel",
+        "website": "vercel.com",
+        "industry": "Software development applications (developer tools and frontend cloud infrastructure)",
+        "hq_location": "San Francisco, California, United States (per Sacra); PitchBook lists a corporate office at 440 North Barranca Avenue, Covina, CA 91723 and says other sources give Covina as HQ",
+        "founded_year": "2015",
+        "employee_count": "501-1000",
+        "business_model": "Vercel earns usage-based fees for compute, bandwidth and storage, plus per-seat Pro subscriptions and custom Enterprise contracts, while its Next.js framework remains free and open source.",
+        "products_services": [
+          "Next.js, an open-source React framework that Vercel maintains and that is downloaded hundreds of millions of times a year",
+          "Serverless computing, a content delivery network, continuous integration and deployment",
+          "Security features such as bot protection and web application firewalls",
+          "AI Gateway for routing requests across many AI models",
+          "AI SDK",
+          "v0 AI app builder"
+        ],
+        "funding_status": "Private, not publicly listed; last priced round was a $300M Series F at a $9.3B post-money valuation announced September 30, 2025, co-led by Accel and Singapore's GIC; roughly $863M raised across primary rounds to date (Sacra estimate)",
+        "leadership": [
+          "Guillermo Rauch, Founder and CEO",
+          "Jeanne DeWitt Grosser, Chief Operating Officer (leads go-to-market; former Chief Business Officer at Stripe)",
+          "Malte Ubl, Chief Technology Officer",
+          "Tom Occhino, Chief Product Officer",
+          "Marten Abrahamsen, Chief Financial Officer",
+          "Keith Messick, Chief Marketing Officer (former CMO at Redis)",
+          "Talha Tariq, Chief Technology Officer (Security) (former CTO (Security) at IBM)",
+          "Aparna Sinha, SVP, Product (former Head of Enterprise AI/ML Products at Capital One)",
+          "Werner Schwock, Chief Accounting Officer (former CAO at HashiCorp)",
+          "Susan St. Ledger, Board of Directors (former President of Worldwide Field Operations at HashiCorp; joined December 2025)",
+          "Mitchell Hashimoto, Board of Directors (co-founder of HashiCorp, creator of Terraform)"
+        ],
+        "recent_news": [
+          "June 30, 2026: Vercel announced a multi-year strategic partnership with the Mercedes-AMG PETRONAS F1 team",
+          "June 2026: Vercel launched eve, an open-source agent framework, plus Passport, a tool aimed at shadow AI, at its Ship London event",
+          "Globant and Vercel formed a multi-year strategic alliance around AI Pods that modernize legacy frontends and ship AI-built apps to Vercel (an aggregator lists July 8, 2026)",
+          "July 17, 2026: Vercel reportedly acquired Stakpak (single secondary source, not confirmed on Vercel's press page)",
+          "July 10, 2025: At Ship 2025, Vercel unveiled a unified AI Cloud platform including AI SDK, AI Gateway, Fluid Compute and Secure Sandboxes",
+          "2025: Vercel acquired NuxtLabs, the team behind the Nuxt framework and Nitro server engine, as part of its shift toward agentic infrastructure",
+          "June 2025: Vercel expanded its global partnership with WPP, bringing v0 and AI SDK tools to WPP teams and clients"
+        ],
+        "deal_signals": [
+          "Roughly $300M secondary tender offer for employees, former employees and early investors ran alongside the Series F, with closing expected November 2025",
+          "Series F mark is nearly 3x the May 2024 Series E valuation of $3.25B (a $250M round led by Accel)",
+          "CEO Guillermo Rauch said in April 2026 the company is ready for an IPO but gave no date or timeline",
+          "No confirmed IPO date or filing as of late August 2026; no announced plans to go public",
+          "Unsolicited investor interest reported at an $8B to $9B valuation range",
+          "About $340M run-rate revenue at end of February 2026 (company-reported, not audited)",
+          "Vercel said in July 2026 it crossed a $500M annualized revenue run rate, its last company-confirmed revenue figure",
+          "The Information reported a roughly $600M annualized run rate as of October 2026, which Vercel has not confirmed",
+          "Acquired Splitbee in October 2022",
+          "Added Susan St. Ledger and Mitchell Hashimoto to the board after the Series F"
+        ],
+        "confidence": "medium",
+        "summary": "Vercel is a private developer-tools and frontend cloud company founded in 2015, known for the open-source Next.js framework and a usage-based hosting platform. It closed a $300M Series F at a $9.3B valuation in September 2025 and its CEO has said it is ready for an IPO, though no date or filing has been confirmed. Sources conflict on headquarters (San Francisco versus Covina, CA), so location should be verified before use.",
+        "sources": {
+          "website": [
+            "https://tracxn.com/d/companies/vercel/__uPuJfXzfvAQs0wmUuqRiXFxW4uGbcaKUHjHks8VPbrI"
+          ],
+          "industry": [
+            "https://pitchbook.com/profiles/company/167175-28"
+          ],
+          "hq_location": [
+            "https://sacra.com/c/vercel/",
+            "https://pitchbook.com/profiles/company/167175-28"
+          ],
+          "founded_year": [
+            "https://pitchbook.com/profiles/company/167175-28"
+          ],
+          "employee_count": [
+            "https://pitchbook.com/profiles/company/167175-28"
+          ],
+          "business_model": [
+            "https://sacra.com/c/vercel/"
+          ],
+          "products_services": [
+            "https://sacra.com/c/vercel/",
+            "https://www.cbinsights.com/company/vercel"
+          ],
+          "funding_status": [
+            "https://www.gic.com.sg/uploads/2025/09/Vercel-Closes-Series-F-at-9.3B-Valuation-to-Scale-the-AI-Cloud.pdf",
+            "https://www.finsmes.com/2025/10/vercel-closes-300m-series-f-funding-at-9-3-billion-valuation.html",
+            "https://sacra.com/c/vercel/",
+            "https://www.revenuememo.com/p/who-owns-vercel"
+          ],
+          "deal_signals": [
+            "https://www.finsmes.com/2025/10/vercel-closes-300m-series-f-funding-at-9-3-billion-valuation.html",
+            "https://sacra.com/c/vercel/",
+            "https://www.axevil.com/company/vercel",
+            "https://venturecapitaltracker.com/2026-vercel-revenue-340m-9-3b-valuation",
+            "https://forgeglobal.com/vercel_ipo/",
+            "https://finance.yahoo.com/news/vercel-closes-series-f-9-150000846.html",
+            "https://www.businesswire.com/news/home/20251217883722/en/Vercel-Appoints-Susan-St.-Ledger-former-President-of-Worldwide-Field-Operations-at-HashiCorp-to-Board-of-Directors",
+            "https://en.wikipedia.org/wiki/Vercel",
+            "https://www.linkedin.com/in/rauchg/",
+            "https://www.gic.com.sg/newsroom/all/vercel-closes-series-f-at-9-3b-valuation-to-scale-the-ai-cloud/",
+            "https://tracxn.com/d/companies/vercel/__uPuJfXzfvAQs0wmUuqRiXFxW4uGbcaKUHjHks8VPbrI",
+            "https://okara.ai/blog/vercel-revenue-growth"
+          ],
+          "leadership": [
+            "https://www.businesswire.com/news/home/20251217883722/en/Vercel-Appoints-Susan-St.-Ledger-former-President-of-Worldwide-Field-Operations-at-HashiCorp-to-Board-of-Directors",
+            "https://vercel.com/blog/jeanne-dewitt-grosser-joins-vercel-as-coo",
+            "https://siliconvalleyinvestclub.com/companies/vercel/team/guillermo-rauch/",
+            "https://finance.yahoo.com/news/vercel-closes-series-f-9-150000846.html",
+            "https://blog.mean.ceo/vercel-news-november-2026/",
+            "https://finance.yahoo.com/quote/VERC.PVT/profile/"
+          ],
+          "recent_news": [
+            "https://vercel.com/press",
+            "https://www.stocktitan.net/news/GLOB/globant-and-vercel-forge-strategic-alliance-to-take-enterprises-from-abm0944teer7.html",
+            "https://tracxn.com/d/companies/vercel/__uPuJfXzfvAQs0wmUuqRiXFxW4uGbcaKUHjHks8VPbrI",
+            "https://www.vktr.com/ai-news/vercel-ceo-signals-ipo/",
+            "https://www.wpp.com/en/news/2025/06/wpp-and-vercel-expand-partnership-to-accelerate-ai-powered-digital-experience-craft"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Airbnb",
+      "seconds": 29,
+      "usage": {
+        "model": "planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), writer `claude-haiku-5-5` (medium)",
+        "effort": null,
+        "requests": 6,
+        "input_tokens": 158457,
+        "output_tokens": 14990,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 9,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.1133407
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "run_id": "79157ba0-939f-4b27-992e-455ad78a7279",
+      "plan": [
+        "business",
+        "funding",
+        "leadership",
+        "news"
+      ],
+      "claims": {
+        "supported": 45,
+        "unsupported": 0
+      },
+      "profile": {
+        "company_name": "Airbnb",
+        "website": "airbnb.com",
+        "industry": "Lodging; online travel marketplace for stays, experiences and services",
+        "hq_location": "888 Brannan Street, San Francisco, California, USA",
+        "founded_year": "2007",
+        "employee_count": "5,001-10,000 (about 8,200 employees at end of 2025)",
+        "business_model": "Two-sided online marketplace that earns revenue by charging service fees to both hosts and guests on each booking.",
+        "products_services": [
+          "Online marketplace for accommodations (stays)",
+          "Experiences offered by hosts to guests",
+          "Services offered by hosts to guests",
+          "Operates across more than 220 countries and regions",
+          "Independent hotels, car rentals, grocery delivery and luggage storage added to the app at the May 20, 2026 product event",
+          "Groceries offering expanded with Instacart across the US and Canada",
+          "Chef-prepared meals through Airbnb Services via CookUnity partnership (January 21, 2026)",
+          "Reserve Now, Pay Later option for guests"
+        ],
+        "funding_status": "Publicly traded on NASDAQ under ticker ABNB; IPO on December 10, 2020; market capitalization of about $105.6 billion per MarketBeat's latest snapshot; private round in April 2020 valued the company at about $18 billion before IPO; $2 billion in loans raised during the pandemic before IPO; total debt of $2.0 billion at end of fiscal 2025, unchanged from fiscal 2024",
+        "leadership": [
+          "Brian Chesky, Co-Founder, Chief Executive Officer & Chairman of the Board",
+          "Nathan Blecharczyk, Co-Founder, Chief Strategy Officer & Director",
+          "Elinor (Ellie) Mertz, Chief Financial Officer (since March 2024)",
+          "Ronald A. Klain, Chief Legal Officer",
+          "Pepijn Rijvers, Chief Business Officer (appointed September 1, 2026; oversees Homes, Hotels, Global Markets and Enterprise Operations)",
+          "Hiroki Asai, Chief Experience Officer (took over experiences and services oversight from Dave Stephenson)",
+          "David Spielfogel, Global Head of Public Policy (replaced Jay Carney, who is exiting)",
+          "Fallon O'Connor, Head of Communications and People",
+          "Dave Stephenson, former Chief Business Officer (departed September 2026 after eight years in senior roles)",
+          "Aristotle (Ari) Balogh, former Chief Technology Officer (departed December 2025)"
+        ],
+        "recent_news": [
+          "Added independent hotels, car rentals, grocery delivery and luggage storage to its app at May 20, 2026 product event, plus AI features",
+          "Announced exclusive partnership with American Express in October 2026 adding over one million listings, including Airbnb Luxe, to the Amex Travel platform",
+          "Tripadvisor will make selected Viator and Tripadvisor experiences bookable on Airbnb later in 2026",
+          "Q3 2026 revenue was $4.87 billion, up on 16% growth in nights and seats booked, with 52% margin",
+          "Announced 'Reserve Now, Pay Later' for guests, later made available worldwide",
+          "Expanded Groceries offering with Instacart across the US and Canada (September 30, 2026 update)",
+          "Announced CookUnity partnership to deliver chef-prepared meals through Airbnb Services on January 21, 2026",
+          "Expanding Neighborhood pages to 1,500 locations globally by end of 2026 after a Paris pilot",
+          "Migrated nearly all hosts to a single 15.5% service fee in October 2026",
+          "Added thousands of boutique hotels across 20 cities in August 2026"
+        ],
+        "deal_signals": [
+          "Disclosed a $7.1 million IP sale and expense transaction with a privately held AI lab founded and controlled by CEO Brian Chesky, with rights to invest in future lab financings and license its technology",
+          "$2.0 billion of 0% convertible senior notes were scheduled to mature March 15, 2026, so a repayment or refinancing event was due in 2026",
+          "Debt reclassified as current at FY2025 year-end, with about $2.0 billion of long-term debt due within a year",
+          "Net cash of about $8.7 billion at FY2025",
+          "Entered a five-year $1.0 billion unsecured revolving credit facility on October 30, 2026, led by Morgan Stanley Senior Funding",
+          "Authorized $12 billion in additional share repurchases, following a $0.7 billion buyback in Q3 2026",
+          "Plans to launch a custom AI-native travel agent in the first half of 2027",
+          "Management says partnerships are a major untapped growth lever after relying mostly on organic growth for nearly 18 years",
+          "Experiences strategy shifted from organic build to major partnerships, per Skift; previously avoided major partnerships or acquisitions for experiences",
+          "Cancellation rates in aggregate were up 200 to 300 basis points year over year, per management on the Q3 2026 call",
+          "Hotel supply expansion and hiring of a hotels-focused CBO to grow homes and hotels",
+          "Capital allocation priority lists strategic acquisitions or partnerships second after organic growth",
+          "Q1 2026 revenue grew 18% year over year to $2.7 billion"
+        ],
+        "confidence": "high",
+        "summary": "Airbnb is a NASDAQ-listed (ABNB) two-sided online travel marketplace headquartered in San Francisco, founded in 2007, that earns service fees from hosts and guests across stays, experiences and services in more than 220 countries. Recent activity includes a shift toward partnerships (Amex, Tripadvisor, Instacart, CookUnity), leadership turnover including a new Chief Business Officer, and a $2.0 billion debt maturity in 2026 alongside large buyback authorizations. Core profile fields are consistent across sources, though some claims are recent and come from secondary outlets.",
+        "sources": {
+          "website": [
+            "https://en.wikipedia.org/wiki/Airbnb"
+          ],
+          "industry": [
+            "https://en.wikipedia.org/wiki/Airbnb"
+          ],
+          "hq_location": [
+            "https://www.globaldata.com/company-profile/airbnb-inc/"
+          ],
+          "founded_year": [
+            "https://www.sec.gov/Archives/edgar/data/0001559720/000155972026000014/abnb-20260331.htm"
+          ],
+          "employee_count": [
+            "https://sqmagazine.co.uk/airbnb-statistics/"
+          ],
+          "business_model": [
+            "https://www.rudrainnovative.com/blog/airbnb-business-model-guide/"
+          ],
+          "products_services": [
+            "https://www.sec.gov/Archives/edgar/data/0001559720/000155972026000014/abnb-20260331.htm"
+          ],
+          "funding_status": [
+            "https://www.cnbc.com/2020/12/10/airbnb-ipo-abnb-starts-trading-on-the-nasdaq.html",
+            "https://www.tradingview.com/symbols/NASDAQ-ABNB/",
+            "https://www.marketbeat.com/stocks/NASDAQ/ABNB/",
+            "https://www.business-standard.com/article/international/home-rental-firm-airbnb-aims-for-up-to-35-billion-valuation-in-ipo-120120101084_1.html",
+            "https://www.cbsnews.com/news/airbnb-ipo-47-billion-valuation-68-share/",
+            "https://stockrow.com/ABNB/metrics/total-debt"
+          ],
+          "deal_signals": [
+            "https://www.sec.gov/Archives/edgar/data/1559720/000155972025000030/abnb-20250930.htm",
+            "https://vectorshift.ai/research/companies/airbnb/financials",
+            "https://stockanalysis.com/stocks/abnb/financials/",
+            "https://www.unite.ai/airbnb-discloses-ai-lab-deal-with-investment-and-licensing-rights/",
+            "https://skift.com/2026/09/01/airbnb-names-ex-booking-com-hotel-boss-and-viator-president-as-chief-business-officer/",
+            "https://www.sec.gov/Archives/edgar/data/0001559720/000119312526337928/d70413dex991.htm",
+            "https://www.sec.gov/Archives/edgar/data/0001559720/000155972026000032/abnb-20260930.htm",
+            "https://www.panabee.com/news/airbnb-earnings-q3-2026",
+            "https://theglobeandmail.com/investing/markets/stocks/AXP-N/pressreleases/8701715/airbnb-abnb-q3-2026-earnings-call-transcript",
+            "https://theglobeandmail.com/investing/markets/stocks/AXP-N/pressreleases/8701715/airbnb-abnb-q3-2026-earnings-call-transcript/",
+            "https://skift.com/2026/08/11/airbnb-partners-with-tripadvisor-experiences-drops-build-your-own-strategy/",
+            "https://www.theglobeandmail.com/investing/markets/stocks/AXP-N/pressreleases/8701715/airbnb-abnb-q3-2026-earnings-call-transcript/",
+            "https://www.sec.gov/Archives/edgar/data/0001559720/000119312526211816/d23351dex991.htm"
+          ],
+          "leadership": [
+            "https://au.finance.yahoo.com/quote/ABNB/profile/",
+            "https://vectorshift.ai/research/companies/airbnb/people",
+            "https://thehospitalitytribune.com/airbnb-pepijn-rijvers-chief-business-officer-2/",
+            "https://www.hr-brew.com/stories/airbnbs-fallon-oconnor-people-communications",
+            "https://skift.com/2026/09/01/airbnb-names-ex-booking-com-hotel-boss-and-viator-president-as-chief-business-officer/",
+            "https://skift.com/2026/07/28/jay-carney-to-exit-airbnb-lime-veteran-appointed-policy-chief/",
+            "https://longbridge.com/en/news/267978597"
+          ],
+          "recent_news": [
+            "https://www.cnbc.com/2026/05/20/airbnb-hotels-car-rentals-ai-rentals.html",
+            "https://uk.finance.yahoo.com/news/airbnb-stock-focus-amex-deal-201632939.html",
+            "https://skift.com/2026/08/11/airbnb-partners-with-tripadvisor-experiences-drops-build-your-own-strategy/",
+            "https://www.panabee.com/news/airbnb-earnings-q3-2026",
+            "https://news.airbnb.com/category/product",
+            "https://news.airbnb.com/tag/partnerships",
+            "https://theglobeandmail.com/investing/markets/stocks/AXP-N/pressreleases/8701715/airbnb-abnb-q3-2026-earnings-call-transcript"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Shopify",
+      "seconds": 26,
+      "usage": {
+        "model": "planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), writer `claude-haiku-5-5` (medium)",
+        "effort": null,
+        "requests": 6,
+        "input_tokens": 224788,
+        "output_tokens": 14659,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 10,
+        "web_fetch_requests": 1,
+        "cost_usd": 0.1298083
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "run_id": "8b6d064f-0f3e-4b29-bd91-892d9ae44fdb",
+      "plan": [
+        "business",
+        "funding",
+        "leadership",
+        "news"
+      ],
+      "claims": {
+        "supported": 43,
+        "unsupported": 0
+      },
+      "profile": {
+        "company_name": "Shopify",
+        "website": "shopify.com",
+        "industry": "E-commerce software and merchant services",
+        "hq_location": "Ottawa, Ontario, Canada",
+        "founded_year": "2006",
+        "employee_count": "5,001-10,000 (approximately 7,600 as of Dec 31, 2025)",
+        "business_model": "Earns recurring merchant subscription fees for its commerce platform plus merchant solutions revenue, chiefly payment processing and currency conversion fees.",
+        "products_services": [
+          "All-in-one commerce platform for online storefronts, physical retail (POS), and AI and social sales channels",
+          "Shopify Plus for enterprise",
+          "Shopify Payments",
+          "Shopify Shipping",
+          "Shopify Capital lending",
+          "App store of more than 21,000 apps"
+        ],
+        "funding_status": "Public: Nasdaq and Toronto Stock Exchange (ticker SHOP); IPO in May 2015 raised $100 million by issuing 7.7 million shares at $12-$14; no venture rounds; market capitalization about $191.58 billion as of November 6, 2026",
+        "leadership": [
+          "Tobias Lütke, Founder, CEO and Head of R&D (also Chair of the Board)",
+          "Harley Finkelstein, President",
+          "Jessica Hertz, Chief Operating Officer (previously General Counsel)",
+          "Jeff Hoffmeister, Chief Financial Officer",
+          "Mikhail Parakhin, Chief Technology Officer",
+          "Jean Niehaus, General Counsel (appointed October 9, 2025)",
+          "Joe Natale, Board Chair and Lead Independent Director (expected to become Audit Committee Chair)",
+          "Joe Strolz, VP of global revenue and support (promoted after October 2025 departures)"
+        ],
+        "recent_news": [
+          "Q3 2026 results (reported Nov 3, 2026): revenue up 32% year over year, 22% free cash flow margin, GMV of $119.1B for the quarter",
+          "Q3 2026 results: shares fell about 8.7% after revenue and GMV missed estimates; company guided to low-thirties percentage revenue growth for Q4 2026",
+          "Q1 2026 results (reported May 5, 2026): revenue growth of 34%, 15% free cash flow margin, over $100B of quarterly GMV",
+          "Fall '26 Edition (\"Exponential\"), announced around Oct 29, 2026, added AI shopping, merchant operations, payments and developer tools, centered on agentic commerce",
+          "Fall '26 release included Shopify Connectors for AI agents, letting merchants manage products, inventory and orders from an AI chat interface",
+          "Sept 28, 2026: WebMCP support extended to checkout, letting browser-based AI agents complete purchases on eligible merchant sites with buyer authorization",
+          "Partnership with Meta so Meta's Muse agent can shop and check out with Shop Pay on Shopify stores",
+          "June 16, 2026 annual meeting: all ten director nominees re-elected; shareholder AI policy proposal not approved",
+          "October 2025: Chief Revenue Officer Bobby Morrison and two other executives departed; revenue and support functions consolidated under Joe Strolz",
+          "October 2025: Jessica Hertz moved from General Counsel to COO, reporting to the CEO",
+          "January 21, 2026: layoffs in partnerships division, including an agency team (agency team still has more than 100 people)",
+          "April 2026: at least 30 people laid off in revenue operations and customer support reorganization in Canada and the US",
+          "July 2, 2026: Audit Committee Chair Prashanth Mahendra-Rajah resigned from the board to take a full-time U.S. Department of Commerce role"
+        ],
+        "deal_signals": [
+          "Board authorized a $5 billion aggregate share repurchase program, raised by $3 billion on June 2, 2026 from an initial $2 billion",
+          "Initial $2 billion buyback authorized Feb 11, 2026 and effective Feb 17, 2026, with no fixed expiry",
+          "About $1.45 billion of repurchases completed under the authorization as of June 1, 2026",
+          "Q1 2026 10-Q references an acquisition of Vantage Discovery Inc. (no deal terms disclosed)",
+          "Paid about $99M for the shop.com domain name, disclosed in Q3 2026 10-Q",
+          "Divested Deliverr fulfillment business to Flexport in 2023; a more recent sale of its logistics division is reported but not confirmed by primary filings",
+          "Founder-CEO Tobias Lütke is the only holder above 5% of any class of shares, concentrating control and relevant to any take-private or deal approach"
+        ],
+        "confidence": "high",
+        "summary": "Shopify is a publicly listed (Nasdaq and TSX: SHOP) Ottawa-based e-commerce software and merchant services company with about 7,600 employees, earning subscription and payments revenue. Recent Q3 2026 results showed 32% revenue growth, but shares fell after missing estimates, and the company has an active $5 billion buyback and ongoing restructuring. Founder-CEO Tobias Lütke holds concentrated control, which is relevant to any deal approach.",
+        "sources": {
+          "website": [
+            "https://en.wikipedia.org/wiki/Shopify"
+          ],
+          "industry": [
+            "https://www.trueup.io/co/shopify"
+          ],
+          "hq_location": [
+            "https://www.sec.gov/Archives/edgar/data/1594805/000159480526000007/shop-20251231.htm"
+          ],
+          "founded_year": [
+            "https://en.wikipedia.org/wiki/Shopify",
+            "https://startuptalky.com/shopify-success-story/"
+          ],
+          "employee_count": [
+            "https://www.sec.gov/Archives/edgar/data/1594805/000159480526000007/shop-20251231.htm"
+          ],
+          "business_model": [
+            "https://www.sec.gov/Archives/edgar/data/1594805/000159480526000007/shop-20251231.htm"
+          ],
+          "products_services": [
+            "https://www.sec.gov/Archives/edgar/data/1594805/000159480526000007/shop-20251231.htm",
+            "https://pitchbook.com/profiles/company/51386-05"
+          ],
+          "funding_status": [
+            "https://www.shopify.com/news/share-repurchase-program-2026",
+            "https://www.marketbeat.com/stocks/NASDAQ/SHOP/",
+            "https://stockanalysis.com/stocks/shop/market-cap/"
+          ],
+          "deal_signals": [
+            "https://www.shopify.com/news/share-repurchase-program-2026",
+            "https://www.sec.gov/Archives/edgar/data/0001594805/000159480526000019/shop-20260331.htm",
+            "https://www.sec.gov/Archives/edgar/data/0001594805/000159480526000028/a26june_shopifyrepurchasea.htm",
+            "https://www.sec.gov/Archives/edgar/data/0001594805/000159480526000067/exhibit991pressreleaseq320.htm",
+            "https://www.cnbc.com/2026/11/03/shopify-q3-2026-earnings-gmv.html",
+            "https://www.kore1.com/shopify-layoffs-2026/",
+            "https://composable.com/insights/shopify-leadership-strategy-ai-shift",
+            "https://www.stocktitan.net/sec-filings/SHOP/10-k-a-shopify-inc-amends-annual-report-71c08bad67b1.html",
+            "https://domainnamewire.com/2026/11/03/shopify-filing-confirms-99-million-acquisition-of-shop-com-domain-name/",
+            "https://www.sec.gov/Archives/edgar/data/0001594805/000159480526000028/shop-20260602.htm",
+            "https://www.sec.gov/Archives/edgar/data/1594805/000159480526000006/shop-20260211.htm",
+            "https://thelogic.co/news/exclusive/shopify-partnerships-division-layoffs-restructuring/",
+            "https://thelogic.co/news/exclusive/shopify-layoffs-revenue-operations-restructure/"
+          ],
+          "leadership": [
+            "https://derrick-app.com/company/shopify",
+            "https://www.stocktitan.net/sec-filings/SHOP/10-k-a-shopify-inc-amends-annual-report-71c08bad67b1.html",
+            "https://www.tipranks.com/news/company-announcements/shopify-announces-board-leadership-and-audit-oversight-changes",
+            "https://thelogic.co/news/exclusive/shopify-layoffs-revenue-operations-restructure/"
+          ],
+          "recent_news": [
+            "https://www.sec.gov/Archives/edgar/data/0001594805/000159480526000067/exhibit991pressreleaseq320.htm",
+            "https://www.sec.gov/Archives/edgar/data/0001594805/000159480526000018/exhibit991pressreleaseq120.htm",
+            "https://itbrief.com.au/story/shopify-unveils-ai-shopping-tools-in-fall-26-update",
+            "https://techcrunch.com/2026/09/28/shopify-opens-checkout-to-browser-based-ai-agents/",
+            "https://www.pymnts.com/news/artificial-intelligence/2026/shopify-opens-store-checkouts-to-ai-agents/",
+            "https://www.sec.gov/Archives/edgar/data/0001594805/000159480526000030/exhibit991-2026agmresultspr.htm"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Datadog",
+      "seconds": 32,
+      "usage": {
+        "model": "planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), writer `claude-haiku-5-5` (medium)",
+        "effort": null,
+        "requests": 6,
+        "input_tokens": 188406,
+        "output_tokens": 15663,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 10,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.1266721
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "run_id": "068fa98a-7e6a-4bdb-813c-a4700efb9a38",
+      "plan": [
+        "business",
+        "funding",
+        "leadership",
+        "news"
+      ],
+      "claims": {
+        "supported": 45,
+        "unsupported": 0
+      },
+      "profile": {
+        "company_name": "Datadog",
+        "website": "datadoghq.com",
+        "industry": "Software (cloud observability and security SaaS; listed as Software - Application in the Technology sector)",
+        "hq_location": "New York City, New York, USA (620 8th Avenue)",
+        "founded_year": "2010",
+        "employee_count": "5,001-10,000 (about 8,430 employees as of March 2026)",
+        "business_model": "Sells subscriptions to a SaaS observability platform, with usage-based pricing for some products and a land-and-expand approach to grow spend within existing customers.",
+        "products_services": [
+          "Infrastructure and application performance monitoring",
+          "Log management",
+          "Observability pipelines",
+          "Synthetics and real user monitoring",
+          "Database monitoring",
+          "LLM observability",
+          "Network monitoring",
+          "Incident response",
+          "Cloud security and cloud SIEM",
+          "Cloud cost management"
+        ],
+        "funding_status": "Public (Nasdaq: DDOG, Class A); IPO completed September 23, 2019 at $27.00 per share; Nasdaq-100 and S&P 500 component; IPO net proceeds of about $615.6 million before the over-allotment option, plus $92.3 million from it",
+        "leadership": [
+          "Olivier Pomel, Co-founder and Chief Executive Officer (also director)",
+          "Alexis Le-Quoc, Co-founder and Chief Technology Officer (also director)",
+          "David Obstler, Chief Financial Officer",
+          "Adam Blitzer, Chief Operating Officer",
+          "Sean Walters, Chief Revenue Officer (joined 2018; previously SVP of Sales)",
+          "Yanbing Li, Chief Product Officer",
+          "David Galloreese, Chief People Officer",
+          "Kerry Acocella, General Counsel & Secretary",
+          "Ami Vora, independent board director (appointed September 2025; former Faire CPO and Meta/WhatsApp product leader)",
+          "Dominic Phillips, board director (EVP and CFO at Samsara)",
+          "Adrian Towsey, VP of Commercial Sales for APJ (appointed June 2025, reporting to SVP Global Sales Bill Kohut)"
+        ],
+        "recent_news": [
+          "June 30, 2026: Datadog acquired Adaptive ML, a frontier AI startup building a Reinforcement Learning Operations (RLOps) platform, and placed it inside Datadog AI Research",
+          "DASH 2026 (June 2026): Datadog launched more than 100 new capabilities aimed at helping customers manage AI and security complexity and drive autonomy",
+          "August 6, 2026: Datadog reported Q2 2026 results, with revenue up 36% year over year to $1.12 billion",
+          "November 4, 2026: Datadog reported Q3 2026 results, with revenue up 35% year over year to $1.20 billion, and launched Scout 1.0, its first specialized model, now powering Bits Investigation",
+          "Datadog's government offering received FedRAMP High certification earlier in 2026",
+          "April 21, 2026: Datadog completed its conversion from a Delaware corporation to a Nevada corporation",
+          "Management disclosed that the largest customer reduced usage in Q3 2026 but stayed above its minimum commitment, and several large AI customers renewed early at higher commit levels with better pricing"
+        ],
+        "deal_signals": [
+          "Market capitalization roughly $64-68 billion in early November 2026 (about 361M shares outstanding)",
+          "FY2025 revenue of $3.43 billion, up 28%; trailing twelve-month revenue about $4.28 billion as of Q3 2026",
+          "Guidance: Q3 2026 revenue of $1.135-1.145 billion and FY2026 revenue of $4.45-4.47 billion (given after Q2 2026)",
+          "Q3 2026 Q4 guidance was cautious, citing spending pressure from a major AI customer",
+          "Cash and marketable position of about $5.23 billion (most recent quarter) with levered free cash flow of about $1.07 billion (TTM)",
+          "At June 30, 2026: about $434.9 million cash and equivalents plus $4,550.5 million marketable securities, against $985.5 million of convertible notes",
+          "Carries $1.0 billion of 0% convertible senior notes due 2029 (issued December 2024), initial conversion price about $217.60 per share, not redeemable before December 6, 2027; 2025 convertible notes were retired in cash rather than converted into shares",
+          "2026 acquisitions carried a total aggregate purchase price of $191.5 million, including $98.5 million in cash net of cash acquired, $14.3 million of deferred holdback payments, and about 796,509 restricted Class A shares",
+          "Entered three acquisition purchase agreements in the first half of 2026; company says none are material individually or in aggregate",
+          "Acquired Propolis, a New York startup building browser agents for autonomous QA testing (announced January 28, 2026; price not disclosed)",
+          "Acquired Metaplane to bring observability to data teams (earlier acquisition)",
+          "Reportedly rejected a takeover offer above $7 billion from Cisco before its IPO",
+          "CEO Olivier Pomel and CTO Alexis Le-Quoc filed Form 4s in July 2026 showing open-market share sales alongside option conversions",
+          "Goldman Sachs downgraded Datadog to Sell on January 12, 2026 (from Buy, $113 price target), citing customer budget fatigue and lower-cost specialist competition"
+        ],
+        "confidence": "high",
+        "summary": "Datadog is a New York City-based, Nasdaq-listed (DDOG) cloud observability and security SaaS company founded in 2010, with roughly 8,400 employees. Its subscription and usage-based platform spans monitoring, logs, security, and AI observability, and it reported Q2 and Q3 2026 revenue growth of 36% and 35%. Recent activity includes several small acquisitions, a Delaware-to-Nevada redomicile, and a cautious Q4 outlook tied to pressure from a major AI customer.",
+        "sources": {
+          "website": [
+            "https://en.wikipedia.org/wiki/Datadog"
+          ],
+          "industry": [
+            "https://en.wikipedia.org/wiki/Datadog",
+            "https://stockanalysis.com/stocks/ddog/company/"
+          ],
+          "hq_location": [
+            "https://en.wikipedia.org/wiki/Datadog"
+          ],
+          "founded_year": [
+            "https://en.wikipedia.org/wiki/Datadog"
+          ],
+          "employee_count": [
+            "https://www.reveliolabs.com/companies/datadog/employees"
+          ],
+          "business_model": [
+            "https://www.koalagains.com/stocks/NASDAQ/DDOG/business-and-moat",
+            "https://vizologi.com/business-strategy-canvas/datadog-business-model-canvas/"
+          ],
+          "products_services": [
+            "https://pitchgrade.com/companies/datadog"
+          ],
+          "funding_status": [
+            "https://www.sec.gov/Archives/edgar/data/1561550/000156155022000009/ddog-20211231.htm",
+            "https://en.wikipedia.org/wiki/Datadog",
+            "https://www.sec.gov/Archives/edgar/data/1561550/000156459019043256/ddog-10q_20190930.htm"
+          ],
+          "deal_signals": [
+            "https://pitchbook.com/profiles/company/53904-79",
+            "https://investors.datadoghq.com/news-releases/news-release-details/datadog-announces-fourth-quarter-and-fiscal-year-2025-financial",
+            "https://investors.datadoghq.com/news-releases/news-release-details/datadog-announces-second-quarter-2026-financial-results",
+            "https://finance.yahoo.com/quote/DDOG/",
+            "https://en.wikipedia.org/wiki/Datadog",
+            "https://app.dealroom.co/news/note/datadog-acquires-propolis",
+            "https://www.sec.gov/Archives/edgar/data/0001561550/000162828026054458/ddog-20260630.htm",
+            "https://investors.datadoghq.com/news-releases",
+            "https://www.sec.gov/Archives/edgar/data/0001561550/000162828026032328/ddog-20260331.htm",
+            "https://www.sec.gov/Archives/edgar/data/0001561550/000156155026000252/wk-form4_1785186600.xml",
+            "https://www.sec.gov/Archives/edgar/data/0001561550/000162828026070292/ddog-20260930.htm",
+            "https://chartsview.co.uk/research/technology/datadog-inc-ddog-research",
+            "https://www.useluminix.com/reports/company-overviews/datadog-company-overview-observability-platform-financials-and-competitive-position-2026"
+          ],
+          "leadership": [
+            "https://www.sec.gov/Archives/edgar/data/0001561550/000156155026000244/wk-form4_1784149631.xml",
+            "https://www.sec.gov/Archives/edgar/data/0001561550/000156155026000228/wk-form4_1782333249.xml",
+            "https://finance.yahoo.com/quote/DDOG/profile/",
+            "https://derrick-app.com/company/datadog/ceo-olivier-pomel",
+            "https://www.datadoghq.com/about/leadership/",
+            "https://investors.datadoghq.com/news-releases/news-release-details/datadog-appoints-ami-vora-its-board-directors/",
+            "https://www.datadoghq.com/about/latest-news/press-releases/datadog-appoints-dominic-phillips-to-its-board-of-directors/",
+            "https://kbi.media/press-release/datadog-reinforces-apj-presence-through-senior-leadership-expansion/"
+          ],
+          "recent_news": [
+            "https://www.datadoghq.com/blog/datadog-acquires-adaptive-ml/",
+            "https://investors.datadoghq.com/news-releases/news-release-details/datadog-announces-second-quarter-2026-financial-results",
+            "https://finance.yahoo.com/markets/stocks/articles/datadog-announces-third-quarter-2026-120000310.html",
+            "https://www.tradingview.com/news/zacks:23d5e6ffb094b:0-datadog-acquires-adaptive-ml-to-pioneer-rlops-what-s-ahead/",
+            "https://www.sec.gov/Archives/edgar/data/0001561550/000162828026032328/ddog-20260331.htm",
+            "https://finance.biggo.com/news/US_DDOG_2026-11-04"
+          ]
+        }
+      }
+    }
+  ]
+}

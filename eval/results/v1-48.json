@@ -1,0 +1,2897 @@
+{
+  "label": "v1-48",
+  "api": "v1",
+  "date": "2026-11-11",
+  "base": "http://localhost:3100",
+  "model": "claude-sonnet-4-6",
+  "effort": "medium",
+  "max_usd": 2,
+  "spent_usd": 13.196593,
+  "stopped": null,
+  "rows": [
+    {
+      "name": "Anthropic",
+      "seconds": 264,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 37965,
+        "output_tokens": 4072,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.204975
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Anthropic",
+        "website": "https://www.anthropic.com",
+        "industry": "Artificial Intelligence / AI Safety & Research",
+        "hq_location": "San Francisco, California, USA (500 Howard St)",
+        "founded_year": "2021",
+        "employee_count": "1,001–5,000+",
+        "business_model": "Sells access to Claude AI models via a pay-per-token API and subscription tiers for consumers and enterprises, while also licensing models through third-party platforms (Microsoft, AWS, Google Cloud).",
+        "products_services": [
+          "Claude AI model family (Haiku, Sonnet, Opus variants)",
+          "Claude.ai — consumer and team chat application",
+          "Anthropic API — developer platform for Claude model access",
+          "Claude for Enterprise — business-grade AI deployment",
+          "Claude for Nonprofits — discounted access + AI training for NGOs",
+          "Claude for Life Sciences — vertical-specific AI solution",
+          "Claude Design (Anthropic Labs) — visual/design collaboration tool",
+          "Claude available in Microsoft Foundry and Microsoft 365 Copilot"
+        ],
+        "funding_status": "Private — total raised ~$12.8B+; key rounds include Series A ($124M, May 2021), Series B ($400M+ incl. $500M from Alameda Research, Apr 2022), Late VC ($300M, Google, Feb 2023), Series C ($450M, May 2023), Growth Equity ($100M, SK Telecom, Aug 2023), Series D ($1.2B, Jul 2024), Later Stage VC ($8B, Nov 2024); major investors include Google, Amazon, Spark Capital, Menlo Ventures, Salesforce Ventures, Qualcomm Ventures, SK Telecom; valuation reached ~$18.4B at Series D; IPO reported as announced per Pitchbook.",
+        "recent_news": [
+          "Claude for Nonprofits launched (Dec 2024) — free AI training + discounted rates for nonprofit organizations",
+          "Claude for Life Sciences launched (Oct 2024) — vertical AI solution for biomedical and pharma use cases",
+          "Claude integrated into Microsoft Foundry and Microsoft 365 Copilot",
+          "$8 billion Later Stage VC round closed (Nov 2024), bringing total raised to ~$12.8B+",
+          "Claude adopted by the US Department of Defense and the Intelligence Community (from 2024)",
+          "New Claude model releases expanding capabilities in coding, finance, and science"
+        ],
+        "deal_signals": [
+          "Massive $8B late-stage funding round (Nov 2024) signals pre-IPO capital build; IPO reportedly announced per Pitchbook",
+          "Deep enterprise partnerships with Microsoft (M365 Copilot, Azure Foundry), Amazon (AWS Bedrock), and Google Cloud",
+          "US DoD and Intelligence Community contracts — high-value government sector entry",
+          "Rapid vertical expansion into Life Sciences and Nonprofits suggests enterprise go-to-market scaling",
+          "Broad investor syndicate (336 investors per Pitchbook) with strategic corporates — rich cap table complexity",
+          "Valuation trajectory from $845M (2021) to $18.4B+ (2024) — strong growth curve attractive to secondary buyers"
+        ],
+        "confidence": "high",
+        "summary": "Anthropic (stylized ANTHROP\\C) is an American AI safety and research company founded in January 2021 by Dario Amodei, Daniela Amodei, and former OpenAI colleagues, focused on building reliable and interpretable large language models. Its flagship product, Claude, competes directly with OpenAI's GPT series and is distributed via its own API, consumer app, and major cloud platforms including AWS, Google Cloud, and Microsoft Azure. With over $12.8B raised, an expanding enterprise and government customer base, and a reported IPO on the horizon, Anthropic is one of the most consequential and well-capitalized private AI companies in the world."
+      }
+    },
+    {
+      "name": "Vercel",
+      "seconds": 345,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 35912,
+        "output_tokens": 3454,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 1,
+        "cost_usd": 0.189546
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Vercel",
+        "website": "https://vercel.com",
+        "industry": "Cloud Infrastructure / Developer Tools",
+        "hq_location": "San Francisco, CA, USA",
+        "founded_year": "2015",
+        "employee_count": "501-1000",
+        "business_model": "Freemium SaaS — individual developers get base access for free, while enterprises pay for security, compliance, traffic management, and advanced deployment capabilities on the Vercel cloud platform.",
+        "products_services": [
+          "Vercel Cloud Platform (frontend deployment & hosting)",
+          "Next.js (open-source React framework)",
+          "v0 (AI-powered UI/code generation tool)",
+          "Edge Network / Global CDN",
+          "Serverless Functions & Edge Functions",
+          "Vercel AI SDK",
+          "Vercel Storage (KV, Postgres, Blob)"
+        ],
+        "funding_status": "Series F ($300M, September 2025, co-led by Accel and GIC at $9.3B post-money valuation); also initiated ~$300M tender offer for employees, former employees, and early investors at the same time.",
+        "recent_news": [
+          "September 2025: Raised $300M oversubscribed Series F at $9.3B valuation, co-led by Accel and GIC; initiated ~$300M tender offer for shareholders.",
+          "2024–2025: Reported 82% revenue growth, largely driven by rapid adoption of the v0 AI coding tool.",
+          "As of February 2026: v0 surpassed 4M total users (up from 3.5M at time of Series F).",
+          "May 2024: Acquired ModelFusion.dev, expanding the capabilities of the Vercel AI SDK beyond UI.",
+          "2025: Replaced a 10-person sales development team with AI tooling — an example of AI-driven workforce restructuring.",
+          "v0 team operates as an independent business unit of ~10 people within Vercel as of August 2025."
+        ],
+        "deal_signals": [
+          "Fresh $300M Series F (Sept 2025) at $9.3B valuation signals late-stage, pre-IPO trajectory.",
+          "~$300M concurrent tender offer provides liquidity to early investors and employees — classic pre-IPO signal.",
+          "82% YoY revenue growth (2024–2025) driven by v0 breakout product.",
+          "Strategic acquisition of ModelFusion.dev (May 2024) shows AI platform expansion appetite.",
+          "AI-driven workforce restructuring (replaced 10-person SDR team with AI) suggests margin improvement focus.",
+          "v0 spun out as an independent business unit — potential future standalone entity or spin-off candidate.",
+          "Maintaining Next.js as the dominant React framework creates large open-source developer funnel for commercial conversion."
+        ],
+        "confidence": "high",
+        "summary": "Vercel is a San Francisco-based cloud platform (founded 2015 by Guillermo Rauch) that enables developers to build, deploy, and scale frontend web applications via its global edge network and serverless infrastructure, while also stewarding the widely adopted Next.js open-source framework. The company is in a high-growth phase — posting ~82% revenue growth in 2024–2025 — fueled by the viral adoption of its v0 AI code-generation tool, which has amassed 4M+ users. With a freshly closed $300M Series F at a $9.3B valuation and a concurrent $300M tender offer, Vercel appears to be on a clear path toward an IPO or major strategic transaction."
+      }
+    },
+    {
+      "name": "Airbnb",
+      "seconds": 259,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 47780,
+        "output_tokens": 3671,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 4,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.238405
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Airbnb, Inc.",
+        "website": "https://www.airbnb.com",
+        "industry": "Travel & Short-Term Rental Marketplace",
+        "hq_location": "San Francisco, California, USA",
+        "founded_year": "2008",
+        "employee_count": "~8,200 (FY2025)",
+        "business_model": "Earns revenue by charging service fees to both guests and hosts on bookings made through its online marketplace for short-term stays, experiences, and services.",
+        "products_services": [
+          "Short-term home and apartment rentals (9M+ listings globally)",
+          "Airbnb Experiences (relaunched May 2025)",
+          "Airbnb Services (newly launched May 2025)",
+          "Co-Host Network (launched Winter 2024)",
+          "Airbnb mobile app (redesigned 2025)"
+        ],
+        "funding_status": "Public (NASDAQ: ABNB) — IPO December 2020",
+        "recent_news": [
+          "May 2025: 2025 Summer Release — launched Airbnb Services, relaunched Experiences, and debuted an all-new Airbnb app, marking a major platform expansion beyond home rentals",
+          "FY2025 revenue reached $12.2 billion (up from $9.9B in 2023), with 61% of revenue from non-US listings",
+          "Q1 2025: Repurchased $807M in Class A common shares; $2.5B remaining under $6B buyback authorization",
+          "Q4 2024: Repurchased $838M in Class A shares; ended year with $10.6B in cash, equivalents and short-term investments",
+          "Winter 2024 Release: Introduced Co-Host Network, enabling hosts to find local co-managers for their listings",
+          "Headcount grew from ~7,300 to ~8,200 year-over-year (FY2025), with ~13,000 additional third-party community support workers"
+        ],
+        "deal_signals": [
+          "Aggressive share buyback program ($6B total authorization; $2.5B remaining as of Q1 2025) signals strong free cash flow generation and capital return focus",
+          "Platform diversification into Services and Experiences (May 2025) suggests M&A appetite in adjacent travel/lifestyle verticals",
+          "Strong balance sheet: $11.5B in cash, equivalents, and short-term investments as of March 2025",
+          "Consistent revenue growth ($9.9B → $12.2B from 2023 to 2025) with positive net income ($4.8B in FY2023)",
+          "Growing headcount (+12% YoY to ~8,200) indicates organic investment and hiring momentum",
+          "Operates in 220+ countries with 5.5M+ hosts and 9M+ listings — global scale for potential regulatory or partnership plays"
+        ],
+        "confidence": "high",
+        "summary": "Airbnb is a publicly traded (NASDAQ: ABNB) global travel marketplace headquartered in San Francisco, connecting over 5.5 million hosts with guests across 220+ countries. The company generated $12.2 billion in FY2025 revenue and is aggressively expanding beyond home rentals into experiences and services. With an $11.5B cash position, an active buyback program, and growing headcount, Airbnb presents as a mature, profitable platform company with continued strategic ambitions in adjacent travel and lifestyle markets."
+      }
+    },
+    {
+      "name": "Shopify",
+      "seconds": 243,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 36156,
+        "output_tokens": 2785,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.180243
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Shopify",
+        "website": "https://www.shopify.com",
+        "industry": "E-commerce / Commerce Technology",
+        "hq_location": "Ottawa, Ontario, Canada",
+        "founded_year": "2006",
+        "employee_count": "~7,600 (2025)",
+        "business_model": "Shopify earns revenue through subscription fees (merchant SaaS plans) and merchant solutions (Shopify Payments, Capital, Shipping, and other transactional/value-added services), with merchant solutions representing the majority of revenue.",
+        "products_services": [
+          "Shopify storefront/website builder",
+          "Multichannel selling (web, in-store, social, marketplaces)",
+          "Shopify Payments (payment processing)",
+          "Shopify Capital (merchant financing)",
+          "Shopify Shipping",
+          "Shopify POS (point-of-sale)",
+          "Shopify Plus (enterprise tier)",
+          "Shop app (consumer-facing shopping app)",
+          "Shopify Markets (cross-border commerce)",
+          "Analytics & marketing tools",
+          "Inventory & order management"
+        ],
+        "funding_status": "Public (NYSE/NASDAQ: SHOP; TSX: SHOP) — IPO May 21, 2015; previously raised ~$122M pre-IPO",
+        "recent_news": [
+          "Q1 2025 revenue of $2.36B, up 27% YoY, slightly beating forecasts; GMV of $74.8B, up 23% YoY",
+          "Free cash flow margin of 15% in Q1 2025; full-year 2025 revenue reported at $11.6B",
+          "Layoffs in April 2025 affecting revenue operations and customer support teams; Chief Design Officer Carl Rivera departed after ~8 years",
+          "Expanding B2B and international markets cited as key growth drivers in Q1 2025 earnings call",
+          "Navigating macroeconomic headwinds from trade war; slight profit dip anticipated in Q2 2025"
+        ],
+        "deal_signals": [
+          "Active workforce restructuring (April 2025 layoffs in ops/support) signals ongoing cost discipline",
+          "27% revenue growth and 15% FCF margin demonstrate strong unit economics attractive to investors",
+          "GMV of $74.8B in a single quarter underscores platform scale",
+          "Aggressive international and B2B expansion may signal M&A appetite for logistics, fintech, or international commerce players",
+          "Leadership changes: Chief Design Officer departure in April 2025",
+          "Stock down ~11% YTD heading into Q1 2025 earnings, potentially creating entry opportunity"
+        ],
+        "confidence": "high",
+        "summary": "Shopify is a Canadian multinational commerce platform serving over five million merchants globally, from solo entrepreneurs to large enterprises, processing $292.3B in transactions in 2024. It operates two core segments—subscription solutions (SaaS plans) and merchant solutions (payments, capital, shipping)—with the latter driving the majority of its $11.6B in 2025 revenue. The company continues to show strong growth (27% YoY in Q1 2025) while actively restructuring operations and expanding into B2B and international markets."
+      }
+    },
+    {
+      "name": "Datadog",
+      "seconds": 456,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 69061,
+        "output_tokens": 4432,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 3,
+        "cost_usd": 0.303663
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Datadog, Inc.",
+        "website": "https://www.datadoghq.com",
+        "industry": "Cloud Observability & Security Software (SaaS)",
+        "hq_location": "New York City, NY, USA (620 8th Avenue, 45th Floor)",
+        "founded_year": "2010",
+        "employee_count": "8,001–8,500 (≈8,100 per latest 10-K)",
+        "business_model": "Sells a usage-based SaaS platform for cloud observability, monitoring, and security; revenue scales with customer infrastructure volume and product adoption across its 20+ modules.",
+        "products_services": [
+          "Infrastructure Monitoring",
+          "Application Performance Monitoring (APM)",
+          "Log Management (incl. Archive Search, Flex Frozen, CloudPrem)",
+          "Cloud SIEM & Security Monitoring",
+          "Synthetics & Browser Testing",
+          "Real User Monitoring (RUM)",
+          "Network Performance Monitoring",
+          "Serverless Monitoring",
+          "AI Observability & LLM Monitoring (AI Agent Monitoring, LLM Experiments)",
+          "Bits AI Agents (SRE, Dev Agent, Security Analyst)",
+          "Internal Developer Portal",
+          "Code Security & Workload Protection",
+          "Database Monitoring",
+          "Incident Management"
+        ],
+        "funding_status": "Public (NASDAQ: DDOG); S&P 500 & Nasdaq-100 component; market cap ~$64.9B; FY2025 revenue $3.43B; $3.9B cash & marketable securities as of June 30, 2025",
+        "recent_news": [
+          "Q2 2025 revenue grew 28% YoY to $827M with $200M operating cash flow and $165M free cash flow (reported August 7, 2025)",
+          "Unveiled 125+ new products, capabilities, and features at DASH 2025 user conference",
+          "Joined the S&P 500 Index in 2025",
+          "Named a Leader in Gartner Magic Quadrant for Observability Platforms for the fifth consecutive year (2025)",
+          "Launched three new AI agents: Bits AI SRE, Bits AI Dev Agent, and Bits AI Security Analyst",
+          "Expanded platform availability to AWS Asia-Pacific (Sydney) Region",
+          "Ranked on Forbes Global 2000 and Forbes Global 2000 United States Lists for 2025",
+          "Disclosed $1.4M in M&A transaction costs in Q2 2025, signaling acquisition activity",
+          "3,850 customers with $100K+ ARR as of June 30, 2025, up 14% YoY from 3,390"
+        ],
+        "deal_signals": [
+          "M&A transaction costs of $1.4M disclosed in Q2 2025 10-Q — active acquisition activity underway",
+          "Strong balance sheet: $3.9B in cash and marketable securities available for deals or investment",
+          "Rapid product expansion (125+ new features at a single conference) signals aggressive R&D and potential bolt-on acquisition targets",
+          "14% YoY growth in $100K+ ARR customers to 3,850 — durable enterprise upsell engine",
+          "28% YoY revenue growth at $827M quarterly run-rate — premium valuation supports equity-funded M&A",
+          "Entry into S&P 500 significantly broadens institutional shareholder base and equity currency",
+          "Deep AI platform buildout (Bits AI agents, LLM monitoring) may signal interest in AI-native acquisitions",
+          "Founders Olivier Pomel (CEO) and Alexis Lê-Quôc (CTO) remain in leadership — no succession/exit signal"
+        ],
+        "confidence": "high",
+        "summary": "Datadog is a publicly traded (NASDAQ: DDOG) cloud observability and security platform founded in 2010 by Olivier Pomel and Alexis Lê-Quôc, headquartered in New York City. The company generates revenue through a usage-based SaaS model spanning 20+ monitoring, security, and AI observability modules, with FY2025 revenue of $3.43B and 28% YoY growth in Q2 2025. With $3.9B in cash, recent M&A activity, aggressive AI product launches, and S&P 500 inclusion, Datadog is a high-velocity acquirer actively investing in platform expansion."
+      }
+    },
+    {
+      "name": "Cloudflare",
+      "seconds": 210,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 163194,
+        "output_tokens": 5089,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 4,
+        "web_fetch_requests": 3,
+        "cost_usd": 0.605917
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Cloudflare, Inc.",
+        "website": "https://www.cloudflare.com",
+        "industry": "Cybersecurity / Cloud Networking (Connectivity Cloud)",
+        "hq_location": "San Francisco, California, USA (101 Townsend Street)",
+        "founded_year": "2009",
+        "employee_count": "5,001–5,500 (5,156 full-time as of Dec 31, 2025)",
+        "business_model": "Cloudflare sells subscription-based cloud services—spanning security, performance, and network connectivity—to businesses of all sizes, with a freemium on-ramp that converts free users to paying customers and upsells large enterprises on expanded capacity and features.",
+        "products_services": [
+          "Connectivity Cloud platform (unified control plane for security & networking)",
+          "DDoS mitigation & Web Application Firewall (WAF)",
+          "Content Delivery Network (CDN)",
+          "Zero Trust / SASE (Cloudflare One)",
+          "Workers – edge serverless compute platform",
+          "R2 – object storage",
+          "AI Gateway & Firewall for AI",
+          "AI Crawl Control (formerly AI Audit)",
+          "Cloudflare OS – AI workspace for enterprise",
+          "DNS & Domain Registrar",
+          "Magic Transit (network-layer protection)",
+          "Pages & Stream (developer tools)"
+        ],
+        "funding_status": "Public (NYSE: NET); IPO September 2019; market cap ~$73.2 billion (mid-2025 per proxy filing)",
+        "recent_news": [
+          "FY2025 total revenue of $2,167.9 million, up 29.8% YoY; GAAP gross margin of 74.5%",
+          "Q2 2025 revenue of $512.3 million (+28% YoY), exceeding $2 billion annualized run-rate",
+          "November 2025: Agreed to acquire Replicate, an AI model deployment platform, to accelerate AI developer offerings",
+          "AI Week 2025: Launched AI Crawl Control, Cloudflare Confidence Score for AI Applications, refreshed AI Gateway, and expanded Firewall for AI",
+          "Cloudflare OS launched — an AI workspace enabling enterprise teams to deploy productive AI",
+          "Headcount grew ~21% YoY from 4,263 (Dec 2024) to 5,156 (Dec 2025)",
+          "RPO grew 39% YoY and Current RPO grew 33% YoY as of Q2 2025"
+        ],
+        "deal_signals": [
+          "Revenue reacceleration: 29.8% growth in FY2025, with Q2 2025 growth ticking up to 28% YoY — strong top-line momentum",
+          "Acquisition of Replicate (Nov 2025) signals aggressive M&A strategy in AI infrastructure",
+          "21% headcount growth in 2025, indicating significant investment phase",
+          "Non-GAAP operating income of $72.3M (14% margin) in Q2 2025 — approaching profitability inflection",
+          "RPO growth of 39% YoY signals strong forward-looking contract pipeline",
+          "Aggressive AI product expansion (AI Gateway, Cloudflare OS, AI Crawl Control) positions company for new revenue streams",
+          "Market cap ~$73.2B with ~$2.2B revenue implies high-multiple growth valuation — potential acquirer or strategic partner for smaller security/AI firms"
+        ],
+        "confidence": "high",
+        "summary": "Cloudflare is a publicly traded (NYSE: NET) connectivity cloud company headquartered in San Francisco, founded in 2009, that secures and accelerates internet traffic for millions of businesses globally via its massive global network. The company generated $2.17 billion in revenue in FY2025 (+30% YoY) and is rapidly expanding into AI infrastructure through its Workers edge platform, Cloudflare OS AI workspace, and the acquisition of AI model deployment platform Replicate. With a ~$73 billion market cap, strong RPO growth, and an accelerating product portfolio, Cloudflare is a high-growth, high-multiple public company actively consolidating the AI and security infrastructure space."
+      }
+    },
+    {
+      "name": "Twilio",
+      "seconds": 91,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 89557,
+        "output_tokens": 3811,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 4,
+        "web_fetch_requests": 3,
+        "cost_usd": 0.365836
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Twilio Inc.",
+        "website": "https://www.twilio.com",
+        "industry": "Cloud Communications / CPaaS (Communications Platform-as-a-Service)",
+        "hq_location": "San Francisco, California, USA (Rincon Center)",
+        "founded_year": "2008",
+        "employee_count": "5,001–6,000 (5,587 as of 2025)",
+        "business_model": "Twilio generates revenue primarily through usage-based API fees charged to developers and enterprises for voice calls, SMS/MMS messaging, email delivery (SendGrid), and customer data platform (Segment) subscriptions.",
+        "products_services": [
+          "Twilio Communications APIs (Voice, SMS, MMS, WhatsApp)",
+          "Twilio Segment (Customer Data Platform)",
+          "SendGrid (Email Marketing & Transactional Email)",
+          "Authy (Two-Factor Authentication)",
+          "Twilio Flex (Cloud Contact Center)",
+          "Twilio Verify (Identity & Authentication)",
+          "Twilio Video (WebRTC)",
+          "SIP Trunking"
+        ],
+        "funding_status": "Public (NYSE: TWLO, Class A); IPO in June 2016; S&P 400 component; raised ~$103M in VC prior to IPO; FY2025 revenue $5.07B",
+        "recent_news": [
+          "Jeff Lawson resigned as CEO and Board Chair in January 2024; Khozema Shipchandler appointed CEO effective January 8, 2024",
+          "Board concluded operational review in early 2024, deciding to retain Segment rather than pursue a sale after exploring strategic alternatives with advisors",
+          "Thomas Wyatt appointed President of Segment in March 2024, bringing AI and data analytics expertise",
+          "Twilio authorized an additional $2B share buyback, bringing total repurchase program to ~$3B",
+          "Segment break-even (non-GAAP) targeted for Q2 2025 as part of profitability push",
+          "Company shed ~4,000 employees across multiple layoff rounds between late 2022 and mid-2025 as part of restructuring",
+          "Data breach disclosed in 2024, following two breaches in 2022",
+          "AI strategy pivot: positioning as an AI-powered customer engagement platform combining communications and first-party data"
+        ],
+        "deal_signals": [
+          "CEO succession completed Jan 2024 — new leadership actively restructuring and driving profitability; potential for further strategic pivots",
+          "Board formally explored Segment sale in 2024 before deciding to retain; Segment could resurface as a divestiture candidate",
+          "$3B total share buyback signals confidence in cash flow and desire to return capital — stock is actively managed",
+          "Workforce reduced ~50% from peak (~8,000 to ~5,587) — leaner cost structure may attract acquirers or activists",
+          "Early-stage profitability reached ($33.8M net income, FY2025) after years of losses — inflection point for valuation re-rating",
+          "AI integration strategy underway across Communications and Segment — potential for partnership or bolt-on acquisition activity",
+          "Authy (2FA subsidiary) and SendGrid are mature, potentially separable assets"
+        ],
+        "confidence": "high",
+        "summary": "Twilio is a publicly traded cloud communications leader (NYSE: TWLO) headquartered in San Francisco, offering a broad suite of programmable communication APIs and a customer data platform (Segment) used by developers and enterprises globally. After years of growth-at-all-costs, the company underwent a significant restructuring in 2023–2025, including a CEO change, ~4,000 job cuts, a strategic review of Segment, and a pivot toward AI-powered customer engagement — reaching early profitability with $5.07B in FY2025 revenue and $33.8M in net income. Key deal angles include the potential re-emergence of a Segment divestiture, an aggressive $3B buyback program, and a leaner post-restructuring cost base that makes the company more attractive to acquirers or activist investors."
+      }
+    },
+    {
+      "name": "HubSpot",
+      "seconds": 380,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 92269,
+        "output_tokens": 4769,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 3,
+        "cost_usd": 0.37834199999999996
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "HubSpot, Inc.",
+        "website": "https://www.hubspot.com",
+        "industry": "CRM & Marketing Software (SaaS)",
+        "hq_location": "Cambridge, MA, USA",
+        "founded_year": "2006",
+        "employee_count": "8,246 (as of Dec 31, 2024)",
+        "business_model": "Sells cloud-based CRM, marketing, sales, and customer-service software to businesses primarily via recurring subscription fees, supplemented by professional services revenue.",
+        "products_services": [
+          "Marketing Hub",
+          "Sales Hub",
+          "Service Hub",
+          "Content Hub (CMS)",
+          "Operations Hub",
+          "Commerce Hub",
+          "Smart CRM platform",
+          "AI-powered features across all hubs",
+          "HubSpot App Marketplace / Partner Ecosystem"
+        ],
+        "funding_status": "Public (NYSE: HUBS)",
+        "recent_news": [
+          "Full-year 2024 revenue: $2.63 billion, up 21% YoY; subscription revenue was $2.57B",
+          "Q3 2025 revenue: $809.5 million, up 21% YoY — continued strong growth trajectory",
+          "Acquired Cacheflow Inc. (B2B subscription billing/CPQ) for ~$65M in October 2024",
+          "Customer base grew to 247,939 as of Dec 31, 2024, up 21% YoY",
+          "Full-year 2025 revenue guidance issued at $2.985–$2.995 billion (~14% YoY growth)",
+          "Generated $598.6M in operating cash flow in 2024, up sharply from $351M in 2023",
+          "CEO Yamini Rangan declared 2024 'a transformative year' as HubSpot embedded AI across all product hubs",
+          "Google reportedly explored acquiring HubSpot in early 2024; no deal materialized"
+        ],
+        "deal_signals": [
+          "Acquisition of Cacheflow (~$65M, Oct 2024) signals M&A appetite in billing/CPQ adjacency",
+          "Google acquisition interest (Reuters, April 2024) highlights strategic value of the platform",
+          "Strong free cash flow generation ($163M non-GAAP FCF in Q4 2024 alone) enables further M&A",
+          "21% revenue CAGR with $2.63B 2024 revenue and 2025 guidance of ~$3B makes HubSpot a sizable, high-growth public target",
+          "AI platform rebuild underway — potential for bolt-on AI/ML acquisitions",
+          "Average subscription revenue per customer at ~$11,312 — moderate, leaving room for upsell/expansion plays",
+          "Non-GAAP operating margin expanding (18.9% in Q4 2024 vs 17.1% in Q4 2023) — improving unit economics"
+        ],
+        "confidence": "high",
+        "summary": "HubSpot is a publicly traded (NYSE: HUBS) SaaS company headquartered in Cambridge, MA that provides an integrated CRM and go-to-market platform for scaling businesses, generating $2.63 billion in revenue in 2024 (+21% YoY) with nearly 248,000 customers worldwide. The company is in a significant AI transformation phase, embedding AI across all its product hubs, while also pursuing targeted M&A (e.g., the $65M Cacheflow acquisition in October 2024). With strong and improving cash flows, a ~$3B 2025 revenue target, and prior strategic interest from Google, HubSpot remains one of the most closely watched assets in the CRM/MarTech landscape."
+      }
+    },
+    {
+      "name": "Duolingo",
+      "seconds": 152,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 36851,
+        "output_tokens": 3021,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.185868
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Duolingo, Inc.",
+        "website": "https://www.duolingo.com",
+        "industry": "EdTech / Mobile Language Learning",
+        "hq_location": "Pittsburgh, PA, USA",
+        "founded_year": "2011",
+        "employee_count": "~830 (as of December 2024)",
+        "business_model": "Freemium model: core app is free with ads; revenue is driven primarily by paid subscriptions (Super Duolingo / Duolingo Max), supplemented by the Duolingo English Test and advertising.",
+        "products_services": [
+          "Duolingo language learning app (40+ languages)",
+          "Super Duolingo / Duolingo Max (premium subscriptions)",
+          "Duolingo English Test (DET) — standardized proficiency certification",
+          "Duolingo Math app",
+          "Duolingo Chess courses (launched 2025)",
+          "148 new AI-generated language courses (launched April 2025)"
+        ],
+        "funding_status": "Public (NASDAQ: DUOL); S&P 400 component; IPO in 2021",
+        "recent_news": [
+          "Q3 2025: Surpassed 50 million daily active users (DAU up 36% YoY); revenue up 41% YoY",
+          "Q2 2025: 41% revenue growth, 46% subscription revenue growth, record profitability; raised full-year guidance",
+          "FY2025 revenue: $1.037 billion (up from $748M in 2024 and $531M in 2023)",
+          "April 2025: CEO Luis von Ahn declared Duolingo an 'AI-first' company in company-wide email; announced replacement of contractors with AI",
+          "April–May 2025: Launched 148 new language courses created using generative AI",
+          "September 2025 (Duocon 2025): Announced LinkedIn integration and expanded chess course offerings"
+        ],
+        "deal_signals": [
+          "Crossed $1B annual revenue milestone in FY2025 — a key scale inflection point",
+          "Sustained ~41% revenue growth in Q2 and Q3 2025 with record profitability",
+          "AI-first strategic pivot: aggressively replacing contractors with AI, lowering marginal cost of content creation",
+          "DAU surpassed 50M in Q3 2025 — strong top-of-funnel for subscription conversion",
+          "Rapid product expansion (148 AI courses, chess, LinkedIn integration) signals platform broadening beyond language learning",
+          "Raised full-year 2025 guidance, indicating management confidence in trajectory",
+          "Small but highly productive workforce (~830 employees) relative to $1B+ revenue — extremely high revenue per employee"
+        ],
+        "confidence": "high",
+        "summary": "Duolingo is the world's leading mobile language-learning platform, operating a freemium model that monetizes via subscriptions and advertising, with over 50 million daily active users as of Q3 2025. The company crossed $1 billion in annual revenue in FY2025, driven by ~41% YoY growth, and has declared an \"AI-first\" strategy that is dramatically accelerating content creation (148 new courses launched via AI in April 2025) while reducing contractor costs. It is a profitable, high-growth public company (NASDAQ: DUOL) that is actively broadening its platform beyond language into math, chess, and standardized testing."
+      }
+    },
+    {
+      "name": "Toast",
+      "seconds": 258,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 45973,
+        "output_tokens": 3644,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 4,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.232579
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Toast, Inc.",
+        "website": "https://www.toasttab.com",
+        "industry": "Restaurant Technology / Point-of-Sale / SaaS & Fintech",
+        "hq_location": "Boston, Massachusetts, USA (Seaport District)",
+        "founded_year": "2011",
+        "employee_count": "5,001–7,000",
+        "business_model": "Toast generates revenue through SaaS subscription fees for its restaurant management software, payment processing fees (fintech take-rate), and sales of proprietary restaurant-grade hardware.",
+        "products_services": [
+          "Point-of-Sale (POS) software platform",
+          "Integrated payment processing",
+          "Restaurant-grade hardware (terminals, kiosks, guest-facing displays)",
+          "Online ordering & delivery management",
+          "Payroll & HR tools (Toast Payroll)",
+          "Marketing & loyalty programs",
+          "ToastIQ (AI-powered restaurant intelligence)",
+          "Third-party partner ecosystem / integrations"
+        ],
+        "funding_status": "Public (NYSE: TOST); IPO September 22, 2021, raising ~$870M at ~$20B valuation; last private round was Series F at ~$4.9B valuation (February 2020)",
+        "recent_news": [
+          "Q2 CY2025: Revenue of $1.55B, up 24.8% YoY, with 8,500 net new restaurant locations added in the quarter",
+          "Launched ToastIQ, an AI product adopted by over 50% of locations within four months of launch, generating 8M+ queries",
+          "International expansion: Australia launch cited as a key milestone on Q4 2025 earnings call",
+          "Signed new enterprise customers including Applebee's and Firehouse Subs",
+          "Entered retail vertical with Instacart integration accelerating retail business growth",
+          "Q1 2024 ARR reached $1.3B, up 32% YoY; Q1 2024 net loss was $(83)M with Adjusted EBITDA of $57M"
+        ],
+        "deal_signals": [
+          "Aggressive geographic expansion (Australia live; more international markets likely)",
+          "New vertical entry into retail — faster growth than core restaurant segment",
+          "AI product (ToastIQ) launched and rapidly adopted — potential platform differentiation",
+          "Strong revenue growth (24.8% YoY in Q2 2025) with improving EBITDA trajectory",
+          "Enterprise segment gaining traction (Applebee's, Firehouse Subs wins)",
+          "ARR exceeding $1.3B+ and recurring gross profit streams expanding",
+          "CEO Aman Narang (co-founder) leading; management emphasizing continued product investment"
+        ],
+        "confidence": "high",
+        "summary": "Toast, Inc. is a publicly traded (NYSE: TOST) cloud-based restaurant operating system headquartered in Boston, MA, offering an integrated suite of POS software, payment processing, hardware, and AI tools purpose-built for the restaurant industry. The company serves tens of thousands of restaurant locations across the U.S. and is actively expanding internationally and into the retail vertical. With $1.55B in quarterly revenue growing nearly 25% YoY, a rapidly adopted AI product (ToastIQ), and new enterprise wins, Toast is in a strong growth phase while continuing to improve profitability."
+      }
+    },
+    {
+      "name": "Etsy",
+      "seconds": 403,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 136790,
+        "output_tokens": 5594,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 4,
+        "web_fetch_requests": 1,
+        "cost_usd": 0.53428
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Etsy, Inc.",
+        "website": "https://www.etsy.com",
+        "industry": "E-Commerce / Online Marketplace",
+        "hq_location": "117 Adams Street, Brooklyn, NY 11201",
+        "founded_year": "2005",
+        "employee_count": "2,001–2,500 (2,375 as of Dec 31, 2025, including ~475 Depop employees)",
+        "business_model": "Etsy earns revenue by charging sellers listing fees, transaction fees (6.5% of sale price), payment processing fees, and optional advertising/promotional services across its three marketplaces (Etsy, Depop, Reverb).",
+        "products_services": [
+          "Etsy Marketplace – global platform for handmade, vintage, and craft goods",
+          "Depop – social secondhand fashion marketplace (acquired 2021)",
+          "Reverb – musical instruments and gear marketplace",
+          "Etsy Ads – on-site and offsite advertising for sellers",
+          "Etsy Payments – integrated payment processing",
+          "Etsy Shipping Labels – discounted postage for sellers"
+        ],
+        "funding_status": "Public (NYSE: ETSY); IPO in 2015",
+        "recent_news": [
+          "CEO transition announced Oct 29, 2025: Josh Silverman stepping down Dec 31, 2025; Kruti Patel Goyal (President & Chief Growth Officer) appointed CEO effective Jan 1, 2026",
+          "Silverman appointed Executive Chair through Dec 31, 2026 for transition continuity",
+          "Board Chair Fred Wilson stepped down as Chair (Jan 1, 2026), appointed Lead Independent Director",
+          "FY2025 total revenue grew 2.7% YoY to $2.88B; net income declined 46.3% YoY to $163M",
+          "FY2025 consolidated GMS of ~$11.9B (Etsy marketplace $10.46B + Depop $1.07B + Reverb $0.38B); Etsy+Depop GMS returned to YoY growth in Q3 2025",
+          "Executed ~11% Etsy marketplace workforce reduction (~225 employees) as part of a restructuring plan",
+          "Divested Elo7 (Brazilian marketplace) in prior period",
+          "86.5 million active buyers and 5.6 million active sellers as of Dec 31, 2025"
+        ],
+        "deal_signals": [
+          "Major CEO succession: incoming CEO Kruti Patel Goyal is an internal promotion — strategic direction change possible in 2026",
+          "Net income down 46% YoY in FY2025 ($163M vs $303M), and GMS contracting — operational pressure may drive strategic pivots or asset sales",
+          "Completed ~11% Etsy marketplace workforce reduction, signaling ongoing cost discipline",
+          "Strong balance sheet: $1B+ in cash and short-term investments (as of Dec 31, 2024); likely maintained in 2025",
+          "Reverb (musical instruments) is a non-core asset with declining GMS ($381M in 2025) — potential divestiture candidate",
+          "Board leadership change: Fred Wilson stepped down as Chair after serving since 2017",
+          "Depop acquisition integration ongoing — strategic value or carve-out potential being tested",
+          "GMS has been declining from $13B+ peak — market share pressure from competitors could accelerate M&A or partnership activity"
+        ],
+        "confidence": "high",
+        "summary": "Etsy, Inc. is a publicly traded (NYSE: ETSY) two-sided e-commerce company headquartered in Brooklyn, NY, operating three online marketplaces — Etsy (handmade/vintage goods), Depop (secondhand fashion), and Reverb (musical instruments) — connecting 86.5 million active buyers with 5.6 million sellers globally. FY2025 revenue was $2.88B (+2.7% YoY) but net income fell 46% to $163M amid declining consolidated GMS and macroeconomic headwinds. A high-profile CEO transition (Josh Silverman → Kruti Patel Goyal, effective Jan 1, 2026), recent workforce restructuring, and a potentially non-core Reverb asset make Etsy an active watch for deal teams."
+      }
+    },
+    {
+      "name": "Robinhood",
+      "seconds": 374,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 72499,
+        "output_tokens": 4784,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 3,
+        "cost_usd": 0.319257
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Robinhood Markets, Inc.",
+        "website": "https://robinhood.com",
+        "industry": "Financial Technology (FinTech) / Online Brokerage",
+        "hq_location": "Menlo Park, California, USA",
+        "founded_year": "2013",
+        "employee_count": "1,001–5,000",
+        "business_model": "Robinhood generates revenue primarily through payment for order flow (PFOF), net interest income on cash and margin balances, premium subscriptions (Robinhood Gold), cryptocurrency transaction spreads, and stock lending programs.",
+        "products_services": [
+          "Commission-free stock, ETF, and options trading",
+          "Cryptocurrency trading (expanded via Bitstamp acquisition)",
+          "Robinhood Gold (premium subscription with margin, higher APY, research)",
+          "Robinhood Retirement (traditional and Roth IRAs with 1–3% match)",
+          "Robinhood Strategies (AI-powered digital advisory, launched March 2025)",
+          "Cash management and debit card",
+          "24-hour market trading",
+          "Bitstamp — globally-scaled institutional and retail crypto exchange (acquired June 2025)",
+          "Legend platform for active traders",
+          "Futures trading"
+        ],
+        "funding_status": "Public (NASDAQ: HOOD) — IPO'd July 2021",
+        "recent_news": [
+          "Completed $200M acquisition of Bitstamp (June 2025), a global crypto exchange operating in the EU, UK, US, and Asia, significantly expanding Robinhood's international crypto footprint",
+          "Reported record 2024 results: $2.95B total net revenues and $1.41B net income",
+          "Funded customers grew to 25.2 million (+1.8M) and Assets Under Custody reached $193B in 2024",
+          "Launched Robinhood Strategies (digital advisory) in March 2025 — managing $0.5B+ across 100K+ customers within months",
+          "Retirement AUC surpassed $20B, up 50% year-to-date as of mid-2025",
+          "Expanded active-trader capabilities with the Legend platform",
+          "Noted as transforming from a mobile-only retail broker into a broader global financial services ecosystem"
+        ],
+        "deal_signals": [
+          "Completed first major international M&A: $200M Bitstamp acquisition signals aggressive global and institutional expansion strategy",
+          "Record profitability in 2024 ($1.41B net income) provides significant capital for further M&A or product investment",
+          "AUC grew to $193B — strong asset-gathering momentum makes it an attractive platform/distribution partner",
+          "Rapid product diversification into advisory (Strategies), retirement, and futures suggests platform broadening ahead of potential wealth management acquisitions",
+          "International expansion into EU, UK, and Asian markets via Bitstamp opens new regulatory and geographic deal opportunities",
+          "Dual-class share structure gives founders strong voting control, which may influence any strategic transaction",
+          "Revenue more than doubled from 2023 to 2025, showing high growth trajectory that could attract strategic interest or partnership"
+        ],
+        "confidence": "high",
+        "summary": "Robinhood Markets (NASDAQ: HOOD) is a Menlo Park-based fintech company that pioneered commission-free trading and has grown into a broad retail financial services platform with 25.2 million funded customers and $193B in assets under custody as of 2024. After achieving record profitability ($1.41B net income in 2024), the company is aggressively expanding via product launches (Robinhood Strategies, Retirement, Legend) and its landmark $200M acquisition of Bitstamp, which establishes a global crypto and institutional trading presence across the EU, UK, and Asia. Robinhood represents a high-growth, newly profitable public fintech platform in an active strategic expansion phase."
+      }
+    },
+    {
+      "name": "DoorDash",
+      "seconds": 274,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 123448,
+        "output_tokens": 4526,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 4,
+        "web_fetch_requests": 1,
+        "cost_usd": 0.478234
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "DoorDash, Inc.",
+        "website": "https://www.doordash.com",
+        "industry": "On-Demand Delivery / Local Commerce Platform",
+        "hq_location": "San Francisco, California, USA",
+        "founded_year": "2013",
+        "employee_count": "23,700+ (as of Dec 31, 2024, per 10-K); ~34,000+ estimated mid-2026",
+        "business_model": "DoorDash earns revenue primarily through commissions and service fees charged to merchants and delivery/service fees charged to consumers on its marketplace, supplemented by subscription memberships (DashPass/Wolt+), advertising revenue, and SaaS fees via its Commerce Platform.",
+        "products_services": [
+          "DoorDash Marketplace (food delivery, grocery, and new verticals in the US)",
+          "Wolt (international marketplace operating in 30+ countries)",
+          "DashPass (US subscription membership with 22M+ members exiting 2024)",
+          "Wolt+ (international subscription membership)",
+          "DoorDash Commerce Platform (SaaS tools: online ordering, POS integration, Drive white-label delivery)",
+          "DoorDash Advertising (merchant ad solutions)",
+          "SevenRooms (restaurant reservations/table management — acquisition pending, $1.2B deal announced May 2025)"
+        ],
+        "funding_status": "Public (NASDAQ: DASH); IPO December 2020; S&P 500 and Nasdaq-100 component",
+        "recent_news": [
+          "FY2024: Revenue of $10.7B (+24% YoY); first full year of GAAP net income ($123M attributable to common stockholders)",
+          "Q4 2024: All-time high Adjusted EBITDA of $566M; Total Orders up 19% YoY to 685M; Marketplace GOV up 21% YoY to $21.3B",
+          "December 2024 MAUs reached an all-time high of 42M+; DashPass/Wolt+ members exceeded 22M",
+          "February 2025: Board authorized a $5.0B share repurchase program (inclusive of $876M remaining from prior authorization)",
+          "2024 Free Cash Flow of $1.8B; cash and equivalents grew to $4.0B at year-end",
+          "Acquired Deliveroo (UK/international food delivery) for ~$3.9B, expanding international footprint",
+          "May 2025: Announced agreement to acquire SevenRooms (restaurant hospitality tech) for $1.2B all-cash, expected to close H2 2025",
+          "Q1 2025 Guidance: Marketplace GOV of $22.6B–$23.0B; Adj. EBITDA of $550M–$600M"
+        ],
+        "deal_signals": [
+          "$5.0B share repurchase authorization announced Feb 2025 — signals strong balance sheet and capital return focus",
+          "$1.2B all-cash acquisition of SevenRooms (May 2025) — first software acquisition since 2022; signals platform expansion into merchant SaaS/hospitality tech",
+          "~$3.9B acquisition of Deliveroo — major international M&A, expanding presence across Europe and Asia-Pacific",
+          "First full year of GAAP profitability in 2024 — inflection point for the business; investor sentiment improving",
+          "Free Cash Flow of $1.8B in 2024 and cash of $4.0B — strong balance sheet enabling further M&A",
+          "Growing advertising revenue line — potential standalone business or acquisition target for ad-tech overlay",
+          "Rapid international expansion via Wolt (30+ countries) — international GOV growth outpacing US in 2024",
+          "CEO Tony Xu holds performance RSUs tied to stock price targets up to $501/share through Nov 2027 — strong executive retention signal"
+        ],
+        "confidence": "high",
+        "summary": "DoorDash is the dominant US on-demand delivery and local commerce platform, operating in 30+ countries via its Wolt international brand, with $10.7B in FY2024 revenue (+24% YoY) and its first full year of GAAP profitability. The company is aggressively expanding beyond food delivery into grocery, new verticals, merchant SaaS (Commerce Platform), and advertising, while executing major international M&A (Deliveroo ~$3.9B) and hospitality tech acquisitions (SevenRooms $1.2B). With $4B+ in cash, $1.8B in free cash flow, and a $5B buyback authorization, DoorDash is in a strong strategic position heading into 2025."
+      }
+    },
+    {
+      "name": "Rivian",
+      "seconds": 174,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 46389,
+        "output_tokens": 3364,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 4,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.229627
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Rivian Automotive",
+        "website": "https://www.rivian.com",
+        "industry": "Electric Vehicles / Automotive Manufacturing",
+        "hq_location": "Irvine, California, USA (manufacturing in Normal, Illinois)",
+        "founded_year": "2009",
+        "employee_count": "10,000+",
+        "business_model": "Rivian designs, manufactures, and sells all-electric consumer trucks and SUVs (R1T, R1S, R2) and commercial electric delivery vans directly to customers and fleet operators, supplemented by software, charging, and services revenue.",
+        "products_services": [
+          "R1T electric pickup truck",
+          "R1S electric SUV",
+          "Electric Delivery Van (EDV) for commercial fleets",
+          "R2 midsize SUV (expected 2026)",
+          "R3 / R3X (announced)",
+          "Charging network & services",
+          "Connected software & accessories",
+          "Rivian and VW Group Technology JV (electrical architecture / software)"
+        ],
+        "funding_status": "Public (NASDAQ: RIVN); market cap ~$10.6B (Oct 2024); major strategic investor: Volkswagen Group (up to $5.8B JV + $1B equity investment June 2025)",
+        "recent_news": [
+          "November 2024: Rivian and Volkswagen Group launched a joint venture ('Rivian and VW Group Technology, LLC') worth up to $5.8B to co-develop electrical architecture and software platforms.",
+          "June 2025: Rivian received a $1B equity investment from Volkswagen Group at $19.42/share (33% premium to 30-day VWAP).",
+          "Q1 & Q2 2025: Rivian achieved back-to-back quarters of gross profit, a key profitability milestone.",
+          "R2 midsize SUV development on track — design validation and testing underway, expected launch 2026.",
+          "Announced new East Coast headquarters in Atlanta, Georgia, expected to open in 2025.",
+          "R3 and R3X models unveiled in 2024, expanding the consumer lineup."
+        ],
+        "deal_signals": [
+          "$5.8B Volkswagen Group joint venture (closed Nov 2024) — largest strategic EV tech partnership in recent history.",
+          "$1B Volkswagen equity investment at a 33% premium (June 2025) signals continued strategic confidence.",
+          "Consecutive gross profit quarters (Q1 & Q2 2025) indicate approaching operational inflection point.",
+          "R2 launch (2026) represents a major volume and revenue expansion opportunity into the mass-market segment.",
+          "New Atlanta East Coast HQ signals geographic expansion and potential talent/operational scaling.",
+          "Second manufacturing plant under development in Georgia — capacity expansion signal.",
+          "JV co-leadership structure (Wassym Bensaid + Carsten Helbing) suggests deep integration with VW ecosystem."
+        ],
+        "confidence": "high",
+        "summary": "Rivian Automotive (NASDAQ: RIVN) is a leading US electric vehicle manufacturer known for the R1T pickup, R1S SUV, and commercial delivery vans, with a growing software and services layer. The company reached a critical inflection in 2024–2025, securing a landmark $5.8B joint venture with Volkswagen Group and achieving back-to-back quarters of gross profit. With the R2 mass-market SUV launching in 2026 and a new Atlanta headquarters underway, Rivian is positioned as a high-growth EV platform company with deep OEM partnership momentum."
+      }
+    },
+    {
+      "name": "Samsara",
+      "seconds": 521,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 62681,
+        "output_tokens": 3674,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 2,
+        "web_fetch_requests": 3,
+        "cost_usd": 0.26315299999999997
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Samsara Inc.",
+        "website": "https://www.samsara.com",
+        "industry": "Industrial IoT / Fleet & Operations Management (SaaS)",
+        "hq_location": "San Francisco, CA, USA",
+        "founded_year": "2015",
+        "employee_count": "3,001-5,000",
+        "business_model": "Sells cloud-based, subscription (ARR) software and hardware bundles to physical operations companies for fleet tracking, driver safety, and industrial IoT monitoring.",
+        "products_services": [
+          "Connected Operations Cloud platform",
+          "GPS fleet tracking & telematics",
+          "AI dash cams & driver safety (video-based)",
+          "Asset tracking & monitoring",
+          "Industrial IoT sensors",
+          "Compliance & ELD (Electronic Logging Device) management",
+          "Samsara AI (AI-powered insights & automation)"
+        ],
+        "funding_status": "Public (NYSE: IOT) — IPO December 2021; pre-IPO raised ~$930M+ across multiple venture rounds (Andreessen Horowitz, General Atlantic, Tiger Global among investors)",
+        "recent_news": [
+          "Q3 FY2025 earnings: Record revenue growth highlighted, with CEO Sanjit Biswas emphasizing continued investment in go-to-market teams, customer success, and AI expansion",
+          "Q2 FY2025: ARR reached $1.26 billion, growing 36% year-over-year; Net New ARR of $88 million",
+          "Strategic AI expansion: Launched AI-focused platform features targeting fleet management and international operations",
+          "Expansion into school transportation and public sector verticals noted as key growth drivers",
+          "International ARR growth initiative underway with unified compliance management for multi-country operations",
+          "NRR for $10K+ ARR customers maintained at 115% as of Q4 FY2025"
+        ],
+        "deal_signals": [
+          "Public company (NYSE: IOT) with $1.26B+ ARR growing at ~36% YoY — a potential acquisition target or M&A acquirer",
+          "Aggressive international expansion creating potential partnership or tuck-in acquisition opportunities",
+          "AI platform investment cycle suggests possible acqui-hire or technology acquisition activity",
+          "Expanding into public sector (school transportation, government) — new vertical that could attract strategic interest",
+          "115% NRR signals strong land-and-expand engine and healthy customer base",
+          "Continued go-to-market investment (headcount expansion) signals scaling phase"
+        ],
+        "confidence": "high",
+        "summary": "Samsara Inc. (NYSE: IOT) is a leading industrial IoT SaaS company founded in 2015 by Sanjit Biswas and John Bicket (former Meraki co-founders) that provides a Connected Operations Cloud for fleet management, driver safety, and physical operations. The company crossed $1.26B in ARR growing at ~36% YoY as of mid-FY2025, with a 115% net revenue retention rate among its largest customers. It is aggressively expanding internationally and into AI-powered fleet analytics, making it a high-profile name for strategic and financial investors in the industrial SaaS space."
+      }
+    },
+    {
+      "name": "MongoDB",
+      "seconds": 490,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 95057,
+        "output_tokens": 5868,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 4,
+        "web_fetch_requests": 3,
+        "cost_usd": 0.413191
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "MongoDB, Inc.",
+        "website": "https://www.mongodb.com",
+        "industry": "Database Software / Developer Data Platform",
+        "hq_location": "New York, NY, USA",
+        "founded_year": "2007",
+        "employee_count": "5,001-7,000",
+        "business_model": "MongoDB sells subscription and consumption-based access to its developer data platform—primarily via MongoDB Atlas (cloud DBaaS) and Enterprise Advanced (self-managed)—supplemented by professional services revenue.",
+        "products_services": [
+          "MongoDB Atlas (cloud database-as-a-service)",
+          "MongoDB Enterprise Advanced (self-managed)",
+          "MongoDB Community Edition (open-source)",
+          "Atlas Vector Search",
+          "Atlas Search",
+          "Atlas Stream Processing",
+          "Atlas Device Sync / Realm (mobile SDK)",
+          "Atlas Infinite",
+          "MongoDB 9.0",
+          "Voyage AI (AI embedding models, acquired)"
+        ],
+        "funding_status": "Public (NASDAQ: MDB); IPO October 2017",
+        "recent_news": [
+          "CEO leadership transition: CJ Desai appointed President & CEO (Nov 3, 2025), replacing Dev Ittycheria who remains on the Board",
+          "FY2025 total revenue of $2.01B, up 19% YoY; Atlas revenue up 24% YoY and representing 71% of Q4 revenue; 54,500+ customers as of Jan 31, 2025",
+          "Q1 FY2026 revenue of $549M, up 22% YoY; 57,100+ customers as of Apr 30, 2025; $800M additional share repurchase authorization (total $1B buyback program)",
+          "Announced €74M Ireland expansion with 200 new jobs and new Cork office (April 2026)",
+          "Acquisition of Voyage AI to strengthen AI and embedding model capabilities",
+          "Launched Atlas Infinite and MongoDB 9.0 for unpredictable AI demand workloads",
+          "Expanded product leadership team with new Chief Revenue Officer, Chief Customer Officer, and additional product heads (April 2026)"
+        ],
+        "deal_signals": [
+          "Major CEO succession event (Dev Ittycheria → CJ Desai, Nov 2025) — potential strategic pivot or board-driven direction change",
+          "Active M&A: acquisition of Voyage AI signals push into AI/embedding model layer",
+          "€74M international expansion and 200 new hires in Ireland — meaningful geographic growth bet",
+          "$1B share repurchase authorization signals strong balance sheet and capital return orientation",
+          "Atlas now 71-72% of revenue — high cloud mix with consumption-based model creating revenue visibility risk/upside",
+          "57,100+ customers growing rapidly; net new customer adds of ~2,600 in a single quarter",
+          "Broadening C-suite (new CRO, CCO) suggests scaling go-to-market motion ahead of potential acceleration"
+        ],
+        "confidence": "high",
+        "summary": "MongoDB, Inc. (NASDAQ: MDB) is a leading developer data platform company built around its flagship NoSQL document database, with MongoDB Atlas—its cloud-managed DBaaS—now driving ~72% of total revenue. The company crossed $2 billion in annual revenue in FY2025 (ended Jan 31, 2025), growing 19% YoY, and is aggressively expanding into AI workloads via acquisitions (Voyage AI), new product launches (Atlas Infinite, MongoDB 9.0), and a broadened executive team. A high-profile CEO transition in November 2025 and a $1B share buyback program make MongoDB a notable name for deal teams tracking large-cap enterprise software activity."
+      }
+    },
+    {
+      "name": "Okta",
+      "seconds": 255,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 47424,
+        "output_tokens": 3621,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 4,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.23658700000000002
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Okta, Inc.",
+        "website": "https://www.okta.com",
+        "industry": "Identity and Access Management (IAM) / Cybersecurity / Enterprise Software",
+        "hq_location": "San Francisco, California, USA",
+        "founded_year": "2009",
+        "employee_count": "5,000–6,000",
+        "business_model": "Sells cloud-based identity and access management software via SaaS subscriptions to enterprise customers for workforce and customer identity use cases.",
+        "products_services": [
+          "Workforce Identity Cloud (Single Sign-On, Multi-Factor Authentication, Lifecycle Management, Identity Governance)",
+          "Customer Identity Cloud (Auth0 — login, authentication, and authorization for apps)",
+          "Privileged Access Management",
+          "Agentic AI Security (identity for AI agents)",
+          "Professional Services"
+        ],
+        "funding_status": "Public (NASDAQ: OKTA); IPO April 2017; S&P 500 component; market cap multi-billion USD",
+        "recent_news": [
+          "January 2025: Laid off ~400 employees (~7% of global workforce), second major reduction in ~12 months",
+          "February 2025: Additional restructuring — laid off ~180 employees (~3%); expects ~$11M in restructuring charges in Q4 FY2025",
+          "Q3 FY2025 (Oct 2024): Total revenue $665M (+14% YoY); operating cash flow $159M; free cash flow $154M",
+          "Q2 FY2025 (Jul 2024): Total revenue $646M (+16% YoY); cRPO grew 13% YoY to $1.995B",
+          "Q1 FY2025 (Apr 2024): Total revenue $617M (+19% YoY); subscription revenue $603M (+20% YoY)",
+          "FY2024 full year: Total revenue $2.263B, up from $1.858B in FY2023"
+        ],
+        "deal_signals": [
+          "Consecutive workforce reductions (7% Jan 2025, 3% Feb 2025) signal active cost restructuring and a push toward GAAP profitability",
+          "Revenue growth decelerating (19% → 16% → 14% across FY2025 quarters) — potential valuation re-rating risk",
+          "Free cash flow turning strongly positive ($154M in Q3 FY2025) — improving cash generation profile",
+          "cRPO of ~$2B signals strong forward revenue visibility",
+          "GAAP operating losses shrinking significantly quarter-over-quarter (-$47M → -$19M → -$16M)",
+          "Co-founder Todd McKinnon remains CEO and Board Chair — founder-led stability",
+          "S&P 500 inclusion signals large-cap institutional ownership and index-driven liquidity"
+        ],
+        "confidence": "high",
+        "summary": "Okta is the leading independent cloud-based Identity and Access Management (IAM) company, serving enterprises globally with workforce and customer identity solutions including SSO, MFA, identity governance, and Auth0. Founded in 2009 and public since 2017 (NASDAQ: OKTA), the company generated $2.26B in revenue in FY2024 and is tracking toward ~$2.6B in FY2025 with mid-teens growth. It is actively restructuring — with two rounds of layoffs in early 2025 — to accelerate its path to GAAP profitability, while generating robust free cash flow of $154M in Q3 FY2025."
+      }
+    },
+    {
+      "name": "Spotify",
+      "seconds": 367,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 67568,
+        "output_tokens": 4176,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 3,
+        "cost_usd": 0.295344
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Spotify Technology S.A.",
+        "website": "https://www.spotify.com",
+        "industry": "Music & Audio Streaming / Internet Software & Services",
+        "hq_location": "Stockholm, Sweden (operational); Luxembourg, Luxembourg (registered holding)",
+        "founded_year": "2006",
+        "employee_count": "7,001–7,500 (~7,284 as of 2024, post-layoffs)",
+        "business_model": "Spotify earns revenue through two segments: Premium subscriptions (paid tier with full on-demand access) and an Ad-Supported free tier where advertisers pay for access to users; Premium accounts for the large majority of total revenue.",
+        "products_services": [
+          "Premium music streaming (ad-free, offline, on-demand)",
+          "Ad-supported free music & podcast streaming",
+          "Podcast platform (hosting, discovery, exclusive content)",
+          "Audiobooks (newer offering included with Premium)",
+          "Spotify for Artists (analytics & tools for creators)",
+          "Spotify Ad Studio (self-serve advertising platform)",
+          "Spotify Connect (multi-device listening)"
+        ],
+        "funding_status": "Public (NYSE: SPOT); Direct listing April 2018; market price ~$558/share as of mid-2025",
+        "recent_news": [
+          "December 2023: Laid off ~1,500 employees (~17% of global workforce) as part of cost-cutting restructuring",
+          "Q1 2024: Reported record operating profits despite — and partly because of — the workforce reduction",
+          "CEO Daniel Ek publicly acknowledged the layoffs posed a 'significant challenge' to the company during Q1 2024 earnings call",
+          "Q1 2025: 678M Monthly Active Users (MAUs, +10% Y/Y) and 268M Premium Subscribers (+12% Y/Y)",
+          "Q2 2025: 696M MAUs (+11% Y/Y) and continued subscriber growth, per SEC Form 6-K filed July 29, 2025",
+          "Ongoing expansion into audiobooks bundled with Premium subscriptions"
+        ],
+        "deal_signals": [
+          "Major workforce reduction (17%, ~1,500 jobs) in Dec 2023 signals aggressive cost discipline and margin focus",
+          "Record profits in Q1 2024 post-restructuring — company demonstrating improved operating leverage",
+          "Consistent double-digit MAU and subscriber growth (10–11% Y/Y) despite market maturity in core markets",
+          "Expansion into audiobooks signals product diversification and higher ARPU opportunity",
+          "High and rising stock price (~$558, NYSE: SPOT) reflects strong investor confidence",
+          "No significant M&A announced recently — potential acquirer or partnership target in adjacent media/tech spaces",
+          "~49 investment/portfolio positions (per PitchBook) indicating active strategic investment activity"
+        ],
+        "confidence": "high",
+        "summary": "Spotify is the world's leading audio streaming platform, founded in Stockholm in 2006 and publicly traded on the NYSE (SPOT) since 2018. The company operates a freemium model across music, podcasts, and audiobooks, serving 696 million MAUs and 268+ million paid subscribers as of mid-2025. After aggressive cost-cutting in late 2023 (17% workforce reduction), Spotify achieved record profitability in 2024 and continues to demonstrate strong top-line growth, making it a closely watched large-cap in the global media and technology landscape."
+      }
+    },
+    {
+      "name": "Adyen",
+      "seconds": 249,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 36207,
+        "output_tokens": 3197,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.18657600000000002
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Adyen",
+        "website": "https://www.adyen.com",
+        "industry": "Fintech / Payment Processing",
+        "hq_location": "Amsterdam, Netherlands",
+        "founded_year": "2006",
+        "employee_count": "4,345–5,020",
+        "business_model": "Adyen earns revenue by charging merchants a processing fee and markup on payment transactions processed through its unified global payments platform (e-commerce, in-store, and embedded finance).",
+        "products_services": [
+          "Unified commerce payment platform (online, mobile, POS)",
+          "Adyen Uplift – AI-powered checkout optimization (incl. 'Personalize')",
+          "Embedded Financial Products (card issuing, business accounts, cash advances)",
+          "Acquiring infrastructure for platforms and marketplaces",
+          "Instant settlement",
+          "Risk & fraud management tools"
+        ],
+        "funding_status": "Public (Euronext Amsterdam: ADYEN); IPO in 2018; has been profitable since 2011",
+        "recent_news": [
+          "FY 2025 net revenue of €2,364.2 million, up ~21% on a constant currency basis; EBITDA margin of 55%",
+          "H2 2025 net revenue €1,270.7 million (+21% constant currency); Q3 2025 net revenue €598.4 million (+20% YoY)",
+          "Launched 'Personalize' (part of Adyen Uplift) – AI-driven real-time checkout personalization helping 6,500+ businesses boost conversion",
+          "Partnered with Flatpay to power SMB payment expansion across Europe and beyond",
+          "Partnered with BILL (SMB financial operations platform) in 2024",
+          "Embedded Financial Products issuing volumes grew 8x YoY in H2 2025",
+          "Completed acquisitions of Talon.One (loyalty & promotions software) and Orb (enterprise billing platform) in July 2026 after regulatory approval"
+        ],
+        "deal_signals": [
+          "Active acquirer: closed two acquisitions (Talon.One and Orb) in mid-2026, signaling a move up the value chain into loyalty, promotions, and billing",
+          "Rapid expansion into SMB segment via platform partnerships (Flatpay, BILL), a new addressable market for Adyen",
+          "Embedded Financial Products scaling fast (issuing volumes 8x YoY) – potential to disrupt incumbent bank card programs",
+          "Consistent 20%+ revenue growth and improving margins make it an attractive benchmark/acquirer in payments M&A",
+          "Public company (AMS: ADYEN) with €4.2B+ equity base and strong free cash flow generation"
+        ],
+        "confidence": "high",
+        "summary": "Adyen is a publicly listed Dutch fintech company (Euronext: ADYEN) that provides a single end-to-end payments platform covering online, mobile, and point-of-sale channels for large global merchants and platforms. The company has delivered sustained profitability since 2011, posting €2.36 billion in net revenue for FY 2025 at a 55% EBITDA margin. It is aggressively expanding beyond core acquiring into embedded finance, AI-driven checkout optimization, and SMB payments, and has begun M&A activity with the 2026 acquisitions of Talon.One and Orb."
+      }
+    },
+    {
+      "name": "Wise",
+      "seconds": 264,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 55650,
+        "output_tokens": 3649,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 4,
+        "web_fetch_requests": 1,
+        "cost_usd": 0.261685
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Wise plc",
+        "website": "https://wise.com",
+        "industry": "Fintech / Financial Services (International Payments & Multi-Currency Accounts)",
+        "hq_location": "London, United Kingdom",
+        "founded_year": "2011",
+        "employee_count": "5,000–5,999",
+        "business_model": "Wise earns revenue primarily through fees charged on international money transfers and multi-currency account services, alongside interest income on customer balances.",
+        "products_services": [
+          "Wise Account (personal multi-currency account with debit card)",
+          "Wise Business (multi-currency accounts and payments for SMEs)",
+          "Wise Platform (API-based payment infrastructure for banks and fintechs)",
+          "International money transfers (40+ currencies, 160+ countries)"
+        ],
+        "funding_status": "Public (LSE: WISE) — direct listing July 2021; total pre-IPO funding ~$1.7B across 13 rounds; latest post-IPO debt round October 2022 led by Silicon Valley Bank UK",
+        "recent_news": [
+          "FY2025 results (year ended 31 March 2025): record revenue of £1.2B (up from £1.1B in FY2024), profit before tax of £564.8M (up from £481.4M), 15.6M active customers (+21% YoY), £145.2B cross-border volume (+23% YoY)",
+          "December 2025: Wise received conditional regulatory approval to launch in South Africa — its first licence on the African continent",
+          "2025: Wise Platform expanded into the Nordics via partnership with Danish neobank Lunar",
+          "2026: Wise activated its US broker-dealer licence to expand its US product suite with new return-earning options for customers",
+          "November 2025: Nita appointed as Group Chief Compliance Officer",
+          "Ongoing listing review — potential change in listing venue discussed in FY2025 annual results"
+        ],
+        "deal_signals": [
+          "Public company with strong profitability trajectory — PBT of £564.8M in FY2025, up 17% YoY",
+          "Revenue crossed £1.2B milestone in FY2025, demonstrating scale",
+          "Rapid customer growth: 15.6M active customers (+21% YoY), signalling strong product-market fit",
+          "Geographic expansion: first Africa licence (South Africa) and Nordic Wise Platform rollout open new markets",
+          "US broker-dealer licence activation unlocks investment-product monetisation in a key market",
+          "Listing review underway — potential primary market relocation (e.g., from LSE) could signal strategic repositioning",
+          "Wise Platform B2B API business growing — over 50% of personal and 60% of business customers using multiple features, deepening lock-in"
+        ],
+        "confidence": "high",
+        "summary": "Wise plc is a London-headquartered fintech company founded in 2011 that provides low-cost international money transfers and multi-currency accounts to over 15.6 million personal and business customers across 160+ countries. The company listed directly on the London Stock Exchange in 2021 and reached record revenues of £1.2 billion in FY2025 with a pre-tax profit of £564.8 million, underscoring its transition to a highly profitable, scaled business. Key growth vectors include the B2B Wise Platform API, geographic expansion into Africa and the Nordics, and newly activated investment products in the US."
+      }
+    },
+    {
+      "name": "Klarna",
+      "seconds": 176,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 62132,
+        "output_tokens": 3840,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 4,
+        "web_fetch_requests": 1,
+        "cost_usd": 0.283996
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Klarna",
+        "website": "https://www.klarna.com",
+        "industry": "Fintech / Buy Now Pay Later (BNPL) / Digital Payments",
+        "hq_location": "Stockholm, Sweden",
+        "founded_year": "2005",
+        "employee_count": "3,000–5,000",
+        "business_model": "Klarna earns revenue primarily through merchant transaction fees for BNPL and payment services, as well as interest and financing fees from consumers on credit products.",
+        "products_services": [
+          "Buy Now Pay Later (BNPL) financing",
+          "Klarna Card (virtual & physical)",
+          "Digital payments & checkout",
+          "Banking and savings accounts",
+          "AI-powered customer service",
+          "Merchant tools & e-commerce integrations",
+          "In-store payment solutions"
+        ],
+        "funding_status": "Public (NYSE: KLAR) — IPO completed September 10, 2025, raising ~$1.37B at ~$15B valuation; priced at $40/share; total prior funding ~$4.6B across Series A–H",
+        "recent_news": [
+          "Completed long-awaited IPO on NYSE (ticker: KLAR) on September 10, 2025, one of the largest European fintech listings in history",
+          "Reported $3.5B in full-year 2025 revenue (+25% YoY) and $127.9B in GMV (+22% YoY)",
+          "AI customer service agent reported to be doing the work of 853 full-time employees, saving ~$60M",
+          "Reversed AI-only customer service strategy in mid-2025 after quality complaints; CEO admitted company 'went too fast' on AI and began rehiring human agents for complex/premium cases",
+          "Q1 2025 net revenues grew 13% YoY; GMV rose 10% YoY to $25.3B — roughly 4x nearest competitor Affirm",
+          "CEO Sebastian Siemiatkowski stated plans to reduce workforce from ~3,000 to ~2,000 by 2030 through AI-driven automation",
+          "Workforce halved over three years while revenues doubled, citing AI productivity gains"
+        ],
+        "deal_signals": [
+          "Newly public company (NYSE: KLAR, Sept 2025) — post-IPO capital deployment and growth phase underway",
+          "Strong revenue trajectory: $2.8B (2024) → $3.5B (2025), 25% YoY growth",
+          "GMV of $127.9B in 2025 — 4x nearest US competitor Affirm, signals dominant market position",
+          "Aggressive AI-driven workforce reduction strategy (halving headcount while doubling revenue) signals structural cost efficiency improvements",
+          "93M consumers and 675K merchants as of end-2024 — large, sticky two-sided platform",
+          "CEO publicly navigating AI vs. human staffing tradeoffs — potential for future HR/tech vendor partnerships",
+          "Previously delayed IPO due to macro uncertainty — now public, suggesting appetite for further strategic moves (acquisitions, geographic expansion)"
+        ],
+        "confidence": "high",
+        "summary": "Klarna is a Swedish fintech company founded in 2005 that pioneered Buy Now Pay Later and has since grown into a full-service consumer payments and financial services platform with 93M users and 675K merchants globally. After completing its NYSE IPO in September 2025 at a ~$15B valuation, Klarna is now a public company with $3.5B in 2025 revenues and $127.9B in GMV. The company is at the forefront of AI-driven operational transformation, having halved its workforce while doubling revenues, though it has since moderated its AI-only approach after quality concerns emerged."
+      }
+    },
+    {
+      "name": "Canva",
+      "seconds": 170,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 40790,
+        "output_tokens": 3610,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.20652
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Canva",
+        "website": "https://www.canva.com",
+        "industry": "Design Software / SaaS",
+        "hq_location": "Sydney, Australia (Surry Hills)",
+        "founded_year": "2013",
+        "employee_count": "~4,200 (post-Nov 2024 restructuring; ~5,500 prior)",
+        "business_model": "Canva operates a freemium SaaS model, generating revenue through paid subscription tiers (Canva Pro, Canva Teams, Canva Enterprise) layered on top of a free design platform used by 265M+ monthly active users.",
+        "products_services": [
+          "Canva (core design platform – templates, drag-and-drop editor)",
+          "Canva Pro (premium subscription)",
+          "Canva Teams (collaborative workspaces)",
+          "Canva Enterprise",
+          "Canva for Education (free for schools)",
+          "Affinity Suite (professional photo, vector & layout editing – acquired 2022)",
+          "Leonardo.ai (generative AI image platform – acquired 2024)",
+          "Canva GPT (OpenAI GPT Store integration, launched Jan 2024)",
+          "Cavalry (animation tooling – acquired Feb 2026)",
+          "MangoAI (AI-powered ad performance – acquired Feb 2026)"
+        ],
+        "funding_status": "Series F ($200M, Sep 2021); total raised ~$589M across 19 rounds; last secondary valuation $42B (Aug 2025 employee tender offer); 8 consecutive years of profitability; IPO widely expected 2026–2027",
+        "recent_news": [
+          "Nov 2024: Major restructuring — 22% of workforce (~1,271 employees) laid off, first significant layoffs in company history, citing need for more agile teams",
+          "Jul 2024: Acquired generative AI startup Leonardo.ai for ~$370M, adding a proprietary AI image-generation foundation model",
+          "Late 2024: Hired Kelly Steckelberg (former Zoom CFO who took Zoom public in 2019) as Canva's CFO — a clear IPO-readiness signal",
+          "Aug 2025: Employee tender offer completed at $42B valuation, up 31% from ~$32B in Oct 2024",
+          "Feb 2026: Dual acquisition of animation startup Cavalry and marketing AI startup MangoAI",
+          "2025: Launched 'Creative Operating System' — broad platform expansion; Affinity tools integrated and made free for Canva users",
+          "2025: Revenue crossed ~$3.3–3.5B ARR; 265M monthly active users, ~29–31M paying subscribers; 95% of Fortune 500 as customers"
+        ],
+        "deal_signals": [
+          "IPO candidacy: CFO hire (ex-Zoom IPO CFO), Sequoia confirmed H2 2026 listing readiness, Aug 2025 tender offer structure mirrors pre-IPO liquidity events",
+          "Aggressive M&A pace: Leonardo.ai (~$370M, 2024), Cavalry & MangoAI (Feb 2026) — building out AI and enterprise capabilities ahead of public markets",
+          "Major workforce restructuring (22% cut, Nov 2024) signals margin optimization and cost discipline ahead of IPO",
+          "Enterprise traction accelerating: Canva Teams avg contract value up 66%; 95% Fortune 500 penetration",
+          "Valuation trajectory: ~$32B (Oct 2024) → $42B (Aug 2025) on secondary market, +31% in 10 months",
+          "Profitable for 8 consecutive years — rare among late-stage private tech; reduces IPO execution risk",
+          "AI strategy solidifying: Leonardo.ai acquisition adds proprietary generative AI moat vs. Adobe and Figma"
+        ],
+        "confidence": "high",
+        "summary": "Canva is a Sydney-based design SaaS platform co-founded in 2013 by Melanie Perkins and Cliff Obrecht, now serving 265M+ monthly active users and generating ~$3.5B in annualized revenue with eight straight years of profitability. The company has been on an aggressive pre-IPO expansion — acquiring Leonardo.ai for generative AI capabilities, integrating the Affinity professional design suite, and hiring a seasoned public-markets CFO — while simultaneously restructuring 22% of its workforce to sharpen margins. With a $42B secondary-market valuation, strong enterprise adoption, and investor signals pointing to a 2026–2027 listing, Canva is one of the most closely watched private-company IPO candidates globally."
+      }
+    },
+    {
+      "name": "Revolut",
+      "seconds": 154,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 36084,
+        "output_tokens": 2848,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.180972
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Revolut",
+        "website": "https://www.revolut.com",
+        "industry": "Fintech / Neobanking",
+        "hq_location": "London, United Kingdom",
+        "founded_year": "2015",
+        "employee_count": "10,000–12,500",
+        "business_model": "Revolut earns revenue through subscription plans (personal and business), interchange fees on card transactions, FX conversion spreads, trading commissions, lending interest, and premium financial services sold to its 68M+ retail and business customers globally.",
+        "products_services": [
+          "Multi-currency current accounts & debit cards",
+          "Foreign exchange & currency conversion",
+          "Stock & crypto trading",
+          "Personal loans & Buy Now Pay Later (BNPL)",
+          "Business accounts & expense management",
+          "Travel insurance & lifestyle perks",
+          "Savings vaults & interest accounts",
+          "Revolut Pay (checkout product)",
+          "Youth/teen accounts (Revolut <18)"
+        ],
+        "funding_status": "Late-stage private — most recent round: $75B valuation secondary share sale (November 2025), led by Coatue, Greenoaks, Dragoneer, and Fidelity; additional participants include Nvidia NVentures, Andreessen Horowitz, Franklin Templeton, and T. Rowe Price-advised funds. Total funding exceeds $115B implied equity value.",
+        "recent_news": [
+          "November 2025: Completed major share sale at $75B valuation, one of the highest for any European private tech company.",
+          "FY2025 results: Revenue grew ~50% YoY to £4.5B ($6B); profit before tax hit £1.7B ($2.3B, 38% PBT margin).",
+          "September 2025: Received conditional approval from the U.S. Office of the Comptroller of the Currency (OCC) for a national bank charter; plans to launch US bank by H1 2027.",
+          "July 2024: Granted a UK banking licence (with restrictions) by the Prudential Regulation Authority (PRA) and Financial Conduct Authority (FCA), a long-awaited milestone.",
+          "Customer base surpassed 68.3M retail and 767K business customers as of end of FY2025."
+        ],
+        "deal_signals": [
+          "$75B valuation in Nov 2025 secondary share sale — signals imminent IPO preparation or continued aggressive pre-public fundraising.",
+          "Conditional US national bank charter approval (OCC, Sept 2025) — major regulatory milestone unlocking the world's largest banking market.",
+          "UK banking licence secured July 2024 — transforms Revolut from e-money institution to full bank in home market, enabling deposit-taking and lending at scale.",
+          "Revenue growing ~50% YoY with 38% pre-tax profit margin — strong unit economics making it an attractive acquisition or public market candidate.",
+          "Headcount at ~12,200 (2025) with announced plans to hire thousands more — rapid organisational scaling.",
+          "Active global expansion into new markets (US, LATAM, Asia-Pacific) — potential for regional partnership or acquisition targets.",
+          "Nvidia NVentures participation in latest round signals interest in AI/fintech intersection."
+        ],
+        "confidence": "high",
+        "summary": "Revolut is a London-based neobank and fintech super-app founded in 2015, serving over 68 million retail customers globally with a full suite of financial products including multi-currency accounts, trading, lending, and insurance. It is Europe's most valuable private tech company at a $75B valuation following its November 2025 share sale, and posted £4.5B in revenue and £1.7B profit before tax in FY2025. With a newly secured UK banking licence and conditional US OCC charter approval, Revolut is aggressively transitioning from an e-money institution into a fully licensed global bank, making it a highly significant deal-sourcing signal for M&A and investment teams."
+      }
+    },
+    {
+      "name": "Monzo",
+      "seconds": 250,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 37612,
+        "output_tokens": 3146,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.190026
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Monzo",
+        "website": "https://monzo.com",
+        "industry": "Fintech / Digital Banking (Neobank)",
+        "hq_location": "London, United Kingdom",
+        "founded_year": "2015",
+        "employee_count": "5,001–6,000 (~5,743 as of mid-2025, +32% YoY)",
+        "business_model": "Monzo earns revenue through interest on current account balances and lending, payment fees, premium subscription tiers (Monzo Plus/Premium), and wealth products offered via its mobile-first digital banking platform.",
+        "products_services": [
+          "Personal current accounts (mobile-first)",
+          "Business accounts",
+          "Borrowing / personal loans & overdrafts",
+          "Monzo Plus & Monzo Premium subscriptions",
+          "Wealth management products",
+          "Payments & international transfers",
+          "Savings pots"
+        ],
+        "funding_status": "Late-stage private; ~$1.7B total raised. Most recent: $190M secondary round (Oct 2024, $5.9B valuation); prior primary round: $430M Series F (Mar 2024, $5.0B valuation, led by CapitalG/Alphabet). Key investors: CapitalG, GV, GIC, Tencent, Vanderbilt University, Continuity.",
+        "recent_news": [
+          "FY2025 results: £1.7B revenue and £87.3M profit (44% profit jump YoY), with 15.2M customers — up 3M in one year (Finextra, 2025)",
+          "$430M Series F raised in March 2024 at $5B valuation, led by Alphabet's CapitalG (TechCrunch, Mar 2024)",
+          "$190M secondary market round closed October 2024 at $5.9B valuation",
+          "Nubank acquisition talks reported at £8–10B range, but talks ended September 2025",
+          "IPO on London Stock Exchange being explored; private equity stake sale also reportedly under consideration",
+          "Headcount grew ~32% YoY to ~5,743 employees"
+        ],
+        "deal_signals": [
+          "Active IPO preparation — LSE listing widely reported, potential $6–10B valuation",
+          "PE stake sale discussions underway as alternative to IPO",
+          "Nubank acquisition talks (ended) signal M&A interest at high valuations",
+          "Revenue near £1.7B with accelerating profitability — attractive acquisition target",
+          "32% headcount growth signals aggressive expansion phase",
+          "Revenue mix diversified across lending, payments, subscriptions, and wealth — platform maturity",
+          "Backed by strategic investors GIC (Singapore sovereign wealth fund), Alphabet (CapitalG & GV), and Tencent"
+        ],
+        "confidence": "high",
+        "summary": "Monzo is a leading UK-based digital neobank founded in 2015, serving over 15 million customers through a mobile-first platform offering current accounts, lending, payments, subscriptions, and wealth products. The company has raised approximately $1.7B in total funding, reaching a $5.9B valuation in its October 2024 secondary round, and reported £1.7B in revenue and £87.3M in profit for FY2025. Monzo is actively exploring liquidity options including an IPO on the London Stock Exchange and private equity stake sales, making it a high-profile deal target in the European fintech landscape."
+      }
+    },
+    {
+      "name": "N26",
+      "seconds": 185,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 106712,
+        "output_tokens": 4098,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 3,
+        "cost_usd": 0.41160599999999997
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "N26",
+        "website": "https://n26.com",
+        "industry": "Fintech / Neobanking / Digital Banking",
+        "hq_location": "Berlin, Germany",
+        "founded_year": "2013",
+        "employee_count": "1,001–2,500 (approx. 1,600 per company; 2,399 per PitchBook)",
+        "business_model": "N26 earns revenue through tiered subscription plans, interchange/card fees, interest income on customer deposits, lending, and financial product partnerships (crypto, ETF/stock trading, insurance).",
+        "products_services": [
+          "Mobile banking app (free N26 Standard + paid N26 Smart, You, Metal tiers)",
+          "Mastercard debit card",
+          "Savings accounts & fixed-term deposits",
+          "Personal loans",
+          "Crypto trading",
+          "Stock & ETF trading (via Upvest partnership, launched 2024)",
+          "Insurance products",
+          "CASH26 cash deposit/withdrawal network"
+        ],
+        "funding_status": "Private, VC-backed; Series E ($900M, Oct 2021) led by Third Point Ventures & Coatue Management at a $9B valuation; total funding >$1.8B; investors include Tencent, Allianz X, GIC, Insight Partners, Dragoneer",
+        "recent_news": [
+          "Posted first full-year net profit of €1.6M in 2025, following first quarterly profit in Q3 2024",
+          "Sacra estimates 2025 revenue at ~$567M, up 18% YoY from ~$482M in 2024",
+          "Co-founder & co-CEO Valentin Stalf stepped down in August 2025 amid investor pressure over BaFin sanctions",
+          "Co-founder & co-CEO Maximilian Tayenthal stepped down from operational duties on 31 December 2025",
+          "New CEO Mike Dargan appointed April 2026 to lead strategic 'cleanup'",
+          "BaFin assigned a supervisor to N26 (December 2025) and imposed business restrictions, including a ban on new mortgage loans in the Netherlands and increased reserve requirements",
+          "Launched stock & ETF trading product in partnership with Upvest (Austria first, then Germany) in H1 2024",
+          "Expanded crypto trading to Germany, Belgium, Ireland, and Spain in February 2024",
+          "Named in Forbes World's Best Banks list in Germany (April 2025)",
+          "Customer deposits surpassed $11.1B in Q3 2024"
+        ],
+        "deal_signals": [
+          "First-ever full-year profitability (2025) makes company a more credible IPO or M&A candidate",
+          "Complete co-founder leadership exit (Stalf & Tayenthal both departed 2025) — classic pre-exit governance restructuring signal",
+          "New external CEO (Mike Dargan, April 2026) brought in to execute strategic 'cleanup' — typical pre-transaction move",
+          "BaFin regulatory overhang (supervisor assigned, business restrictions imposed) could suppress valuation or accelerate a strategic sale",
+          "Last known valuation $9B (2021 Series E) — significant down-round risk relative to current market, creating potential deal window",
+          "Strong revenue growth (+18% YoY) and 8M+ customers across 24 markets show scale",
+          "Total funding >$1.8B with 40+ investors — mature private company with pressure for liquidity",
+          "Potential IPO candidate; no public listing as of research date"
+        ],
+        "confidence": "high",
+        "summary": "N26 (N26 Bank SE) is a Berlin-based European neobank founded in 2013 that serves over 8 million customers across 24 markets via a fully licensed mobile banking platform. Having raised over $1.8B at a peak $9B valuation, the company achieved its first full-year profitability in 2025, though it simultaneously faces BaFin regulatory restrictions and a sweeping leadership reset — both co-founders departed and a new external CEO took over in April 2026. This combination of improving financials, investor pressure for liquidity, and governance restructuring makes N26 a noteworthy deal-sourcing watch."
+      }
+    },
+    {
+      "name": "Celonis",
+      "seconds": 152,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 36467,
+        "output_tokens": 2750,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.180651
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Celonis",
+        "website": "https://www.celonis.com",
+        "industry": "Enterprise Software – Process Mining & Process Intelligence",
+        "hq_location": "Munich, Germany (with major U.S. presence, including New York)",
+        "founded_year": "2011",
+        "employee_count": "2,000–3,500",
+        "business_model": "Sells subscription-based SaaS licenses for its Process Intelligence platform (process mining, AI agents, and execution management) to large enterprises globally.",
+        "products_services": [
+          "Celonis Process Intelligence Platform",
+          "AgentC (AI agent suite for business processes)",
+          "Orchestration Engine (acquired 2025 – intelligent process orchestration layer)",
+          "Celonis Solution Suites (pre-built vertical/domain solutions)",
+          "Execution Management System (EMS) for operational improvement"
+        ],
+        "funding_status": "Venture Capital-backed; Series D ($1B raised in June 2021 at $11B valuation, followed by $400M in August 2022 at $13B valuation); total funding ~$2.4B; secondary-market valuation estimated at ~$7.7B as of June 2024; status: private (later-stage VC, 39 investors including Accel)",
+        "recent_news": [
+          "May 2025 – Celonis:Next 2025 product showcase: announced AgentC suite updates, acquisition of Orchestration Engine, and launch of Celonis Solution Suites",
+          "May 2025 – Reports emerged that Celonis is considering a future IPO amid strong U.S. growth, particularly in public administration",
+          "2024–2025 – Continued expansion of PI + AI strategy, integrating large-language-model capabilities into its core process mining platform",
+          "Secondary market valuation declined ~51% from peak round, to approximately $7.7B as of mid-2024"
+        ],
+        "deal_signals": [
+          "IPO consideration reported as of May 2025, signaling potential near-term liquidity event",
+          "Acquisition of Orchestration Engine (2025) shows continued inorganic growth appetite",
+          "Secondary valuation down ~51% from $13B peak, potentially creating attractive entry point for growth equity or strategic buyers",
+          "~$2.4B total capital raised with 39 investors – strong institutional backing but no profitability disclosed",
+          "Estimated 2023 revenue of ~$771M (unverified), suggesting significant scale and possible path to profitability",
+          "Strong U.S. public sector expansion noted as a growth driver in 2025",
+          "Leadership continuity: co-CEO/co-founder Alexander Rinke still active, reducing key-man risk concern"
+        ],
+        "confidence": "high",
+        "summary": "Celonis is a Munich-based enterprise software unicorn founded in 2011 that pioneered the process mining category and has since evolved into a broader Process Intelligence platform combining data-driven process analysis with AI-powered execution management. Having raised ~$2.4B in venture funding at a peak valuation of $13B, the company employs 2,000–3,500 people globally and reportedly generates roughly $771M in annual revenue. As of mid-2025, Celonis is actively expanding into AI agents (AgentC) and orchestration, and is publicly weighing an IPO — making it a high-profile watch for both strategic acquirers and public-markets investors."
+      }
+    },
+    {
+      "name": "Mistral AI",
+      "seconds": 179,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 79501,
+        "output_tokens": 4068,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 3,
+        "cost_usd": 0.329523
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Mistral AI",
+        "website": "https://mistral.ai",
+        "industry": "Artificial Intelligence / Large Language Models (LLMs)",
+        "hq_location": "Paris, France (15 Rue des Halles, 75001)",
+        "founded_year": "2023",
+        "employee_count": "900–1,000+",
+        "business_model": "Generates revenue through API access to its LLMs, enterprise AI deployments and licensing, and a consumer AI assistant (Le Chat / Mistral Vibe), with strategic industry partnerships supplementing core model revenue.",
+        "products_services": [
+          "Mistral Large 4 (flagship LLM)",
+          "Mistral Large 3 (675B parameter MoE model)",
+          "Mistral Medium 3.5",
+          "Mistral Small 4",
+          "Ministral 3 (edge/on-device models: 14B/8B/3B)",
+          "Codestral-2508 (code generation model)",
+          "Mistral OCR 3 (document understanding)",
+          "Magistral 1.2 (reasoning model)",
+          "Devstral 2 (developer-focused model)",
+          "Voxtral (voice/audio model)",
+          "Le Chat (consumer AI chatbot, iOS/Android)"
+        ],
+        "funding_status": "Private — Series C ($2B / €1.7B, September 2025, led by ASML at ~11% stake); total raised ~$3.3B+; valuation ~$14B (Sep 2025). Prior rounds: Seed €105M (Jun 2023, Lightspeed, Eric Schmidt), Series A €385M (Dec 2023, a16z, BNP Paribas, Salesforce), $16M from Microsoft (Feb 2024), Series B €600M (Jun 2024, $6.2B valuation).",
+        "recent_news": [
+          "September 2025: Closed €2B Series C led by ASML (11% stake), valuing Mistral at ~€12B ($14B) — largest European AI funding round to date",
+          "April 2025: Announced €100M strategic AI partnership with global shipping giant CMA CGM",
+          "February 2025: Launched Le Chat as a mobile app for iOS and Android, featuring web search, image generation, and real-time updates",
+          "2025: Released new model family including Voxtral (voice), Devstral 2 (coding), Magistral 1.2 (reasoning), and Mistral OCR 3",
+          "Annual revenue estimated at ~$400M as of 2025"
+        ],
+        "deal_signals": [
+          "Massive Series C ($2B, Sep 2025) signals aggressive expansion phase and strong investor conviction",
+          "ASML's €1.3–1.5B strategic investment (11% stake) ties Europe's top semiconductor firm to Mistral's future",
+          "€100M CMA CGM partnership demonstrates traction in large industrial/enterprise verticals",
+          "Revenue trajectory (~$400M ARR) suggests rapid commercialization of models",
+          "Headcount scaling toward 1,000+ employees indicates operational build-out",
+          "CBInsights flags a Series D round, suggesting additional near-term capital raise",
+          "EU digital sovereignty tailwinds position Mistral as the preferred European LLM provider for government and regulated industries",
+          "Founding team are DeepMind/Meta AI alumni with deep technical credibility — attractive acquisition or IPO candidate"
+        ],
+        "confidence": "high",
+        "summary": "Mistral AI is Europe's leading large language model company, founded in April 2023 by three French AI researchers (Arthur Mensch, Guillaume Lample, Timothée Lacroix) who previously worked at DeepMind and Meta AI. The Paris-based company has rapidly scaled to a ~$14B valuation on the back of a $2B Series C (Sep 2025) led by ASML, with ~$3.3B+ in total funding from blue-chip investors including a16z, Microsoft, Salesforce, and BNP Paribas. Mistral differentiates itself through a mix of open-weight and proprietary models, strong EU regulatory alignment, and growing enterprise and government partnerships, positioning it as a credible alternative to US-based AI giants."
+      }
+    },
+    {
+      "name": "Cohere",
+      "seconds": 165,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 54220,
+        "output_tokens": 3431,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 4,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.254125
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Cohere",
+        "website": "https://cohere.com",
+        "industry": "Enterprise Artificial Intelligence / Large Language Models",
+        "hq_location": "Toronto, Ontario, Canada",
+        "founded_year": "2019",
+        "employee_count": "450-1000",
+        "business_model": "Sells enterprise AI APIs, models, and agentic platform tools (Command LLM family, embeddings, reranking, and North workspace) to businesses on a subscription/usage basis, targeting secure and sovereign AI deployments.",
+        "products_services": [
+          "Command A+ / Command A family (large language models)",
+          "North (AI agent workspace platform)",
+          "Compass (intelligent enterprise search)",
+          "Cohere Embed (text embeddings)",
+          "Rerank 5 (retrieval reranking)",
+          "Model Vault (dedicated model inference)",
+          "Aya Vision (open-source multilingual LLM via Cohere Labs)",
+          "Command A Translate (111B-parameter translation model, 23 languages)"
+        ],
+        "funding_status": "Series D+ — ~$970M total raised; most recent: $500M at $6.8B valuation (August 2025), extended by an additional $100M in September 2025, bringing valuation to $7B. Key investors include Radical Ventures, Inovia, Oracle, Salesforce, AMD, NVIDIA, and Google Cloud.",
+        "recent_news": [
+          "August 2025: Raised $500M at $6.8B valuation to accelerate enterprise and sovereign AI globally.",
+          "September 2025: Extended August round with additional $100M, raising valuation to $7B.",
+          "August 2025: Hired Joelle Pineau (prominent AI researcher) to leadership team.",
+          "May 2025: Acquired Ottogrid, a Vancouver-based enterprise market-research automation platform.",
+          "January 2025: Officially launched North, its AI agent workspace, in early access.",
+          "2025 ARR reached ~$240M, up 287% YoY from ~$62M at end of 2024."
+        ],
+        "deal_signals": [
+          "Aggressive revenue growth: 287% YoY ARR growth to $240M in 2025, well above its own $200M internal target.",
+          "Fresh $600M in capital raised across two tranches in Aug–Sep 2025 signals strong investor conviction and acquisition firepower.",
+          "Active M&A: Acquired Ottogrid (May 2025), indicating platform expansion strategy.",
+          "Focused on sovereign/secure AI, a differentiated and fast-growing niche vs. public-cloud-first rivals.",
+          "High-profile hire of Joelle Pineau (ex-Meta AI) in August 2025 signals research-to-product ambition.",
+          "Strategic corporate investors (Oracle, Salesforce, AMD, NVIDIA, Google) suggest deep partnership and potential acquirer overlap.",
+          "Expanding globally — fresh funding explicitly earmarked for international expansion."
+        ],
+        "confidence": "high",
+        "summary": "Cohere is a Toronto-based enterprise AI company founded in 2019 by Aidan Gomez (a co-author of the original Transformer paper) that provides large language models, embeddings, reranking, and agentic workflow tools purpose-built for secure business deployments. The company has raised approximately $970M in total funding, most recently at a $7B valuation in September 2025, and is growing rapidly with estimated ARR of $240M in 2025 (up 287% YoY). Its differentiated focus on sovereign and private AI for regulated industries, combined with active M&A and high-profile talent additions, makes it a compelling watch for both strategic and financial investors."
+      }
+    },
+    {
+      "name": "Nubank",
+      "seconds": 177,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 47634,
+        "output_tokens": 4275,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 4,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.24702700000000002
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Nubank (Nu Holdings Ltd.)",
+        "website": "https://nubank.com.br",
+        "industry": "Fintech / Digital Banking / Neobanking",
+        "hq_location": "São Paulo, Brazil (incorporated in Cayman Islands)",
+        "founded_year": "2013",
+        "employee_count": "10,000+",
+        "business_model": "Nubank generates revenue primarily through interest income on credit products (credit cards, personal loans, payroll loans), interchange fees, subscription fees, and cross-sold financial services on its digital banking platform.",
+        "products_services": [
+          "No-fee digital bank accounts",
+          "Credit cards",
+          "Personal loans",
+          "Payroll loans (INSS/FGTS-backed)",
+          "Investment and savings accounts",
+          "Business accounts",
+          "Insurance products",
+          "Cryptocurrency trading",
+          "Payments and money transfers"
+        ],
+        "funding_status": "Public (NYSE: NU) — IPO December 2021",
+        "recent_news": [
+          "Full-year 2025 revenue reached $16.3 billion, a 45% year-over-year increase from $11.7 billion in 2024",
+          "Q3 2025: 127 million customers, record quarterly revenue of $4B+, and $783 million in net income",
+          "Received a conditionally approved de novo bank charter from the U.S. OCC (January 2025), signaling imminent U.S. market entry",
+          "Mexico surpassed 13 million customers (14% of adult population) as of Q3 2025",
+          "Colombia approaching 4 million customers as of Q3 2025",
+          "Q1 2025: 118.6 million customers, revenues surged 40% YoY (FX-neutral) to $3.2 billion"
+        ],
+        "deal_signals": [
+          "U.S. de novo bank charter conditionally approved by OCC — signals imminent expansion into the U.S. market",
+          "45% revenue CAGR in 2025 to $16.3B signals strong monetization and scalability",
+          "Rapidly growing credit portfolio: 62% expansion in interest-earning portfolio in Q1 2025",
+          "Record profitability: $783M net income in Q3 2025 alone",
+          "Active international expansion in Mexico and Colombia with accelerating user growth",
+          "Activity rate above 83% across 127M customers suggests deep platform engagement and cross-sell opportunity",
+          "Over 60% of Brazil's adult population are now Nubank customers, nearing domestic saturation — international growth becoming primary driver"
+        ],
+        "confidence": "high",
+        "summary": "Nubank (Nu Holdings Ltd., NYSE: NU) is Latin America's largest digital bank, founded in 2013 and headquartered in São Paulo, Brazil, serving 127+ million customers across Brazil, Mexico, and Colombia. The company has achieved exceptional scale and profitability, reporting full-year 2025 revenues of $16.3 billion—a 45% year-over-year increase—driven by rapid credit portfolio expansion and deepening customer engagement across its mobile-first platform. With a conditionally approved U.S. bank charter from the OCC and accelerating international growth, Nubank is positioned to extend its disruptive, low-fee digital banking model beyond Latin America into North America."
+      }
+    },
+    {
+      "name": "Grab",
+      "seconds": 96,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 83381,
+        "output_tokens": 3730,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 3,
+        "cost_usd": 0.33609300000000003
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Grab Holdings Limited",
+        "website": "https://grab.com",
+        "industry": "Technology / Super-App (Transportation, Food Delivery, Financial Services, E-commerce)",
+        "hq_location": "One-North, Singapore",
+        "founded_year": "2012",
+        "employee_count": "10,001–15,000 (~11,000 as of 2025)",
+        "business_model": "Grab monetizes its super-app platform through commissions on ride-hailing and food/grocery delivery, fees on digital financial services (consumer loans, insurance, payments via GrabPay), and advertising revenue (GrabAds).",
+        "products_services": [
+          "GrabCar / GrabBike – ride-hailing and motorcycle taxi",
+          "GrabFood – food delivery",
+          "GrabMart – grocery and parcel delivery",
+          "GrabPay – digital payments and e-wallet",
+          "GrabFinance – consumer and SME lending",
+          "GrabInsure – insurance products",
+          "GrabAds – digital advertising platform",
+          "Jaya Grocer – physical and online supermarket chain (subsidiary)",
+          "OVO – digital financial services (subsidiary, Indonesia)"
+        ],
+        "funding_status": "Public (NASDAQ: GRAB) — listed December 2021 via SPAC merger with Altimeter Growth Corp, the largest SPAC deal at the time",
+        "recent_news": [
+          "FY2025 full-year revenue reached US$3.37 billion (up from US$2.80B in FY2024), marking first full year of net profitability",
+          "Announced a US$500 million share repurchase program alongside FY2025 earnings",
+          "Acquired Stash Financial for approximately US$425 million, expanding wealth-management and financial services offerings",
+          "Acquired Infermove, a Chinese robotics startup, to advance delivery automation capabilities",
+          "Committed US$750 million (part of a US$1.85B combined plan with SoftBank and PETROS) toward a Malaysia AI infrastructure initiative (Nov 2024)",
+          "GoTo merger speculation reported by Singapore competition watchdog monitoring potential consolidation",
+          "Q4 2025 revenue of US$906 million; on-demand GMV grew 21% YoY",
+          "GrabAds surpassed US$200 million in annualized revenue run rate in 2023, now a high-margin growth driver"
+        ],
+        "deal_signals": [
+          "Achieved first full year of net profit in FY2025 — signals improved unit economics and de-risked investment thesis",
+          "US$500M share buyback signals management confidence and capital allocation shift",
+          "Active M&A: US$425M Stash Financial acquisition and Infermove robotics acquisition in rapid succession",
+          "US$750M AI infrastructure commitment in Malaysia — major strategic capex bet on regional AI buildout",
+          "GoTo merger speculation could reshape Southeast Asian super-app competitive landscape if regulators approve",
+          "Revenue growing 20%+ YoY with expanding EBITDA margin — potential premium valuation re-rating",
+          "Uber Technologies holds a significant equity stake (~535M shares), making ownership/secondary dynamics relevant",
+          "Operates across 8 Southeast Asian markets with network effects moat in ride-hailing and food delivery"
+        ],
+        "confidence": "high",
+        "summary": "Grab Holdings is Southeast Asia's dominant super-app, offering ride-hailing, food and grocery delivery, digital payments, lending, and insurance across 8 countries from its Singapore headquarters. Founded in 2012 and publicly listed on NASDAQ since December 2021 (via SPAC), Grab reported FY2025 revenues of US$3.37 billion and achieved its first full year of net profitability. The company is aggressively deploying capital through M&A (Stash Financial, Infermove) and a major AI infrastructure partnership, while a potential merger with GoTo could significantly reshape the regional competitive landscape."
+      }
+    },
+    {
+      "name": "Brex",
+      "seconds": 346,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 57228,
+        "output_tokens": 3860,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 2,
+        "web_fetch_requests": 2,
+        "cost_usd": 0.249584
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Brex",
+        "website": "https://www.brex.com",
+        "industry": "Fintech / Spend Management Software",
+        "hq_location": "San Francisco, California, USA",
+        "founded_year": "2017",
+        "employee_count": "1,001–1,500 (est. ~1,100 as of 2025)",
+        "business_model": "Brex earns revenue through interchange fees on its corporate credit cards, subscription fees for its spend management software platform, and financial services (cash management) offered primarily to startup and enterprise technology companies.",
+        "products_services": [
+          "Corporate credit cards (startup- and enterprise-focused)",
+          "Cash management accounts",
+          "Brex Empower – spend management & expense compliance software platform",
+          "Global travel and expense management"
+        ],
+        "funding_status": "Acquired by Capital One for $5.15B (equal parts cash and stock, April 2026); previously raised ~$2.3B total equity across 8 rounds (peak valuation $12.3B in 2021); also closed a $235M revolving credit facility in January 2025",
+        "recent_news": [
+          "January 2024: Laid off ~300 employees (~20% of workforce) citing slowing growth",
+          "May 2024: CNBC ranked Brex #4 on its 2024 Disruptor 50 list",
+          "2024 revenue reached ~$500M (up ~57% YoY from $319M in 2023)",
+          "January 2025: Closed a $235M two-year revolving credit facility",
+          "August 2025: Obtained license to operate in the European Union (international expansion)",
+          "August 2025: Leased 100,000 sq ft of office space in South of Market, San Francisco (re-establishing physical HQ)",
+          "April 2026: Acquired by Capital One for $5.15B"
+        ],
+        "deal_signals": [
+          "ACQUIRED: Capital One completed acquisition of Brex for $5.15B in April 2026 — definitive exit event",
+          "EU regulatory license obtained August 2025 — signals international market push ahead of acquisition",
+          "Major SF office lease (100,000 sq ft) in August 2025 — physical footprint expansion",
+          "$235M revolving credit facility closed January 2025 — balance sheet strengthening",
+          "Revenue grew 57% YoY to ~$500M in 2024 — strong top-line momentum",
+          "January 2024 layoff of ~20% workforce — operational restructuring / margin focus",
+          "Pivot from SMB to enterprise-only in 2022 — strategic repositioning that preceded revenue acceleration",
+          "Founders Henrique Dubugras (Chairman) and Pedro Franceschi (CEO) remain in leadership"
+        ],
+        "confidence": "high",
+        "summary": "Brex is a San Francisco-based fintech company founded in 2017 that offers corporate credit cards, cash management accounts, and spend management software (Brex Empower) targeting startup and enterprise technology companies. After raising ~$2.3B in equity at a peak valuation of $12.3B, Brex underwent a significant strategic pivot away from SMBs to enterprise, restructured its workforce, and grew revenue to ~$500M in 2024. The company was acquired by Capital One in April 2026 for $5.15B, making it a wholly owned subsidiary; prior deal signals included EU expansion, a large SF office lease, and a $235M credit facility."
+      }
+    },
+    {
+      "name": "Ramp",
+      "seconds": 161,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 36772,
+        "output_tokens": 3126,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.187206
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Ramp",
+        "website": "https://ramp.com",
+        "industry": "Financial Technology (FinTech) — Corporate Spend Management",
+        "hq_location": "New York, NY, USA",
+        "founded_year": "2019",
+        "employee_count": "1,200–2,800",
+        "business_model": "Earns revenue through interchange fees on its corporate charge cards and subscription/SaaS fees for its expense management, bill payment, and treasury software platform.",
+        "products_services": [
+          "Corporate charge cards",
+          "Expense management software",
+          "Bill payment automation",
+          "Vendor management & procurement",
+          "Ramp Treasury (integrated cash management / yield on operating cash)",
+          "AI-driven spend automation & agentic finance workflows"
+        ],
+        "funding_status": "Late-stage private — raised $300M at a $32B valuation (November 2025); total equity financing ~$2.3–2.7B raised since founding. Previous rounds include Series E ($200M, June 2025) and Series D ($750M, 2022).",
+        "recent_news": [
+          "November 2025: Raised $300M in primary financing at a $32B valuation, doubling valuation in under six months; surpassed $1B in annualized revenue.",
+          "January 2025: Launched Ramp Treasury, a fully integrated cash management product enabling businesses to earn yield on operating cash while keeping it liquid.",
+          "January 2025: Promoted Will Petrie to CFO, Geoff Charles to Chief Product Officer, and Nik Koblov to EVP of Engineering.",
+          "May 2025: Announced partnership with Stripe to expand corporate card offerings.",
+          "H1 2025: Shipped 270 new product features in the first six months of 2025, signaling aggressive product investment."
+        ],
+        "deal_signals": [
+          "Rapidly escalating valuation — from ~$16B to $32B in under 6 months as of late 2025, signaling strong investor conviction.",
+          "Surpassed $1B in annualized revenue milestone, with customers doubling year-over-year.",
+          "Total funding of $2.3–2.7B raised; still private — potential IPO candidate.",
+          "Major leadership bench-strengthening in early 2025 (new CFO, CPO, EVP Eng) suggests preparation for next growth phase.",
+          "Aggressive product expansion beyond cards into treasury, procurement, and AI automation — broadening TAM.",
+          "Strategic partnership with Stripe (May 2025) may signal further ecosystem integrations or acquisition interest.",
+          "Headcount growing rapidly (from ~400 in 2023 to 1,200+ in 2025)."
+        ],
+        "confidence": "high",
+        "summary": "Ramp is a New York-based fintech founded in 2019 that offers businesses an integrated financial operations platform combining corporate charge cards, automated expense management, bill payments, vendor management, and cash treasury tools. The company has scaled to over $1B in annualized revenue and reached a $32B valuation following a $300M raise in late 2025, making it one of the most valuable private fintech companies in the US. With rapid headcount growth, 270+ features shipped in H1 2025, and a broadening product suite powered by AI automation, Ramp is a strong IPO or strategic acquisition watch."
+      }
+    },
+    {
+      "name": "Plaid",
+      "seconds": 365,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 61616,
+        "output_tokens": 3938,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 2,
+        "web_fetch_requests": 3,
+        "cost_usd": 0.263918
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Plaid",
+        "website": "https://plaid.com",
+        "industry": "Financial Technology (Open Banking / Financial Data Infrastructure)",
+        "hq_location": "San Francisco, CA, USA",
+        "founded_year": "2013",
+        "employee_count": "1,001-2,000",
+        "business_model": "Plaid charges API fees to fintech apps and financial services companies for connecting consumer bank accounts to their platforms, enabling data access, payment initiation, identity verification, and fraud prevention.",
+        "products_services": [
+          "Plaid Link (consumer bank account connection widget)",
+          "Auth (bank account verification)",
+          "Transactions (transaction history)",
+          "Identity & Identity Verification (KYC)",
+          "Balance (real-time balance check)",
+          "Transfer (ACH payment initiation)",
+          "Assets (asset verification for lending)",
+          "Income (income verification)",
+          "Investments & Liabilities (investment/debt data)",
+          "Enrich (transaction data enrichment)",
+          "Beacon (fraud prevention network)",
+          "Monitor (AML/KYC monitoring)",
+          "LendScore (credit underwriting via Plaid Check)"
+        ],
+        "funding_status": "Late-stage private; Series D ($425M, 2021) at $13.4B peak valuation; additional funding round disclosed April 2025 with revenue of $300M reported; most recent valuation ~$8B (February 2026)",
+        "recent_news": [
+          "April 2025 funding round disclosed, with Plaid reporting $300M in annual revenue",
+          "Valuation reset to ~$8B as of early 2026, down significantly from $13.4B peak in 2021",
+          "Continued geographic expansion operating in US, Canada, UK, France, Spain, Ireland, and the Netherlands",
+          "As of 2024, Plaid integrated with over 12,000 financial institutions and 8,000+ digital financial services",
+          "One in three US adults have used Plaid's customer onboarding flow as of 2024"
+        ],
+        "deal_signals": [
+          "April 2025 fundraising round signals continued capital needs and possible pre-IPO positioning",
+          "Valuation compression from $13.4B to ~$8B may create attractive M&A entry point",
+          "$300M revenue disclosure is unusually transparent for a private company — IPO preparation signal",
+          "Broad product diversification (payments, fraud, credit, identity) beyond core data aggregation increases TAM",
+          "Visa acquisition attempt (blocked by DOJ in 2021) confirms strategic value to large financial incumbents",
+          "European expansion (UK, France, Spain, Ireland, Netherlands) adds international revenue optionality",
+          "12,000+ FI integrations and 8,000+ app customers create deep network-effect moat"
+        ],
+        "confidence": "high",
+        "summary": "Plaid is a San Francisco-based financial data infrastructure company that operates a network connecting consumers' bank accounts to thousands of fintech and financial applications via API. Founded in 2013, it has become a foundational layer of the US (and growing European) open finance ecosystem, with over 12,000 financial institution integrations and an estimated one-in-three US adults having used its platform. After a failed $5.3B Visa acquisition and a valuation decline from its $13.4B Series D peak, Plaid disclosed $300M in revenue alongside a 2025 funding round at an ~$8B valuation, positioning it as a potential near-term IPO candidate."
+      }
+    },
+    {
+      "name": "Rippling",
+      "seconds": 171,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 78954,
+        "output_tokens": 3374,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 3,
+        "cost_usd": 0.317472
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Rippling",
+        "website": "https://www.rippling.com",
+        "industry": "Human Resource Management / Enterprise SaaS",
+        "hq_location": "San Francisco, California, United States",
+        "founded_year": "2016",
+        "employee_count": "1,001-5,000",
+        "business_model": "Charges businesses a monthly subscription fee for access to its cloud-based platform that unifies HR, payroll, IT, and finance management in a single system.",
+        "products_services": [
+          "HR & Workforce Management",
+          "Global Payroll",
+          "Benefits Administration",
+          "IT & Device Management",
+          "Finance & Expense Management",
+          "Employee Onboarding Automation",
+          "Rippling AI (AI-powered automation and analytics)",
+          "Automated Compliance (multi-framework)",
+          "Rippling Data Cloud (business intelligence, launched June 2026)"
+        ],
+        "funding_status": "Series G ($450M, May 2025, valuation $16.8B); total funding ~$1.85B across 8+ rounds; private (RIPP.PVT)",
+        "recent_news": [
+          "May 2025: Raised $450M Series G at $16.8B valuation; new investors include Sands Capital, GIC (Singapore sovereign wealth fund), Goldman Sachs Growth, and Baillie Gifford; also executed $200M employee share buyback.",
+          "March 2025: Rippling sued competitor Deel in Ireland for alleged corporate espionage; Deel counter-sued in Delaware; in April 2025, the alleged Deel spy admitted to espionage; a judge later dismissed Deel's motion to throw out Rippling's lawsuit.",
+          "Rippling reached $570M in annualized revenue by February 2025, up from $532M in late 2024, with 30%+ YoY growth and a 99.5% client retention rate.",
+          "Launched Rippling AI integrating AI features across its platform.",
+          "June 2026: Launched Rippling Data Cloud, a business intelligence product allowing companies to combine internal and third-party data."
+        ],
+        "deal_signals": [
+          "Series G ($450M) closed May 2025 at $16.8B valuation — up 24% from prior $13.5B round in 2024, signaling continued aggressive growth trajectory.",
+          "$200M employee share buyback program signals preparation for liquidity event or IPO.",
+          "Revenue surpassing $1B annually as of mid-2026 — potential IPO readiness threshold.",
+          "Offices in California, Ireland, UK, India, and Australia — active international expansion.",
+          "High-profile Deel corporate espionage lawsuit puts Rippling's competitive positioning and IP in the spotlight.",
+          "99.5% client retention rate and 30%+ YoY revenue growth indicate strong product-market fit.",
+          "Remains unprofitable but held $1B+ in cash as of 2024, providing substantial runway."
+        ],
+        "confidence": "high",
+        "summary": "Rippling is a high-growth, privately held enterprise SaaS company headquartered in San Francisco that offers a unified cloud platform for HR, payroll, IT, and finance management. Founded in 2016 by Parker Conrad and Prasanna Sankar, it has scaled to ~$1B in annualized revenue and ~5,000 employees, backed by $1.85B in total funding at a $16.8B valuation as of its May 2025 Series G. The company is widely regarded as a strong IPO candidate given its scale, retention metrics, and broadening product suite including AI and business intelligence."
+      }
+    },
+    {
+      "name": "Vanta",
+      "seconds": 251,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 46325,
+        "output_tokens": 3312,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 4,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.228655
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Vanta",
+        "website": "https://www.vanta.com",
+        "industry": "SaaS / Security Compliance & Trust Management",
+        "hq_location": "San Francisco, California, USA",
+        "founded_year": "2018",
+        "employee_count": "1,000+",
+        "business_model": "Sells SaaS subscriptions to businesses seeking automated security compliance certification and continuous monitoring across frameworks like SOC 2, ISO 27001, HIPAA, PCI, and GDPR.",
+        "products_services": [
+          "Agentic Trust Platform (AI-powered compliance automation)",
+          "SOC 2 compliance automation",
+          "ISO 27001 compliance automation",
+          "HIPAA compliance automation",
+          "PCI DSS compliance automation",
+          "GDPR compliance tools",
+          "Continuous security monitoring",
+          "Vendor risk management",
+          "Trust reports / security questionnaire automation"
+        ],
+        "funding_status": "Series D ($150M, July 2025) — valued at $4.15B; backed by Sequoia Capital, Craft Ventures, Y Combinator, J.P. Morgan, Goldman Sachs, CrowdStrike, and Atlassian; total raised over $350M across 6 priced rounds.",
+        "recent_news": [
+          "July 2025: Closed $150M funding round at $4.15B valuation — up from $2.45B — with CrowdStrike and Atlassian joining as investors.",
+          "2025: Repositioned platform as an 'Agentic Trust Platform,' signaling deeper AI integration into compliance workflows.",
+          "Rapid valuation growth: from $18M seed (2018) to $4.15B in 2025, a 231x increase across 6 rounds."
+        ],
+        "deal_signals": [
+          "Fresh $150M raise in July 2025 at $4.15B valuation signals strong investor conviction and potential pre-IPO trajectory.",
+          "Strategic investors CrowdStrike and Atlassian indicate ecosystem partnership potential and corporate development interest.",
+          "Valuation nearly doubled (from $2.45B to $4.15B) in under 12 months — aggressive growth phase.",
+          "Headcount crossed 1,000+ employees, suggesting scaling infrastructure and potential acquisition appetite.",
+          "AI 'Agentic Trust Platform' rebranding reflects product expansion into higher-value workflow automation.",
+          "Founded by ex-Dropbox employees (Christina Cacioppo, Erik Goldman) with strong operator-founder profile."
+        ],
+        "confidence": "high",
+        "summary": "Vanta is a San Francisco-based SaaS company founded in 2018 that automates security compliance and continuous monitoring for frameworks including SOC 2, ISO 27001, HIPAA, PCI, and GDPR. The company has grown rapidly to 1,000+ employees and a $4.15B valuation following its July 2025 $150M funding round backed by Sequoia, CrowdStrike, Atlassian, J.P. Morgan, and Goldman Sachs. With a recent strategic pivot to an AI-powered \"Agentic Trust Platform,\" Vanta is positioning itself as the category leader ahead of a likely IPO or strategic exit."
+      }
+    },
+    {
+      "name": "Retool",
+      "seconds": 157,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 52903,
+        "output_tokens": 2805,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 2,
+        "cost_usd": 0.230784
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Retool",
+        "website": "https://retool.com",
+        "industry": "Developer Tools / Low-Code Application Development",
+        "hq_location": "San Francisco, CA (1550 Bryant Street)",
+        "founded_year": "2017",
+        "employee_count": "471",
+        "business_model": "Sells SaaS subscriptions (and self-hosted licenses) to enterprises and developers who use its low-code platform to build, deploy, and manage internal tools and AI-powered applications.",
+        "products_services": [
+          "Retool (low-code internal tool builder)",
+          "Retool Agents (AI agent toolkit for autonomous business workflows, launched May 2025)",
+          "Retool AI / AI AppGen (plain-text to dashboard/app generation, launched 2024–2025)",
+          "Retool Automations (workflow automation)",
+          "Retool Database (built-in Postgres-based datastore)",
+          "Retool Mobile (mobile internal apps)"
+        ],
+        "funding_status": "Series C ($45M at $3.2B valuation, led by Sequoia Capital, Thrive Capital, and GV); total funding ~$165M over 6 rounds; private",
+        "recent_news": [
+          "May 2025: Launched Retool Agents — a full-stack toolkit for building, deploying, and managing AI agents that can take action across enterprise services autonomously.",
+          "2025: Announced partnership with Databricks to combine Retool's application layer with Databricks' Data Intelligence platform.",
+          "October 2025: Launched AI AppGen — builds editable, secure, schema-aware dashboards from plain-text prompts.",
+          "Company reported automating over 100 million hours of work across its 10,000+ customer base.",
+          "February 2024: Listed as a top Product Hunt launch for Retool AI (AI app and workflow builder)."
+        ],
+        "deal_signals": [
+          "Last funding round was Series C (~$3.2B valuation) — no Series D announced; potential candidate for late-stage growth equity or strategic acquisition.",
+          "Rapid AI product expansion (Agents, AI AppGen) signals pivot toward enterprise AI market and larger TAM.",
+          "10,000+ enterprise customers provides strong recurring revenue base attractive to acquirers.",
+          "Databricks partnership signals deepening enterprise data ecosystem integrations.",
+          "~471 employees — scaled but lean, suggesting capital efficiency.",
+          "Private company with top-tier backing (Sequoia, Thrive Capital, GV) — could be approaching liquidity event."
+        ],
+        "confidence": "high",
+        "summary": "Retool is a San Francisco-based, Series C-funded low-code platform (founded 2017) that enables developers and business teams to rapidly build internal tools, dashboards, and AI-native applications. With over 10,000 enterprise customers and $165M raised at a $3.2B valuation, Retool has recently expanded aggressively into AI with the launch of Retool Agents and AI AppGen in 2024–2025. The company is well-positioned as an enterprise AI execution layer, making it a compelling target for strategic acquirers or late-stage growth investors."
+      }
+    },
+    {
+      "name": "Figma",
+      "seconds": 156,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 37094,
+        "output_tokens": 3089,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.18761699999999998
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Figma",
+        "website": "https://www.figma.com",
+        "industry": "Multimedia & Design Software (SaaS)",
+        "hq_location": "San Francisco, CA, USA",
+        "founded_year": "2012",
+        "employee_count": "1,886–2,480",
+        "business_model": "Sells subscription-based access to its collaborative design platform (SaaS), generating revenue from individual, team, and enterprise plans based on seat count and product tier.",
+        "products_services": [
+          "Figma Design (collaborative UI/UX design tool)",
+          "FigJam (online whiteboard/diagramming)",
+          "Figma Sites (web publishing)",
+          "Figma Make (AI-powered app/prototype builder)",
+          "Figma Buzz (marketing asset creation)",
+          "Figma Draw (vector illustration tool)"
+        ],
+        "funding_status": "Public — NYSE: FIG. IPO priced at $33/share on July 30, 2025; opened at $85 and closed day one at $115.50 (~$68B fully diluted market cap). Pre-IPO total funding: ~$748.6M across 7 rounds.",
+        "recent_news": [
+          "IPO on NYSE (ticker: FIG) completed July 30–31, 2025, raising ~$979M (66% secondary); shares surged from $33 to $115.50 on day one.",
+          "Filed S-1 on July 1, 2025; raised IPO price range twice due to strong investor demand.",
+          "FY 2025 revenue reached $1.055B, up 41% YoY; FY 2024 revenue was $749M.",
+          "Launched four new products in 2025: Figma Sites, Figma Make, Figma Buzz, and Figma Draw.",
+          "Post-IPO leadership signaled plans to 'take big swings' with acquisitions to compete with Adobe.",
+          "Operating loss in FY 2025 was $(1,290.5)M, significantly impacted by IPO-related compensation expenses."
+        ],
+        "deal_signals": [
+          "Freshly public (NYSE: FIG, July 2025) — potential for follow-on offerings or acquisition currency.",
+          "Aggressive M&A appetite stated explicitly by CEO post-IPO.",
+          "13M+ monthly active users and expanding TAM beyond designers to PMs and engineers.",
+          "Rapid product portfolio expansion (4 new products in 2025) signals platform strategy shift.",
+          "Strong ARR growth (41% YoY to $1.055B) despite large operating losses — burn rate warrants monitoring.",
+          "Failed Adobe acquisition ($20B, blocked by regulators in 2023) raised competitive profile significantly.",
+          "Headcount declining (2,726 → ~1,886–2,480 range depending on source) — possible efficiency restructuring."
+        ],
+        "confidence": "high",
+        "summary": "Figma is a San Francisco-based SaaS company and global leader in collaborative UI/UX design software, serving over 13 million monthly active users across designers, product managers, and engineers. The company went public on the NYSE (FIG) in July 2025 at a ~$68B fully diluted valuation after a blockbuster debut, following a failed $20B acquisition by Adobe that was blocked by regulators in 2023. With $1.055B in FY 2025 revenue (+41% YoY) and an aggressive post-IPO product expansion and M&A strategy, Figma is positioned as a high-growth platform play in the design-to-development workflow space."
+      }
+    },
+    {
+      "name": "Notion",
+      "seconds": 179,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 87826,
+        "output_tokens": 3819,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 3,
+        "cost_usd": 0.35076299999999994
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Notion",
+        "website": "https://www.notion.com",
+        "industry": "Enterprise Technology / Productivity Software (SaaS)",
+        "hq_location": "San Francisco, California, USA",
+        "founded_year": "2013",
+        "employee_count": "501-1000",
+        "business_model": "Freemium SaaS model — free tier drives adoption, with paid plans (Plus, Business, Enterprise) and an add-on Notion AI subscription generating recurring subscription revenue from individuals and teams.",
+        "products_services": [
+          "Notion Workspace (notes, wikis, databases, kanban, project management)",
+          "Notion AI (writing assistant, search, summarization powered by Claude & GPT-4)",
+          "Notion AI Agents (autonomous multi-step workflows, launched Sept 2025)",
+          "Notion Calendar (standalone scheduling app, launched Jan 2024)",
+          "Notion Charts (data visualization within workspace)",
+          "Notion Sites (publish websites directly from Notion)",
+          "Notion Developer Platform / Workers (cloud-based custom code sandbox, launched May 2026)",
+          "Notion Mail (Gmail-based AI email client, launched April 2025 — shutting down Sept 2026)"
+        ],
+        "funding_status": "Private — Later Stage VC; Total raised ~$343M across 3 rounds: Seed (~$2M), Series A ($50M, Jan 2020, led by Index Ventures, $2B valuation), Series B ($275M, Oct 2021, led by Coatue Management & Sequoia Capital, $10B valuation). Secondary market valuation ~$11B as of Dec 2025.",
+        "recent_news": [
+          "September 2025: Launched Notion 3.0 with AI Agent feature — autonomous multi-step workflows using Notion pages/databases as memory",
+          "September 2025: Crossed $500M in annual recurring revenue (up from $300M ARR in 2024)",
+          "June 2025: Named #34 on CNBC Disruptor 50 list",
+          "April 2025: Featured on Forbes AI 50 list; Notion Mail launched as Gmail-based AI email client",
+          "May 2026: Launched Notion Developer Platform with Workers, database sync (Salesforce, Zendesk), and external agent integrations (Claude Code, Cursor, Codex)",
+          "June 2026: Announced Notion Mail shutdown (effective Sept 22, 2026) to refocus on agent-based email workflows",
+          "December 2025: Secondary market valuation of $11B reported by Forbes (~$600M ARR)"
+        ],
+        "deal_signals": [
+          "Revenue doubled YoY ($300M → $600M ARR), signaling strong growth momentum and potential IPO readiness",
+          "Valuation reached $11B on secondary markets (Dec 2025) — no primary round since 2021, suggesting IPO or new primary round may be approaching",
+          "Aggressive AI product expansion (Notion AI, Agents, Developer Platform) repositioning from note-taking tool to full productivity OS",
+          "Notion Mail shutdown (June 2026) signals strategic focus sharpening — prioritizing AI agents over standalone apps",
+          "Founders Ivan Zhao (CEO), Akshay Kothari, and Simon Last still leading — no major leadership change flagged",
+          "Over 1M custom agents built since Feb 2026 launch — strong platform/ecosystem lock-in developing",
+          "Acquisitions history: Automate.io (2021), Cron/Notion Calendar (2022), Skiff (2024) — demonstrates appetite for tuck-ins"
+        ],
+        "confidence": "high",
+        "summary": "Notion (Notion Labs, Inc.) is a San Francisco-based private SaaS company offering an all-in-one productivity and collaboration platform encompassing notes, wikis, databases, project management, and increasingly AI-powered automation. Founded in 2013 and last primarily funded at a $10B valuation in 2021, the company has seen explosive revenue growth — doubling ARR from $300M to $600M between 2024 and 2025 — driven by rapid AI feature adoption including its Notion AI assistant and newly launched AI Agents. With a secondary-market valuation of $11B, $343M in total funding, and no primary round in four years, Notion is a compelling watch for a potential IPO or strategic transaction in the near-to-medium term."
+      }
+    },
+    {
+      "name": "Databricks",
+      "seconds": 179,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 92321,
+        "output_tokens": 3725,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 3,
+        "cost_usd": 0.362838
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Databricks",
+        "website": "https://www.databricks.com",
+        "industry": "Data Analytics, Artificial Intelligence, Cloud Software",
+        "hq_location": "San Francisco, California, United States",
+        "founded_year": "2013",
+        "employee_count": "10,000+",
+        "business_model": "Databricks sells cloud-based subscription licenses for its Data Intelligence Platform (lakehouse, AI/ML, data engineering, and governance tools) running on AWS, Azure, and Google Cloud, with revenue primarily driven by usage-based consumption.",
+        "products_services": [
+          "Data Lakehouse Platform",
+          "Genie (AI-powered chatbot/agentic automation)",
+          "Lakebase (OLTP database for AI agents)",
+          "Lakeflow (data pipelines)",
+          "Unity Catalog (data governance)",
+          "Agent Bricks (AI agent-building suite)",
+          "Lakewatch (AI security)",
+          "Databricks Apps",
+          "Delta Lake (open-source)"
+        ],
+        "funding_status": "Private – Series L ($4B+ raised, December 2025, $134B valuation); prior Series K ($1B, September 2025, $100B+ valuation); Series J ($10B, December 2024, $62B valuation); total funding ~$25.5B raised across 14 rounds",
+        "recent_news": [
+          "December 2025: Raised $4B+ in Series L at $134B valuation — third major fundraise in under a year",
+          "September 2025: $1B Series K at $100B+ valuation",
+          "September 2025: $100M partnership with OpenAI to incorporate LLMs into the Databricks platform",
+          "June 2025: Four-year partnership with Alphabet/Google to integrate Gemini into the platform; also Google Cloud integration partnership",
+          "May 2025: Acquired Neon (cloud database startup) for ~$1B",
+          "March 2025: Five-year $100M partnership with Anthropic to incorporate AI products into the platform",
+          "March 2025: Announced $1B investment in San Francisco's downtown",
+          "2025: Launched Agent Bricks (AI agent suite) and Lakebase (OLTP database)",
+          "March 2026: Acquired Antimatter and SiftD.ai to underpin new AI security product",
+          "2024: Acquired data-management startup Tabular for over $1B"
+        ],
+        "deal_signals": [
+          "Aggressive M&A spree: acquired Neon (~$1B, May 2025), Tabular ($1B+, 2024), Antimatter and SiftD.ai (2026) — actively deploying capital",
+          "Three major fundraising rounds in under 12 months (Series J, K, L) totaling >$15B, signaling fast growth and high investor demand",
+          "ARR of ~$6.9B growing at 80% YoY as of June 2026 — exceptional top-line velocity",
+          "Strategic partnerships with Anthropic ($100M), OpenAI ($100M), Google/Alphabet (4-yr), and Microsoft (multi-year extending to 2030s) — deep hyperscaler alignment",
+          "Free cash flow positive as of 2025 — improving financial maturity ahead of potential IPO",
+          "Valuation trajectory: $62B (Dec 2024) → $100B+ (Sep 2025) → $134B (Dec 2025) — rapid value creation",
+          "Committed $1B investment in San Francisco, indicating long-term HQ stability and civic engagement",
+          "Active in AI agent and security market expansion — broadening TAM beyond core lakehouse"
+        ],
+        "confidence": "high",
+        "summary": "Databricks is a leading private data and AI software company that pioneered the \"data lakehouse\" architecture, combining data lake flexibility with data warehouse structure. The company has seen explosive growth—ARR reached ~$6.9B at 80% YoY growth—and has raised over $25B in total funding across 14 rounds, most recently at a $134B valuation in December 2025. It is aggressively expanding through major strategic partnerships (OpenAI, Anthropic, Google, Microsoft) and acquisitions, positioning itself as the end-to-end platform for enterprise data, AI, and agentic workflows."
+      }
+    },
+    {
+      "name": "Scale AI",
+      "seconds": 352,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 47430,
+        "output_tokens": 3881,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 2,
+        "web_fetch_requests": 2,
+        "cost_usd": 0.220505
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Scale AI",
+        "website": "https://scale.com",
+        "industry": "Artificial Intelligence Infrastructure & Data Annotation",
+        "hq_location": "San Francisco, California, USA",
+        "founded_year": "2016",
+        "employee_count": "1,001–1,500 (approx. 1,200 as of 2025)",
+        "business_model": "Scale AI generates revenue by selling AI data infrastructure services — including data labeling, RLHF (Reinforcement Learning from Human Feedback), LLM evaluation, red-teaming, and enterprise AI software — to commercial AI companies and government clients on a contract basis.",
+        "products_services": [
+          "Data annotation & labeling platform",
+          "RLHF (Reinforcement Learning from Human Feedback) services",
+          "LLM evaluation & benchmarking (incl. Humanity's Last Exam benchmark)",
+          "AI red-teaming & safety testing",
+          "Enterprise AI application software suite",
+          "Scale Public Sector (government AI solutions)",
+          "Remotasks (subsidiary – computer vision & autonomous vehicle data)",
+          "Outlier (subsidiary – LLM training data annotation)",
+          "Safety, Evaluation and Alignment Lab (SEAL research arm)"
+        ],
+        "funding_status": "Late-stage private; Meta Platforms acquired a 49% non-voting stake for ~$14.3B in June 2025, valuing Scale AI at over $29B. Previously backed by Y Combinator, Dragoneer Investment Group, and others through multiple venture rounds.",
+        "recent_news": [
+          "June 2025: Meta Platforms invested $14.3B for a 49% non-voting stake, valuing Scale AI at ~$29B — the largest deal of its kind in AI infrastructure",
+          "June 2025: Founder & CEO Alexandr Wang departed to join Meta; replaced as CEO (Jason Droege and/or Francis deSouza per latest filings)",
+          "2025: Named to CNBC Disruptor 50 list for 2025",
+          "2025: International public-sector revenue doubled year-over-year and projected to double again in 2026",
+          "2024: Annual revenue reached approximately $870 million",
+          "2025: Expanded St. Louis AI Center deepening ties to Missouri's geospatial and defense tech industries"
+        ],
+        "deal_signals": [
+          "Transformational ownership change: Meta holds 49% non-voting stake ($14.3B, June 2025) — signals deep strategic entrenchment with a hyperscaler",
+          "CEO/founder departure: Alexandr Wang moved to Meta; leadership transition underway, creating strategic uncertainty and potential opportunity",
+          "Rapid revenue growth: ~$870M revenue in 2024, with public sector doubling — high-growth trajectory attracting acquirer interest",
+          "Government & defense contracts: active work with the US military and foreign governments (Qatar) signals durable, recurring revenue base",
+          "Valuation of $29B+ at last transaction — potential future liquidity event (IPO or further acquisition) as Meta deepens control",
+          "Co-created 'Humanity's Last Exam' AI benchmark, reinforcing thought leadership positioning in LLM evaluation market"
+        ],
+        "confidence": "high",
+        "summary": "Scale AI is a leading U.S. AI infrastructure company founded in 2016 that provides data labeling, RLHF, LLM evaluation, red-teaming, and enterprise AI software to top-tier commercial clients (OpenAI, Microsoft, Meta, GM) and government agencies. In June 2025, Meta Platforms made a landmark ~$14.3B investment for a 49% non-voting stake, valuing the company at over $29B and triggering a CEO transition as founder Alexandr Wang moved to Meta. With ~$870M in 2024 revenue and rapidly scaling public-sector contracts, Scale AI is a critical picks-and-shovels infrastructure provider in the AI boom."
+      }
+    },
+    {
+      "name": "Anduril",
+      "seconds": 163,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 40015,
+        "output_tokens": 3231,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.19851
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Anduril Industries",
+        "website": "https://www.anduril.com",
+        "industry": "Defense Technology / Autonomous Systems",
+        "hq_location": "Costa Mesa, California, USA",
+        "founded_year": "2017",
+        "employee_count": "5,001–10,000 (~7,000 as of 2025)",
+        "business_model": "Sells AI-powered autonomous defense systems and software (Lattice OS) primarily to the U.S. Department of Defense and allied governments under government contracts, achieving 40–45% gross margins vs. the 8–10% typical of traditional defense primes.",
+        "products_services": [
+          "Lattice AI — autonomous command-and-control software platform",
+          "YFQ-44A 'Fury' — Collaborative Combat Aircraft (CCA) drone fighter (U.S. Air Force program)",
+          "Altius — family of loitering munition / attritable UAS",
+          "Ghost — autonomous surveillance and reconnaissance drone",
+          "Menace / Menace-T — full-stack field operating system for in-field operators",
+          "Counter-UAS systems (IC-sUAS) for military installations",
+          "Autonomous surface warships (partnership with HD Hyundai Heavy Industries)",
+          "Soldier AR headset system (U.S. Army IVAS program)",
+          "Edge computing & tactical comms (via Klas acquisition, May 2025)"
+        ],
+        "funding_status": "Private — Series H ($5B led by Andreessen Horowitz and Thrive Capital, May 2026, $61B post-money valuation). Prior round: Series G ($2.5B, June 2025, $30.5B valuation). Total raised: ~$11.3B across 9+ rounds.",
+        "recent_news": [
+          "May 2026: Closed $5B Series H at $61B valuation, led by a16z and Thrive Capital — roughly doubling its prior valuation in ~12 months.",
+          "2025 full-year revenue disclosed at $2.2B, up ~120% from ~$1B in 2024.",
+          "U.S. Air Force awarded Anduril a production contract for the YFQ-44A 'Fury' Collaborative Combat Aircraft (CCA) program (part of a ~$5B ceiling contract).",
+          "Won $642M U.S. Navy contract for counter-drone systems (IC-sUAS) at Marine Corps bases worldwide.",
+          "Won $159M U.S. Army contract for soldier AR headset system (Sep 2025).",
+          "November 2025: Announced partnership with HD Hyundai Heavy Industries to build dual-use autonomous warships.",
+          "May 2025: Acquired Klas, a 30-year-old edge computing and tactical communications provider.",
+          "May 2025: Launched Menace-T, a full-stack OS for in-field operators.",
+          "October 2025: First flight of the YFQ-44A 'Fury' CCA drone.",
+          "December 2025: Boeing and Anduril teamed up for a U.S. program (CCA-related)."
+        ],
+        "deal_signals": [
+          "Hyper-growth: revenue doubled YoY to $1B in 2024, doubled again to $2.2B in 2025 — strong top-line momentum.",
+          "Series H ($5B, May 2026) at $61B valuation signals strong institutional conviction and potential IPO buildup.",
+          "High gross margins (40–45%) vs. legacy defense primes, making it attractive for investors and acquirers.",
+          "Rapid government contract wins across all service branches (Air Force CCA, Navy counter-drone, Army AR headset) validate revenue durability.",
+          "Aggressive M&A appetite: acquisition of Klas (May 2025) shows platform expansion strategy.",
+          "International expansion: Altius drones deployed in Ukraine; Taiwan named as a customer; HD Hyundai partnership signals allied-nation push.",
+          "IPO widely anticipated given valuation trajectory and investor base (a16z, Thrive, Founders Fund)."
+        ],
+        "confidence": "high",
+        "summary": "Anduril Industries is a fast-scaling U.S. defense technology company founded in 2017 by Palmer Luckey and partners, building AI-driven autonomous systems (drones, counter-drone, autonomous ships, AR headsets) unified under its Lattice software platform. The company has grown from ~$1B in 2024 revenue to $2.2B in 2025, closed a $5B Series H in May 2026 at a $61B valuation, and is winning major production contracts across the U.S. Air Force, Navy, and Army. It is widely expected to pursue a public offering and represents one of the most significant non-traditional entrants to the defense-industrial base."
+      }
+    },
+    {
+      "name": "Perplexity",
+      "seconds": 204,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 91598,
+        "output_tokens": 4603,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 3,
+        "cost_usd": 0.373839
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Perplexity AI, Inc.",
+        "website": "https://www.perplexity.ai",
+        "industry": "Artificial Intelligence / AI-Powered Search Engine",
+        "hq_location": "San Francisco, California, USA",
+        "founded_year": "2022",
+        "employee_count": "51-200 (52 reported in 2024; rapidly scaling)",
+        "business_model": "Generates revenue primarily through a paid \"Pro\" subscription tier ($20/month) offering advanced LLM access and additional features, while a free tier drives user growth; pivoted away from AI-integrated advertising to a subscription-first model in February 2026.",
+        "products_services": [
+          "Perplexity (AI-powered search/answer engine — free tier)",
+          "Perplexity Pro (paid subscription with advanced models: GPT-5.4, Claude, etc.)",
+          "Perplexity Assistant (AI assistant product)",
+          "Perplexity Computer (AI computer interface)",
+          "Perplexity Comet (AI-powered Chromium-based browser, launched July 2025)"
+        ],
+        "funding_status": "Private — Series E; $1.6B raised across 9 rounds total. Most recent: $500M round (June 2025) at $14B valuation; subsequent rounds pushed valuation to ~$21B (early 2026). Investors include Jeff Bezos, Nvidia, Databricks, Tobias Lütke, Nat Friedman, and 1789 Capital.",
+        "recent_news": [
+          "April 2025: Global partnership with Motorola to pre-install Perplexity assistant on new Razr and Edge smartphones.",
+          "May 2025: Acquired Sidekick, a productivity-focused browser startup, to support Comet browser development.",
+          "June 2025: Closed $500M funding round, valuing the company at $14B.",
+          "July 2025: Launched Comet, an AI-powered browser built on Chromium.",
+          "August 2025: Submitted a $34.5B bid to purchase Google Chrome, citing antitrust remedies.",
+          "September 2025: Valuation reached $20B.",
+          "October 2025: In discussions with Samsung to embed AI search into Galaxy S26 series.",
+          "December 2025: Cristiano Ronaldo took an undisclosed equity stake and entered a global brand partnership.",
+          "January 2026: Signed a 3-year, $750M agreement with Microsoft Azure (access to OpenAI, Anthropic, and xAI models).",
+          "February 2026: Pivoted to subscription-first model, discontinuing AI-integrated advertising strategy.",
+          "Early 2026: Valuation reached $21.21B following Series E-6 round."
+        ],
+        "deal_signals": [
+          "Hyper-active fundraising: 9 rounds totaling $1.6B, most recent at $21B+ valuation — indicates continued investor appetite.",
+          "Acquisition activity: Purchased Sidekick (May 2025), signaling inorganic growth strategy.",
+          "Major enterprise partnership: 3-year $750M Microsoft Azure deal (Jan 2026) — deepens cloud dependency and model access.",
+          "Strategic OEM distribution: Pre-install deal with Motorola and Samsung Galaxy S26 talks broaden distribution.",
+          "Business model pivot: Shift to subscription-first (Feb 2026) could signal path to profitability and revenue quality improvement.",
+          "Potential Nvidia investment discussions reported — could add a strategic chip/infra partner to cap table.",
+          "Celebrity/brand investment: Cristiano Ronaldo stake (Dec 2025) suggests consumer brand-building push.",
+          "Legal risk: Ongoing copyright/scraping lawsuits from BBC, Dow Jones, and NYT — potential liability overhang.",
+          "Revenue scale: ~$100M ARR (early 2025), reportedly doubling toward $200M ARR — strong growth trajectory.",
+          "30M+ monthly active users as of April 2025, 3× YoY growth from Jan 2024."
+        ],
+        "confidence": "high",
+        "summary": "Perplexity AI is a San Francisco-based AI search company founded in August 2022 that has rapidly emerged as a major challenger to Google Search, offering an LLM-powered \"answer engine\" that synthesizes real-time web results with cited sources. The company has raised $1.6B across nine funding rounds and reached a ~$21B valuation by early 2026, with ~$100M ARR growing quickly. It presents a compelling deal signal profile: aggressive M&A (Sidekick acquisition), major platform partnerships (Microsoft, Motorola, Samsung), and a recent pivot to a subscription-first model that improves revenue quality — though ongoing copyright litigation represents a material risk factor."
+      }
+    },
+    {
+      "name": "Gusto",
+      "seconds": 156,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 35558,
+        "output_tokens": 2964,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.18113400000000002
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": false,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Gusto",
+        "website": "https://gusto.com",
+        "industry": "HR Tech / Payroll Software (SaaS)",
+        "hq_location": "San Francisco, California, USA",
+        "founded_year": "2012 (originally ZenPayroll; rebranded Gusto in 2015)",
+        "employee_count": "~3,000",
+        "business_model": "Subscription-based SaaS platform charging small and mid-sized businesses monthly fees for payroll processing, HR management, employee benefits, and financial services; additional revenue from embedded payroll APIs (Gusto Embedded) licensed to banks and vertical SaaS companies.",
+        "products_services": [
+          "Payroll processing & compliance",
+          "HR management & team tools",
+          "Employee benefits (health, dental, vision)",
+          "401(k) retirement services (powered by 2025 Guideline acquisition)",
+          "Time tracking",
+          "Gusto Money (financial services / EWA)",
+          "Gusto Embedded (white-label payroll APIs for banks and SaaS partners)",
+          "AI assistant 'Gus' for HR & payroll Q&A"
+        ],
+        "funding_status": "Private — $746M+ raised across 8+ rounds; latest deal: $178M debt financing",
+        "recent_news": [
+          "Crossed $1B in trailing twelve-month revenue as of early 2026",
+          "Acquired retirement specialist Guideline in 2025 to power 401(k) services",
+          "Launched AI assistant 'Gus' in 2025 to handle routine HR and payroll questions",
+          "Testing stablecoin payouts for global payroll via a partnership with Zero Hash",
+          "Gusto Money (financial services) grew 140% YoY in 2024; 401(k) services grew 50% YoY",
+          "Direct SMB customer base grew from ~300,000 (Aug 2024) to 400,000+ (Mar 2025)"
+        ],
+        "deal_signals": [
+          "Crossed $1B ARR — prime IPO or late-stage PE candidate",
+          "$178M debt raise signals capital needs for continued expansion and M&A",
+          "Acquired Guideline (2025) — active inorganic growth strategy",
+          "Gusto Embedded B2B2C channel opens new partnership/acquisition angles for financial institutions",
+          "Rapid growth in fintech adjacencies (Gusto Money +140% YoY) suggests platform expansion beyond core payroll",
+          "Stablecoin/global payroll pilot signals international expansion ambitions",
+          "CEO Joshua Reeves still leading — founder-led, no known succession or leadership change"
+        ],
+        "confidence": "high",
+        "summary": "Gusto is a leading cloud-based payroll, HR, and benefits platform serving over 400,000 small and mid-sized businesses in the U.S., with estimated revenue of ~$975M in 2025 and $1B+ ARR as of early 2026. The company has expanded beyond core payroll into financial services (Gusto Money), retirement (via the 2025 Guideline acquisition), and embedded payroll APIs for third-party platforms. Remaining private with $746M+ raised, Gusto is a strong IPO or late-stage buyout candidate as it scales its multi-product fintech ecosystem."
+      }
+    },
+    {
+      "name": "Modal",
+      "seconds": 253,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 36507,
+        "output_tokens": 3490,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.19187099999999999
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Modal Labs",
+        "website": "https://modal.com",
+        "industry": "Cloud Infrastructure / AI Infrastructure",
+        "hq_location": "New York, NY, USA",
+        "founded_year": "2021",
+        "employee_count": "201-500 (~270 per Pitchbook)",
+        "business_model": "Charges developers and AI teams pay-per-use fees for serverless GPU/CPU compute and cloud infrastructure accessed through a Python-native API.",
+        "products_services": [
+          "Serverless GPU/CPU cloud compute platform",
+          "Python-native deployment and scaling infrastructure for AI/ML workloads",
+          "Programmable cloud building blocks (functions, containers, job queues)",
+          "Model inference and fine-tuning hosting"
+        ],
+        "funding_status": "Series D ($750M, October 2026, $15.75B post-money valuation, led by Accel with Kleiner Perkins and Menlo Ventures); prior Series C ($355M, May 2026, $4.65B valuation); prior $80M raise (September 2025); seed $7M (Amplify Partners, 2022)",
+        "recent_news": [
+          "Raised $80M in September 2025 to scale AI infrastructure platform",
+          "Raised $355M Series C in May 2026 at a $4.65B valuation",
+          "Raised $750M Series D in October 2026 at a $15.75B post-money valuation, led by Accel",
+          "Annualized revenue grew from ~$90M (June 2025) to ~$160M (end of 2025) to $1B+ (October 2026) per Sacra estimates"
+        ],
+        "deal_signals": [
+          "Explosive ARR growth: ~$90M (Jun 2025) → $1B+ (Oct 2026) in ~16 months",
+          "Three major funding events in rapid succession (2025–2026), suggesting aggressive scaling",
+          "Valuation surged from $4.65B to $15.75B in ~5 months (Series C → Series D)",
+          "Top-tier investor entry: Accel leads Series D, Kleiner Perkins participating",
+          "Headcount ~270 and likely growing fast to support hyper-growth",
+          "Co-founders Erik Bernhardsson (ex-Spotify/Better.com) and Akshat Bubna bring strong pedigree"
+        ],
+        "confidence": "high",
+        "summary": "Modal Labs is a New York-based serverless AI cloud infrastructure company founded in 2021 by Erik Bernhardsson and Akshat Bubna, offering a Python-native platform that lets developers run GPU/CPU workloads at scale without managing infrastructure. The company has seen extraordinary growth, with annualized revenue surging from ~$90M in mid-2025 to over $1B by late 2026, backed by major rounds from Accel, Kleiner Perkins, and Menlo Ventures. Its rapid valuation expansion to $15.75B signals strong market positioning as a leading independent AI cloud vendor."
+      }
+    },
+    {
+      "name": "Replit",
+      "seconds": 254,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 36568,
+        "output_tokens": 3230,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.188154
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": false
+      },
+      "profile": {
+        "company_name": "Replit",
+        "website": "https://replit.com",
+        "industry": "AI-Powered Software Development / Developer Tools",
+        "hq_location": "San Francisco, CA, USA",
+        "founded_year": "2016",
+        "employee_count": "201-500 (≈251 as of early 2025)",
+        "business_model": "Replit earns subscription and usage-based revenue by offering a cloud-hosted AI software creation platform where individuals, teams, and enterprises build and deploy applications through natural-language AI agents and collaborative coding tools.",
+        "products_services": [
+          "Replit Agent (autonomous AI app-building agent; Agent v2 launched Feb 2025 on Claude 3.7 Sonnet; Agent 3 launched Sept 2025)",
+          "Replit Assistant (AI code completion / pair-programming tool)",
+          "Replit IDE (browser-based collaborative coding environment)",
+          "Replit Deployments (hosting & deployment infrastructure)",
+          "Ghostwriter (AI code-generation, predecessor to Agent)"
+        ],
+        "funding_status": "Series D ($250M, Sept 2025, led by Georgian) at $3B valuation; total raised ~$877M; prior backers include Andreessen Horowitz",
+        "recent_news": [
+          "Sept 2025: Closed $250M Series D at $3B valuation — nearly 3x increase vs. 2023 raise",
+          "Sept 2025: Launched Agent 3, described as '10x more autonomous' than prior versions",
+          "Feb 2025: Released Replit Agent v2, powered by Anthropic's Claude 3.7 Sonnet",
+          "July 2025: AI agent incident — reportedly deleted a client's live production database during a code freeze, raising reliability concerns",
+          "ARR reportedly surged from ~$2.8M to ~$150M in under a year"
+        ],
+        "deal_signals": [
+          "Fresh $250M Series D (Sept 2025) signals strong investor conviction and near-term growth capital",
+          "3B valuation — ~3x step-up from 2023, indicating rapid ARR growth ($2.8M → $150M)",
+          "Total capital raised ~$877M; well-funded for continued product and go-to-market expansion",
+          "Agent 3 launch and enterprise product momentum suggest possible upmarket move / enterprise sales build-out",
+          "Team built from alumni of Google, Mozilla, Facebook, Spotify, Box — talent density growing",
+          "July 2025 database-deletion incident may create enterprise trust/security sales angle for competitors or acquirers focused on governance"
+        ],
+        "confidence": "high",
+        "summary": "Replit is a San Francisco-based AI software creation platform founded in 2016 by Amjad Masad (CEO), Haya Odeh, and Faris Masad, allowing users to build and deploy full applications through natural-language AI agents without traditional coding. The company has achieved explosive revenue growth (ARR from ~$2.8M to ~$150M in under a year) and closed a $250M Series D in September 2025 at a $3B valuation. With its flagship Replit Agent 3, an enterprise-grade agentic IDE, and ~$877M in total funding, Replit is positioning itself as a leading platform in the agentic AI development wave."
+      }
+    },
+    {
+      "name": "Harvey",
+      "seconds": 90,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 72970,
+        "output_tokens": 3269,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 3,
+        "cost_usd": 0.297945
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Harvey",
+        "website": "https://www.harvey.ai",
+        "industry": "Legal AI / Legal Technology",
+        "hq_location": "San Francisco, CA",
+        "founded_year": "2022",
+        "employee_count": "860+",
+        "business_model": "Sells a SaaS AI platform (subscriptions) to law firms, in-house legal teams, and professional services firms for legal research, document analysis, and workflow automation.",
+        "products_services": [
+          "Harvey AI Assistant (legal research, drafting, analysis)",
+          "Vault (secure legal document storage and organization)",
+          "Workflow automation tools for law firms and in-house teams",
+          "Custom large language models fine-tuned for legal and professional services"
+        ],
+        "funding_status": "Late-stage venture — raised $550M at a $15.5B valuation in September 2026, co-led by Diffusion and Lightspeed Venture Partners; total funding exceeds $1.7B. Prior rounds include a Series F at ~$8B (Dec 2025) and a round at $11B valuation. Parent entity: Counsel AI Corporation.",
+        "recent_news": [
+          "Raised $550M at a $15.5B valuation (September 2026), co-led by Diffusion and Lightspeed Venture Partners",
+          "Early IPO talks reported with lawyers at Latham & Watkins; no listing imminent",
+          "ARR surpassed $400M as of 2026 (up from $190M in 2025)",
+          "Announced product integrations with iManage at Harvey FORUM Chicago",
+          "Previously raised at $11B valuation with over 100,000 lawyers on the platform"
+        ],
+        "deal_signals": [
+          "Most recent funding round ($550M, Sep 2026) is in top 1% of late-stage venture deals in its sector",
+          "Early IPO talks underway — potential near-term liquidity event",
+          "Hypergrowth ARR trajectory: ~$0 → $400M+ in ~4 years",
+          "Customer base expanded to 3,500+ organizations across 85+ countries",
+          "Headcount growing rapidly (from 82 in Mar 2024 to 860+ in 2026)",
+          "Strategic partnership with iManage signals enterprise go-to-market expansion",
+          "Backed by Sequoia (3 co-led rounds), Andreessen Horowitz, Kleiner Perkins, Elad Gil, and Lightspeed"
+        ],
+        "confidence": "high",
+        "summary": "Harvey (Counsel AI Corporation) is a San Francisco-based legal AI company founded in 2022 that builds generative AI infrastructure for law firms, in-house legal teams, and professional services firms. It has scaled at exceptional speed — growing from zero to $400M+ ARR in roughly four years — and is now valued at $15.5B after a $550M late-stage round in September 2026. With early IPO talks already underway, strong institutional backing, and 3,500+ enterprise customers in 85+ countries, Harvey is widely considered the leading pure-play legal AI platform."
+      }
+    },
+    {
+      "name": "Hex",
+      "seconds": 175,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 55378,
+        "output_tokens": 3927,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 2,
+        "cost_usd": 0.255039
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Hex Technologies",
+        "website": "https://hex.tech",
+        "industry": "Data Analytics / AI-powered Data Science Platforms",
+        "hq_location": "San Francisco, CA",
+        "founded_year": "2020",
+        "employee_count": "101-200 (~162 as of Dec 2024)",
+        "business_model": "Sells SaaS subscriptions to data teams for a collaborative, AI-native analytics workspace combining SQL, Python, and no-code tools in a unified notebook platform.",
+        "products_services": [
+          "Hex Notebook – collaborative SQL/Python/no-code analytics notebook",
+          "App Builder – packages analyses into interactive dashboards for stakeholders",
+          "Hex Magic – AI assistant suite for code debugging, query generation, and logic interpretation",
+          "Hex Notebook Agent – agentic AI-driven notebook for autonomous data analytics",
+          "Explore – visual drag-and-drop data exploration UI for non-technical users (launched Oct 2024)",
+          "Hashboard – acquired BI and analytics platform"
+        ],
+        "funding_status": "Series C ($70M, May 2025) led by Avra, with participation from Sequoia, a16z, Amplify Partners, Box Group, Redpoint Ventures, and Snowflake Ventures; ~$172–200M total raised; $400M valuation",
+        "recent_news": [
+          "Raised $70M Series C in May 2025 at a $400M valuation, led by Avra Capital",
+          "Acquired Hashboard, a BI and analytics platform, alongside Series C announcement",
+          "Launched 'Explore' in October 2024 – a visual, drag-and-drop data-exploration UI aimed at non-technical users",
+          "Launched Hex Notebook Agent, an agentic AI-powered notebook for data analytics",
+          "Named a Product Hunt Runner-Up for Data & Data Security Product of the Year 2024"
+        ],
+        "deal_signals": [
+          "Fresh $70M Series C (May 2025) signals active growth phase and investor confidence",
+          "$400M valuation with top-tier backers (Sequoia, a16z, Snowflake Ventures) increases M&A attractiveness",
+          "Strategic acquisition of Hashboard indicates inorganic growth appetite",
+          "Expanding TAM with 'Explore' product targeting non-technical business users",
+          "Deep AI integration (Hex Magic, Notebook Agent) positions company in high-demand AI-analytics category",
+          "Notable enterprise customer base: Anthropic, Reddit, HubSpot, Cisco, NBA, Figma, StubHub",
+          "Founded by ex-Palantir employees with strong technical pedigree"
+        ],
+        "confidence": "high",
+        "summary": "Hex Technologies is a San Francisco-based, AI-native data analytics platform that unifies SQL, Python, and no-code workflows in a collaborative notebook environment, targeting both data scientists and business users. Founded in 2020 by former Palantir employees, the company has raised approximately $172–200M in total funding, most recently a $70M Series C in May 2025 at a $400M valuation. With a recent BI-platform acquisition (Hashboard), aggressive AI product launches, and an enterprise roster including Anthropic, Reddit, and Cisco, Hex is positioning itself as a consolidator in the fragmented data analytics stack market."
+      }
+    },
+    {
+      "name": "Glean",
+      "seconds": 245,
+      "usage": {
+        "model": "claude-sonnet-4-6",
+        "effort": "medium",
+        "requests": 2,
+        "input_tokens": 36894,
+        "output_tokens": 3082,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 3,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.186912
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "profile": {
+        "company_name": "Glean",
+        "website": "https://www.glean.com",
+        "industry": "Enterprise AI / Workplace Search Software",
+        "hq_location": "Palo Alto, CA",
+        "founded_year": "2019",
+        "employee_count": "501-1,000 (est. ~618 as of late 2024, growing)",
+        "business_model": "Sells SaaS subscriptions to enterprises for an AI-powered work search and agent platform that connects to company data sources and surfaces contextually relevant knowledge to employees.",
+        "products_services": [
+          "Enterprise AI workplace search (core product)",
+          "Glean Assistant – AI conversational assistant for work",
+          "Glean Agents – horizontal AI agent platform for employees to build/deploy agents",
+          "Work AI Platform – unified hub connecting enterprise data sources with AI",
+          "Enterprise Graph – knowledge graph underpinning contextual search (Gen 3, launched Sept 2025)"
+        ],
+        "funding_status": "Series F ($150M, June 2025, led by Wellington Management) at $7.2B valuation; total funding ~$765M+",
+        "recent_news": [
+          "June 2025: Raised $150M Series F at $7.2B valuation led by Wellington Management to accelerate AI agent innovation globally",
+          "September 2025: Launched third-generation Glean Assistant and new Enterprise Graph product",
+          "February 2025: Announced reaching $100M in annual recurring revenue (ARR)",
+          "November 2025: Achieved AWS Agentic AI Specialization",
+          "2025 CNBC Disruptor 50 honoree",
+          "Expanding office footprint near downtown Mountain View, CA (2026 lease)",
+          "September 2024: Raised $260M Series E at $4.6B valuation"
+        ],
+        "deal_signals": [
+          "Rapid valuation growth: $4.6B (Sept 2024) → $7.2B (June 2025) in under a year",
+          "$100M ARR milestone reached Feb 2025 — strong revenue traction",
+          "Strategic platform expansion from search into AI agents (Glean Agents launch)",
+          "Office space expansion near Mountain View signals headcount growth",
+          "AWS Agentic AI Specialization — deepening hyperscaler partnership",
+          "Flagged by OpenAI internally as a competitive threat — market validation",
+          "Total funding now ~$765M+ — well-capitalized but still private, potential IPO candidate"
+        ],
+        "confidence": "high",
+        "summary": "Glean is a Palo Alto-based enterprise Work AI company founded in 2019 that provides AI-powered search and an agent platform to help employees find, understand, and act on information across all company data sources. The company has scaled rapidly, reaching $100M ARR in early 2025 and closing a $150M Series F round in June 2025 at a $7.2B valuation. With its expansion from core search into AI agents and a deepening AWS partnership, Glean is positioning itself as a horizontal AI platform for the enterprise, drawing competitive attention from players including OpenAI."
+      }
+    }
+  ]
+}

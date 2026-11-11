@@ -34,9 +34,17 @@ const PROFILE: CompanyProfile = {
 
 interface Turn {
   events?: unknown[];
-  message?: { stop_reason: string; content: unknown[] };
+  message?: { stop_reason: string; content: unknown[]; usage?: unknown };
   error?: Error;
 }
+
+const NO_USAGE = {
+  input_tokens: 0,
+  output_tokens: 0,
+  cache_creation_input_tokens: null,
+  cache_read_input_tokens: null,
+  server_tool_use: null,
+};
 
 type Params = {
   model: string;
@@ -59,7 +67,7 @@ function script(...turns: Turn[]) {
         if (turn.error) throw turn.error;
         for (const e of turn.events ?? []) yield e;
       },
-      finalMessage: async () => turn.message,
+      finalMessage: async () => ({ usage: NO_USAGE, ...turn.message }),
     };
   });
 }
@@ -106,9 +114,23 @@ describe("runResearchAgent", () => {
           { type: "content_block_delta", delta: { type: "text_delta", text: "Found it." } },
           { type: "message_delta", delta: { container: { id: "cntr_1" } } },
         ],
-        ...saveProfileTurn("toolu_42"),
+        message: {
+          ...saveProfileTurn("toolu_42").message!,
+          usage: {
+            input_tokens: 1_000,
+            output_tokens: 200,
+            cache_creation_input_tokens: 0,
+            cache_read_input_tokens: 0,
+            server_tool_use: { web_search_requests: 1, web_fetch_requests: 1 },
+          },
+        },
       },
-      endTurn,
+      {
+        message: {
+          ...endTurn.message!,
+          usage: { ...NO_USAGE, input_tokens: 1_500, output_tokens: 20 },
+        },
+      },
     );
 
     const events = await run();
@@ -121,6 +143,22 @@ describe("runResearchAgent", () => {
       { type: "text", text: "Found it." },
       { type: "profile", profile: PROFILE },
       { type: "done" },
+      {
+        type: "usage",
+        usage: {
+          model: "claude-opus-4-8",
+          effort: "medium",
+          requests: 2,
+          input_tokens: 2_500,
+          output_tokens: 220,
+          cache_creation_input_tokens: 0,
+          cache_read_input_tokens: 0,
+          web_search_requests: 1,
+          web_fetch_requests: 1,
+          // Opus 4.8: 2,500 x $5 + 220 x $25 per MTok, plus one $0.01 search.
+          cost_usd: expect.closeTo(0.028, 10),
+        },
+      },
     ]);
 
     expect(requests).toHaveLength(2);
@@ -142,7 +180,7 @@ describe("runResearchAgent", () => {
 
     const events = await run();
 
-    expect(types(events)).toEqual(["profile", "done"]);
+    expect(types(events)).toEqual(["profile", "done", "usage"]);
     expect(requests).toHaveLength(3);
     expect(requests[1].messages.at(-1)).toEqual({ role: "assistant", content: paused.content });
   });
@@ -161,7 +199,9 @@ describe("runResearchAgent", () => {
       type: "status",
       message: "Model unavailable — switching to claude-opus-4-8…",
     });
-    expect(types(events).slice(-2)).toEqual(["profile", "done"]);
+    expect(types(events).slice(-3)).toEqual(["profile", "done", "usage"]);
+    // The 404 has no usage; the two answered requests are priced as Opus 4.8.
+    expect(events.at(-1)).toMatchObject({ usage: { model: "claude-opus-4-8", requests: 2, cost_usd: 0 } });
   });
 
   it("does not retry forever when the fallback model also 404s", async () => {
@@ -175,18 +215,39 @@ describe("runResearchAgent", () => {
     await expect(run()).rejects.toThrow("overloaded");
   });
 
+  it("still reports usage when the run throws", async () => {
+    script(
+      { message: { stop_reason: "pause_turn", content: [], usage: { ...NO_USAGE, input_tokens: 10 } } },
+      { error: new Error("overloaded") },
+    );
+    vi.resetModules();
+    const { runResearchAgent } = await import("@/lib/agent");
+    const events: AgentEvent[] = [];
+    await expect(runResearchAgent("Neon", (e) => events.push(e))).rejects.toThrow("overloaded");
+    expect(events).toEqual([
+      { type: "usage", usage: expect.objectContaining({ requests: 1, input_tokens: 10 }) },
+    ]);
+  });
+
+  it("reports an unknown cost for a model with no price", async () => {
+    script(saveProfileTurn(), endTurn);
+    const events = await run("Neon", { DEALSCOUT_MODEL: "claude-unpriced-model" });
+    expect(events.at(-1)).toMatchObject({ usage: { model: "claude-unpriced-model", cost_usd: null } });
+  });
+
   it("reports a refusal as an error", async () => {
     script({ message: { stop_reason: "refusal", content: [] } });
     const events = await run();
-    expect(types(events)).toEqual(["error"]);
+    expect(types(events)).toEqual(["error", "usage"]);
   });
 
   it("reports an error when the model ends without saving a profile", async () => {
     script(endTurn);
     const events = await run();
-    expect(events).toEqual([
+    expect(events.slice(0, -1)).toEqual([
       { type: "error", message: "Research finished without a structured profile. Please try again." },
     ]);
+    expect(types(events).at(-1)).toBe("usage");
   });
 
   it("gives up after the iteration cap", async () => {
@@ -194,7 +255,7 @@ describe("runResearchAgent", () => {
     script(...Array.from({ length: 6 }, () => paused));
     const events = await run();
     expect(requests).toHaveLength(6);
-    expect(types(events)).toEqual(["error"]);
+    expect(types(events)).toEqual(["error", "usage"]);
   });
 
   it("still completes when the closing turn fails after the profile was saved", async () => {
@@ -203,12 +264,12 @@ describe("runResearchAgent", () => {
 
     const events = await run();
 
-    expect(types(events)).toEqual(["profile", "done"]);
+    expect(types(events)).toEqual(["profile", "done", "usage"]);
   });
 
   it("does not turn a refusal on the closing turn into an error", async () => {
     script(saveProfileTurn(), { message: { stop_reason: "refusal", content: [] } });
     const events = await run();
-    expect(types(events)).toEqual(["profile", "done"]);
+    expect(types(events)).toEqual(["profile", "done", "usage"]);
   });
 });

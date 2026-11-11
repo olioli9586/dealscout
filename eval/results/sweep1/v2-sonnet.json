@@ -1,0 +1,502 @@
+{
+  "label": "v2-sonnet",
+  "api": "v2",
+  "date": "2026-11-08",
+  "base": "http://localhost:3100",
+  "models": "planner `claude-haiku-5-5` (low), researcher `claude-sonnet-5-5` (medium), writer `claude-sonnet-5-5` (medium)",
+  "max_usd": 4,
+  "spent_usd": 2.4513660999999995,
+  "stopped": null,
+  "rows": [
+    {
+      "name": "Anthropic",
+      "seconds": 43,
+      "usage": {
+        "model": "planner `claude-haiku-5-5` (low), researcher `claude-sonnet-5-5` (medium), writer `claude-sonnet-5-5` (medium)",
+        "effort": null,
+        "requests": 7,
+        "input_tokens": 178355,
+        "output_tokens": 5366,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 12,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.526893
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "run_id": "3dd64c21-d7fc-4f59-9a1b-5930115114e2",
+      "plan": [
+        "business",
+        "funding",
+        "leadership",
+        "news"
+      ],
+      "claims": {
+        "supported": 17,
+        "unsupported": 0
+      },
+      "profile": {
+        "company_name": "Anthropic",
+        "website": "https://www.anthropic.com",
+        "industry": "Artificial intelligence research and software (large language models, AI safety)",
+        "hq_location": "San Francisco, California, U.S.",
+        "founded_year": "2021",
+        "employee_count": "5,001-10,000 (about 5,300 as of Sept 2026)",
+        "business_model": "Sells access to Claude AI models via chatbot subscriptions, enterprise offerings, and usage-based API and coding tools; reported 2025 revenue of $4.6B.",
+        "products_services": [
+          "Claude LLM family (Opus, Sonnet, Haiku)",
+          "Claude chatbot",
+          "Claude API",
+          "Claude Code",
+          "Cowork",
+          "Design",
+          "Science"
+        ],
+        "funding_status": "Private; Series H, $65B at $965B post-money valuation (May 2026); aggregate capital raised $141.1B as of Sept 30, 2026. Prior round: Series G, $30B at $380B post-money, led by GIC and Coatue.",
+        "leadership": [
+          "Dario Amodei, Co-Founder and Chief Executive Officer",
+          "Daniela Amodei, President",
+          "Jack Clark, Co-Founder",
+          "Tom Brown, Co-Founder"
+        ],
+        "recent_news": [
+          "Closed Series H of $65B at a $965B post-money valuation (May 2026)",
+          "Confidentially submitted an IPO filing in June 2026",
+          "As of Nov 6, 2026, some investors lowered IPO valuation expectations after a tech selloff, with valuation reportedly possibly falling to near $1T"
+        ],
+        "deal_signals": [
+          "IPO preparation: Nasdaq selected, reportedly targeting an October/November 2026 listing at up to ~$2T valuation (not confirmed)",
+          "Confidential IPO filing submitted in June 2026; reportedly targeting a pre-Thanksgiving listing, with a roadshow possibly starting in November",
+          "As of Nov 6, 2026, some investors lowered IPO valuation expectations after a tech selloff; valuation reportedly could fall to near $1T",
+          "Held $95.6B cash and $36.3B short-term investments at Sept 30, 2026",
+          "Board granted the Amodei siblings RSUs, some tied to the IPO; seven co-founders pledged 80% of their shares to charity per the prospectus"
+        ],
+        "confidence": "high",
+        "summary": "Anthropic is a San Francisco-based AI company founded in 2021 that develops the Claude family of large language models and sells access through subscriptions, enterprise offerings, and usage-based API and coding tools. It is privately held, having raised a $65B Series H at a $965B post-money valuation in May 2026, and holds substantial cash reserves. It is reportedly preparing a Nasdaq IPO for late 2026, though valuation expectations have reportedly softened amid a tech selloff.",
+        "sources": {
+          "website": [
+            "https://en.wikipedia.org/wiki/Anthropic"
+          ],
+          "hq_location": [
+            "https://en.wikipedia.org/wiki/Anthropic"
+          ],
+          "founded_year": [
+            "https://en.wikipedia.org/wiki/Anthropic"
+          ],
+          "employee_count": [
+            "https://en.wikipedia.org/wiki/Anthropic"
+          ],
+          "products_services": [
+            "https://en.wikipedia.org/wiki/Anthropic"
+          ],
+          "industry": [
+            "https://www.cbinsights.com/company/anthropic"
+          ],
+          "business_model": [
+            "https://en.wikipedia.org/wiki/Anthropic"
+          ],
+          "funding_status": [
+            "https://www.anthropic.com/news/series-h",
+            "https://www.anthropic.com/news/anthropic-raises-30-billion-series-g-funding-380-billion-post-money-valuation"
+          ],
+          "deal_signals": [
+            "https://forgeglobal.com/insights/anthropic-upcoming-ipo-news/",
+            "https://unite.ai/anthropic-ipo-valuation-expectations-fall-after-technology-selloff",
+            "https://finance.yahoo.com/technology/ai/articles/anthropic-ceo-dario-amodeis-pay-130506456.html",
+            "https://qz.com/anthropic-ipo-filing-dario-amodei-pay-18-million-100626"
+          ],
+          "leadership": [
+            "https://www.unifygtm.com/insights/executives/anthropic-ceo",
+            "https://qz.com/anthropic-ipo-filing-dario-amodei-pay-18-million-100626",
+            "https://craft.co/anthropic/executives"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Vercel",
+      "seconds": 39,
+      "usage": {
+        "model": "planner `claude-haiku-5-5` (low), researcher `claude-sonnet-5-5` (medium), writer `claude-sonnet-5-5` (medium)",
+        "effort": null,
+        "requests": 7,
+        "input_tokens": 184669,
+        "output_tokens": 4816,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 12,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.5341274
+      },
+      "fields": {
+        "website_domain": false,
+        "founded_year": true,
+        "hq_city": false
+      },
+      "run_id": "530c9c54-420a-4ea0-9bd7-e33bc844153d",
+      "plan": [
+        "business",
+        "funding",
+        "leadership",
+        "news"
+      ],
+      "claims": {
+        "supported": 13,
+        "unsupported": 0
+      },
+      "profile": {
+        "company_name": "Vercel",
+        "website": "unknown",
+        "industry": "Cloud infrastructure / developer tools (web application development and hosting)",
+        "hq_location": "Covina, California, USA",
+        "founded_year": "2015",
+        "employee_count": "201-1000 (about 800-900)",
+        "business_model": "Sells a frontend cloud platform to developers and enterprises through SaaS and usage-based hosting and infrastructure pricing.",
+        "products_services": [
+          "Serverless computing",
+          "CDN",
+          "CI/CD deployment services",
+          "Security features such as bot protection and WAF for web apps"
+        ],
+        "funding_status": "Private; Series F ($300M, Sept 2025, led by Accel and GIC) at $9.3B valuation; ~$863M total raised",
+        "leadership": [
+          "Guillermo Rauch, Founder and CEO",
+          "Jeanne Grosser, Chief Operating Officer",
+          "Marten Abrahamsen, Chief Financial Officer"
+        ],
+        "recent_news": [
+          "Dec 2025: Vercel appointed Susan St. Ledger (ex-HashiCorp President of Worldwide Field Operations) to its board; Stripe CFO Steffan Tomlinson is already a director."
+        ],
+        "deal_signals": [
+          "Valuation rose from $3.3B (Series E, Aug 2024, $250M) to $9.3B (Series F, Sept 2025); no public listing; secondary-market (Forge) pre-IPO coverage exists, but no confirmed IPO or acquisition found",
+          "Revenue reportedly ~$200M in 2025, up from $100M in 2024 (third-party estimate)"
+        ],
+        "confidence": "medium",
+        "summary": "Vercel is a private frontend cloud and developer tools company founded in 2015 and based in Covina, California, with roughly 800-900 employees. It raised a $300M Series F in Sept 2025 at a $9.3B valuation, up from $3.3B a year earlier, and is reported to have roughly doubled revenue to about $200M (third-party estimate). No IPO or acquisition has been confirmed, though pre-IPO secondary-market coverage exists.",
+        "sources": {
+          "founded_year": [
+            "https://www.cbinsights.com/company/vercel"
+          ],
+          "hq_location": [
+            "https://pitchbook.com/profiles/company/167175-28"
+          ],
+          "employee_count": [
+            "https://pitchbook.com/profiles/company/167175-28"
+          ],
+          "products_services": [
+            "https://www.cbinsights.com/company/vercel"
+          ],
+          "industry": [
+            "https://www.cbinsights.com/company/vercel"
+          ],
+          "business_model": [
+            "https://pitchbook.com/profiles/company/167175-28"
+          ],
+          "funding_status": [
+            "https://getlatka.com/companies/vercel"
+          ],
+          "deal_signals": [
+            "https://getlatka.com/companies/vercel"
+          ],
+          "leadership": [
+            "https://www.businesswire.com/news/home/20251217883722/en/Vercel-Appoints-Susan-St.-Ledger-former-President-of-Worldwide-Field-Operations-at-HashiCorp-to-Board-of-Directors",
+            "https://www.cfodive.com/news/stripe-cfo-joins-board-generativeai-startup-vercel-venturecapital/735945/"
+          ],
+          "recent_news": [
+            "https://www.businesswire.com/news/home/20251217883722/en/Vercel-Appoints-Susan-St.-Ledger-former-President-of-Worldwide-Field-Operations-at-HashiCorp-to-Board-of-Directors"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Airbnb",
+      "seconds": 40,
+      "usage": {
+        "model": "planner `claude-haiku-5-5` (low), researcher `claude-sonnet-5-5` (medium), writer `claude-sonnet-5-5` (medium)",
+        "effort": null,
+        "requests": 7,
+        "input_tokens": 157197,
+        "output_tokens": 4703,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 12,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.4779375
+      },
+      "fields": {
+        "website_domain": false,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "run_id": "b3e8ed00-44db-4693-ae7b-783f8ea3cd4d",
+      "plan": [
+        "business",
+        "funding",
+        "leadership",
+        "news"
+      ],
+      "claims": {
+        "supported": 12,
+        "unsupported": 0
+      },
+      "profile": {
+        "company_name": "Airbnb",
+        "website": "unknown",
+        "industry": "unknown",
+        "hq_location": "San Francisco, California, USA",
+        "founded_year": "2008",
+        "employee_count": "5,001-10,000 (approx. 8,200 in 2025)",
+        "business_model": "Charges service fees to guests and hosts on bookings made through its platform, recognized as revenue net of incentives and refunds.",
+        "products_services": [],
+        "funding_status": "Public (NASDAQ: ABNB); IPO December 2020, 50.0M Class A shares sold at $68.00",
+        "leadership": [
+          "Brian Chesky, Co-founder, CEO and Chairman",
+          "Ahmad Al-Dahle, Chief Technology Officer (named Jan 2026; ex-Meta head of generative AI; succeeded Aristotle Balogh)",
+          "Ellie Mertz, Chief Financial Officer (since March 2024)",
+          "Dave Stephenson, Chief Business Officer"
+        ],
+        "recent_news": [
+          "Ahmad Al-Dahle named CTO in January 2026, succeeding Aristotle Balogh",
+          "November 2026: Airbnb sold certain IP to a new private AI lab for $7.1M, with right to invest in future rounds; related-party transaction since CEO Chesky founded/controls the lab and CTO Al-Dahle holds equity"
+        ],
+        "deal_signals": [
+          "Highly profitable: Q3 2026 net income of $1.9B, revenue up 19% YoY, so no need for external fundraising",
+          "Active buybacks: $1.1B repurchased in Q2 2026, leaving $3.4B authorization available at June 30, 2026",
+          "November 2026: sold IP to a CEO-affiliated private AI lab for $7.1M with right to invest in future rounds (related-party)",
+          "CEO Chesky adopted a 10b5-1 plan to sell up to 3.15M shares through May 2027"
+        ],
+        "confidence": "medium",
+        "summary": "Airbnb is a public company (NASDAQ: ABNB) headquartered in San Francisco, founded in 2008, with roughly 8,200 employees in 2025. It earns revenue from service fees charged to guests and hosts on platform bookings, and is highly profitable with active share buybacks. Recent items include a new CTO from Meta and a related-party IP sale to a CEO-founded AI lab; website and industry were not covered by the claims.",
+        "sources": {
+          "hq_location": [
+            "https://en.wikipedia.org/wiki/Airbnb"
+          ],
+          "founded_year": [
+            "https://en.wikipedia.org/wiki/Airbnb"
+          ],
+          "employee_count": [
+            "https://en.wikipedia.org/wiki/Airbnb"
+          ],
+          "business_model": [
+            "https://fintel.io/doc/sec-airbnb-inc-1559720-10k-2025-february-13-20132-9720"
+          ],
+          "funding_status": [
+            "https://www.sec.gov/Archives/edgar/data/1559720/000155972021000010/airbnb-10k.htm"
+          ],
+          "deal_signals": [
+            "https://www.sec.gov/Archives/edgar/data/0001559720/000155972026000032/abnb-20260930.htm",
+            "https://www.sec.gov/Archives/edgar/data/0001559720/000155972026000027/abnb-20260630.htm"
+          ],
+          "leadership": [
+            "https://www.sec.gov/Archives/edgar/data/0001559720/000155972026000032/abnb-20260930.htm",
+            "https://www.phocuswire.com/airbnb-names-ahmad-al-dahle-cto",
+            "https://www.sec.gov/Archives/edgar/data/1559720/000119312523291772/d636215d8k.htm"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Shopify",
+      "seconds": 26,
+      "usage": {
+        "model": "planner `claude-haiku-5-5` (low), researcher `claude-sonnet-5-5` (medium), writer `claude-sonnet-5-5` (medium)",
+        "effort": null,
+        "requests": 6,
+        "input_tokens": 138722,
+        "output_tokens": 4701,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 7,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.3909979
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "run_id": "5790525b-f5fe-4f5b-a8c7-eec9f96ac66a",
+      "plan": [
+        "business",
+        "funding",
+        "leadership",
+        "news"
+      ],
+      "claims": {
+        "supported": 18,
+        "unsupported": 0
+      },
+      "profile": {
+        "company_name": "Shopify",
+        "website": "https://www.shopify.com/",
+        "industry": "Commerce technology / e-commerce software and merchant services",
+        "hq_location": "Ottawa, Ontario, Canada",
+        "founded_year": "2006",
+        "employee_count": "5001-10000",
+        "business_model": "Recurring subscription fees from merchants plus usage-based merchant solutions revenue (payments and other services).",
+        "products_services": [
+          "Commerce platform for online stores, social channels, marketplaces, physical retail and B2B",
+          "Add-ons such as Shopify Payments, Shipping and Capital",
+          "Agentic plan for AI-driven commerce"
+        ],
+        "funding_status": "Public (NASDAQ, TSX: SHOP)",
+        "leadership": [
+          "Tobias Lütke, Chief Executive Officer",
+          "Harley Finkelstein, President",
+          "Jeff Hoffmeister, Chief Financial Officer",
+          "Jessica Hertz, Chief Operating Officer",
+          "Jean Niehaus, General Counsel (since October 2025)"
+        ],
+        "recent_news": [
+          "Q3 2026 results (Nov 3, 2026): revenue +32%, 22% FCF margin, GMV $119.1B vs $92.0B a year earlier",
+          "Q2 2026 results (Aug 5, 2026): revenue +34%, 18% FCF margin; over 30% growth in GMV, revenue, gross profit and FCF",
+          "Jan 2026: Shopify announced agentic AI integrations with Google and Microsoft, a new Agentic plan, and the co-developed Universal Commerce Protocol (following the ChatGPT partnership in Sept 2025)"
+        ],
+        "deal_signals": [
+          "FY2025 revenue of $11.6B (30% growth) and $2B free cash flow",
+          "Launched a $2B share repurchase program (announced Feb 11, 2026), signaling a strong cash position and capacity for buybacks or acquisitions"
+        ],
+        "confidence": "high",
+        "summary": "Shopify is an Ottawa-based, publicly traded (NASDAQ, TSX: SHOP) commerce technology company founded in 2006, earning revenue from merchant subscriptions and usage-based merchant solutions such as payments. It reported FY2025 revenue of $11.6B with $2B in free cash flow and continued 30%+ growth through 2026 quarterly results. It is expanding into agentic AI commerce with Google, Microsoft and ChatGPT integrations, and launched a $2B buyback.",
+        "sources": {
+          "website": [
+            "https://umbrex.com/resources/company-profiles/shopify-subordinate-voting-inc-cl-a/"
+          ],
+          "hq_location": [
+            "https://umbrex.com/resources/company-profiles/shopify-subordinate-voting-inc-cl-a/"
+          ],
+          "founded_year": [
+            "https://umbrex.com/resources/company-profiles/shopify-subordinate-voting-inc-cl-a/"
+          ],
+          "industry": [
+            "https://umbrex.com/resources/company-profiles/shopify-subordinate-voting-inc-cl-a/"
+          ],
+          "employee_count": [
+            "https://pitchbook.com/profiles/company/51386-05"
+          ],
+          "business_model": [
+            "https://umbrex.com/resources/company-profiles/shopify-subordinate-voting-inc-cl-a/"
+          ],
+          "products_services": [
+            "https://pitchbook.com/profiles/company/51386-05"
+          ],
+          "funding_status": [
+            "https://www.sec.gov/Archives/edgar/data/1594805/000159480526000006/exhibit991pressreleaseq420.htm"
+          ],
+          "deal_signals": [
+            "https://www.sec.gov/Archives/edgar/data/1594805/000159480526000006/exhibit991pressreleaseq420.htm"
+          ],
+          "leadership": [
+            "https://www.unifygtm.com/insights/executives/shopify-ceo",
+            "https://www.sec.gov/Archives/edgar/data/0001594805/000159480526000018/exhibit991pressreleaseq120.htm"
+          ],
+          "recent_news": [
+            "https://www.sec.gov/Archives/edgar/data/0001594805/000159480526000067/exhibit991pressreleaseq320.htm",
+            "https://www.sec.gov/Archives/edgar/data/0001594805/000159480526000046/exhibit991pressreleaseq220.htm",
+            "https://www.theglobeandmail.com/business/article-shopify-agentic-ai-artificial-intelligence-google-microsoft/"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Datadog",
+      "seconds": 42,
+      "usage": {
+        "model": "planner `claude-haiku-5-5` (low), researcher `claude-sonnet-5-5` (medium), writer `claude-sonnet-5-5` (medium)",
+        "effort": null,
+        "requests": 7,
+        "input_tokens": 183416,
+        "output_tokens": 4960,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "web_search_requests": 11,
+        "web_fetch_requests": 0,
+        "cost_usd": 0.5214103
+      },
+      "fields": {
+        "website_domain": true,
+        "founded_year": true,
+        "hq_city": true
+      },
+      "run_id": "d9a194e8-a37c-4108-820c-370fa2c1fcc8",
+      "plan": [
+        "business",
+        "funding",
+        "leadership",
+        "news"
+      ],
+      "claims": {
+        "supported": 13,
+        "unsupported": 0
+      },
+      "profile": {
+        "company_name": "Datadog",
+        "website": "https://www.datadoghq.com",
+        "industry": "Observability and security SaaS (cloud monitoring software)",
+        "hq_location": "New York City, USA",
+        "founded_year": "2010",
+        "employee_count": "unknown",
+        "business_model": "Sells monthly or annual subscriptions to its cloud-based platform using a land-and-expand model.",
+        "products_services": [
+          "Infrastructure monitoring",
+          "Application performance monitoring (APM)",
+          "Log management",
+          "User experience monitoring",
+          "Cloud security",
+          "Service management"
+        ],
+        "funding_status": "Public (NASDAQ: DDOG); Q3 2026 revenue $1.20B, up 35% YoY",
+        "leadership": [
+          "Olivier Pomel, Co-Founder & Chief Executive Officer",
+          "Alexis Lê-Quôc, Co-Founder & Chief Technology Officer",
+          "David Obstler, Chief Financial Officer",
+          "Kerry Acocella, General Counsel"
+        ],
+        "recent_news": [
+          "Acquired Propolis, a browser-agent QA testing startup, on 28 January 2026",
+          "Q3 2026 revenue of $1.20B, up 35% YoY"
+        ],
+        "deal_signals": [
+          "Active acquirer: three small acquisitions in 2026 YTD totaling $191.5M aggregate purchase price (not material individually or in aggregate)",
+          "Acquired Propolis (browser-agent QA testing startup) on 28 January 2026",
+          "Strong growth: Q3 2026 revenue up 35% YoY to $1.20B; about 4,860 $100k+ ARR customers"
+        ],
+        "confidence": "medium",
+        "summary": "Datadog is a New York City-headquartered observability and security SaaS company founded in 2010 and publicly traded on NASDAQ (DDOG). It sells subscriptions to a unified cloud monitoring and security platform and reported Q3 2026 revenue of $1.20B, up 35% YoY. It is an active acquirer of small companies, including Propolis in January 2026.",
+        "sources": {
+          "hq_location": [
+            "https://www.sec.gov/Archives/edgar/data/1561550/000162828026008819/ddog-20251231.htm"
+          ],
+          "founded_year": [
+            "https://www.sec.gov/Archives/edgar/data/1561550/000162828026008819/ddog-20251231.htm"
+          ],
+          "industry": [
+            "https://www.sec.gov/Archives/edgar/data/1561550/000162828026008819/ddog-20251231.htm"
+          ],
+          "products_services": [
+            "https://www.sec.gov/Archives/edgar/data/1561550/000162828026008819/ddog-20251231.htm"
+          ],
+          "business_model": [
+            "https://www.sec.gov/Archives/edgar/data/1561550/000156459021009770/ddog-10k_20201231.htm"
+          ],
+          "funding_status": [
+            "https://www.sec.gov/Archives/edgar/data/0001561550/000162828026069792/ex-991x20260930x8k.htm"
+          ],
+          "deal_signals": [
+            "https://www.sec.gov/Archives/edgar/data/0001561550/000162828026070292/ddog-20260930.htm",
+            "https://app.dealroom.co/news/note/datadog-acquires-propolis",
+            "https://www.sec.gov/Archives/edgar/data/0001561550/000162828026069792/ex-991x20260930x8k.htm"
+          ],
+          "leadership": [
+            "https://craft.co/datadog/executives",
+            "https://www.datadoghq.com/about/latest-news/press-releases/chief-financial-officer/"
+          ]
+        }
+      }
+    }
+  ]
+}

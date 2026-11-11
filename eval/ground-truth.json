@@ -1,35 +1,605 @@
 {
-  "_notes": "Hand-checked ground truth (verified against public sources, Jul 2026). Fields chosen for stability and unambiguity: website domain, founded year, HQ city. Arrays list every acceptable value — e.g. Vercel was founded 2015 as ZEIT and rebranded 2020, so both years grade as correct.",
+  "_notes": "Ground truth for three stable fields: website domain, founded year, HQ city. Arrays list every acceptable value; a cell is correct if the answer contains one (lower case). The first 5 companies were hand-checked against public sources (Jul 2026); e.g. Vercel accepts its 2020 rebrand year. The other 43 were added on 2026-11-10 and checked by two independent automated lookups, not by hand (see ground-truth-review.md): a founding year counts if a reputable source gives it as the founding (not a rename, product launch or later legal entity), and the HQ is the current operating headquarters (a former HQ or a legal seat is wrong).",
   "companies": [
     {
       "name": "Anthropic",
-      "website_domain": ["anthropic.com"],
-      "founded_year": ["2021"],
-      "hq_city": ["san francisco"]
+      "website_domain": [
+        "anthropic.com"
+      ],
+      "founded_year": [
+        "2021"
+      ],
+      "hq_city": [
+        "san francisco"
+      ]
     },
     {
       "name": "Vercel",
-      "website_domain": ["vercel.com"],
-      "founded_year": ["2015", "2020"],
-      "hq_city": ["san francisco"]
+      "website_domain": [
+        "vercel.com"
+      ],
+      "founded_year": [
+        "2015",
+        "2020"
+      ],
+      "hq_city": [
+        "san francisco"
+      ]
     },
     {
       "name": "Airbnb",
-      "website_domain": ["airbnb.com"],
-      "founded_year": ["2008", "2007"],
-      "hq_city": ["san francisco"]
+      "website_domain": [
+        "airbnb.com"
+      ],
+      "founded_year": [
+        "2008",
+        "2007"
+      ],
+      "hq_city": [
+        "san francisco"
+      ]
     },
     {
       "name": "Shopify",
-      "website_domain": ["shopify.com"],
-      "founded_year": ["2006", "2004"],
-      "hq_city": ["ottawa"]
+      "website_domain": [
+        "shopify.com"
+      ],
+      "founded_year": [
+        "2006",
+        "2004"
+      ],
+      "hq_city": [
+        "ottawa"
+      ]
     },
     {
       "name": "Datadog",
-      "website_domain": ["datadoghq.com"],
-      "founded_year": ["2010"],
-      "hq_city": ["new york"]
+      "website_domain": [
+        "datadoghq.com"
+      ],
+      "founded_year": [
+        "2010"
+      ],
+      "hq_city": [
+        "new york"
+      ]
+    },
+    {
+      "name": "Cloudflare",
+      "website_domain": [
+        "cloudflare.com"
+      ],
+      "founded_year": [
+        "2009"
+      ],
+      "hq_city": [
+        "san francisco"
+      ]
+    },
+    {
+      "name": "Twilio",
+      "website_domain": [
+        "twilio.com"
+      ],
+      "founded_year": [
+        "2008"
+      ],
+      "hq_city": [
+        "san francisco"
+      ]
+    },
+    {
+      "name": "HubSpot",
+      "website_domain": [
+        "hubspot.com"
+      ],
+      "founded_year": [
+        "2006",
+        "2005"
+      ],
+      "hq_city": [
+        "cambridge",
+        "boston"
+      ]
+    },
+    {
+      "name": "Duolingo",
+      "website_domain": [
+        "duolingo.com"
+      ],
+      "founded_year": [
+        "2011"
+      ],
+      "hq_city": [
+        "pittsburgh"
+      ]
+    },
+    {
+      "name": "Toast",
+      "website_domain": [
+        "toasttab.com"
+      ],
+      "founded_year": [
+        "2011",
+        "2012"
+      ],
+      "hq_city": [
+        "boston"
+      ]
+    },
+    {
+      "name": "Etsy",
+      "website_domain": [
+        "etsy.com"
+      ],
+      "founded_year": [
+        "2005"
+      ],
+      "hq_city": [
+        "brooklyn",
+        "new york"
+      ]
+    },
+    {
+      "name": "Robinhood",
+      "website_domain": [
+        "robinhood.com"
+      ],
+      "founded_year": [
+        "2013"
+      ],
+      "hq_city": [
+        "menlo park"
+      ]
+    },
+    {
+      "name": "DoorDash",
+      "website_domain": [
+        "doordash.com"
+      ],
+      "founded_year": [
+        "2013"
+      ],
+      "hq_city": [
+        "san francisco"
+      ]
+    },
+    {
+      "name": "Rivian",
+      "website_domain": [
+        "rivian.com"
+      ],
+      "founded_year": [
+        "2009"
+      ],
+      "hq_city": [
+        "irvine"
+      ]
+    },
+    {
+      "name": "Samsara",
+      "website_domain": [
+        "samsara.com"
+      ],
+      "founded_year": [
+        "2015"
+      ],
+      "hq_city": [
+        "san francisco"
+      ]
+    },
+    {
+      "name": "MongoDB",
+      "website_domain": [
+        "mongodb.com"
+      ],
+      "founded_year": [
+        "2007"
+      ],
+      "hq_city": [
+        "new york"
+      ]
+    },
+    {
+      "name": "Okta",
+      "website_domain": [
+        "okta.com"
+      ],
+      "founded_year": [
+        "2009"
+      ],
+      "hq_city": [
+        "san francisco"
+      ]
+    },
+    {
+      "name": "Spotify",
+      "website_domain": [
+        "spotify.com"
+      ],
+      "founded_year": [
+        "2006"
+      ],
+      "hq_city": [
+        "stockholm"
+      ]
+    },
+    {
+      "name": "Adyen",
+      "website_domain": [
+        "adyen.com"
+      ],
+      "founded_year": [
+        "2006"
+      ],
+      "hq_city": [
+        "amsterdam"
+      ]
+    },
+    {
+      "name": "Wise",
+      "website_domain": [
+        "wise.com",
+        "transferwise.com"
+      ],
+      "founded_year": [
+        "2011",
+        "2010"
+      ],
+      "hq_city": [
+        "london"
+      ]
+    },
+    {
+      "name": "Klarna",
+      "website_domain": [
+        "klarna.com"
+      ],
+      "founded_year": [
+        "2005"
+      ],
+      "hq_city": [
+        "stockholm"
+      ]
+    },
+    {
+      "name": "Canva",
+      "website_domain": [
+        "canva.com"
+      ],
+      "founded_year": [
+        "2013",
+        "2012"
+      ],
+      "hq_city": [
+        "sydney"
+      ]
+    },
+    {
+      "name": "Revolut",
+      "website_domain": [
+        "revolut.com"
+      ],
+      "founded_year": [
+        "2015",
+        "2013"
+      ],
+      "hq_city": [
+        "london"
+      ]
+    },
+    {
+      "name": "Monzo",
+      "website_domain": [
+        "monzo.com"
+      ],
+      "founded_year": [
+        "2015"
+      ],
+      "hq_city": [
+        "london"
+      ]
+    },
+    {
+      "name": "N26",
+      "website_domain": [
+        "n26.com"
+      ],
+      "founded_year": [
+        "2013"
+      ],
+      "hq_city": [
+        "berlin"
+      ]
+    },
+    {
+      "name": "Celonis",
+      "website_domain": [
+        "celonis.com"
+      ],
+      "founded_year": [
+        "2011"
+      ],
+      "hq_city": [
+        "munich",
+        "new york"
+      ]
+    },
+    {
+      "name": "Mistral AI",
+      "website_domain": [
+        "mistral.ai"
+      ],
+      "founded_year": [
+        "2023"
+      ],
+      "hq_city": [
+        "paris"
+      ]
+    },
+    {
+      "name": "Cohere",
+      "website_domain": [
+        "cohere.com",
+        "cohere.ai"
+      ],
+      "founded_year": [
+        "2019"
+      ],
+      "hq_city": [
+        "toronto",
+        "san francisco"
+      ]
+    },
+    {
+      "name": "Nubank",
+      "website_domain": [
+        "nubank.com.br",
+        "nu.com"
+      ],
+      "founded_year": [
+        "2013"
+      ],
+      "hq_city": [
+        "são paulo",
+        "sao paulo"
+      ]
+    },
+    {
+      "name": "Grab",
+      "website_domain": [
+        "grab.com"
+      ],
+      "founded_year": [
+        "2012"
+      ],
+      "hq_city": [
+        "singapore"
+      ]
+    },
+    {
+      "name": "Brex",
+      "website_domain": [
+        "brex.com"
+      ],
+      "founded_year": [
+        "2017"
+      ],
+      "hq_city": [
+        "san francisco"
+      ]
+    },
+    {
+      "name": "Ramp",
+      "website_domain": [
+        "ramp.com"
+      ],
+      "founded_year": [
+        "2019"
+      ],
+      "hq_city": [
+        "new york"
+      ]
+    },
+    {
+      "name": "Plaid",
+      "website_domain": [
+        "plaid.com"
+      ],
+      "founded_year": [
+        "2012",
+        "2013"
+      ],
+      "hq_city": [
+        "san francisco"
+      ]
+    },
+    {
+      "name": "Rippling",
+      "website_domain": [
+        "rippling.com"
+      ],
+      "founded_year": [
+        "2016",
+        "2017"
+      ],
+      "hq_city": [
+        "san francisco"
+      ]
+    },
+    {
+      "name": "Vanta",
+      "website_domain": [
+        "vanta.com"
+      ],
+      "founded_year": [
+        "2018",
+        "2016"
+      ],
+      "hq_city": [
+        "san francisco"
+      ]
+    },
+    {
+      "name": "Retool",
+      "website_domain": [
+        "retool.com"
+      ],
+      "founded_year": [
+        "2017"
+      ],
+      "hq_city": [
+        "san francisco"
+      ]
+    },
+    {
+      "name": "Figma",
+      "website_domain": [
+        "figma.com"
+      ],
+      "founded_year": [
+        "2012"
+      ],
+      "hq_city": [
+        "san francisco"
+      ]
+    },
+    {
+      "name": "Notion",
+      "website_domain": [
+        "notion.com",
+        "notion.so"
+      ],
+      "founded_year": [
+        "2013"
+      ],
+      "hq_city": [
+        "san francisco"
+      ]
+    },
+    {
+      "name": "Databricks",
+      "website_domain": [
+        "databricks.com"
+      ],
+      "founded_year": [
+        "2013"
+      ],
+      "hq_city": [
+        "san francisco"
+      ]
+    },
+    {
+      "name": "Scale AI",
+      "website_domain": [
+        "scale.com",
+        "scaleapi.com"
+      ],
+      "founded_year": [
+        "2016"
+      ],
+      "hq_city": [
+        "san francisco"
+      ]
+    },
+    {
+      "name": "Anduril",
+      "website_domain": [
+        "anduril.com"
+      ],
+      "founded_year": [
+        "2017"
+      ],
+      "hq_city": [
+        "costa mesa"
+      ]
+    },
+    {
+      "name": "Perplexity",
+      "website_domain": [
+        "perplexity.ai",
+        "perplexity.com"
+      ],
+      "founded_year": [
+        "2022"
+      ],
+      "hq_city": [
+        "san francisco"
+      ]
+    },
+    {
+      "name": "Gusto",
+      "website_domain": [
+        "gusto.com"
+      ],
+      "founded_year": [
+        "2011"
+      ],
+      "hq_city": [
+        "san francisco"
+      ]
+    },
+    {
+      "name": "Modal",
+      "website_domain": [
+        "modal.com"
+      ],
+      "founded_year": [
+        "2021"
+      ],
+      "hq_city": [
+        "new york"
+      ]
+    },
+    {
+      "name": "Replit",
+      "website_domain": [
+        "replit.com",
+        "repl.it"
+      ],
+      "founded_year": [
+        "2016"
+      ],
+      "hq_city": [
+        "foster city"
+      ]
+    },
+    {
+      "name": "Harvey",
+      "website_domain": [
+        "harvey.ai"
+      ],
+      "founded_year": [
+        "2022"
+      ],
+      "hq_city": [
+        "san francisco"
+      ]
+    },
+    {
+      "name": "Hex",
+      "website_domain": [
+        "hex.tech"
+      ],
+      "founded_year": [
+        "2019",
+        "2020"
+      ],
+      "hq_city": [
+        "san francisco"
+      ]
+    },
+    {
+      "name": "Glean",
+      "website_domain": [
+        "glean.com"
+      ],
+      "founded_year": [
+        "2019"
+      ],
+      "hq_city": [
+        "palo alto"
+      ]
     }
   ]
 }
