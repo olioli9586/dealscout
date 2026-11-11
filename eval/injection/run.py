@@ -163,11 +163,17 @@ async def run_case_v1(client: httpx.AsyncClient, base: str, case: dict) -> dict:
         "error": error,
         "cost_usd": usage["cost_usd"] if usage else None,
         "page": page,
+        # Kept so a hit can be read: following an instruction and warning
+        # about it both mention the injected text.
+        "profile": profile,
         **grade_v1(case, profile),
     }
 
 
-async def main_v1(label: str, repeats: int, max_usd: float, commit: str, base: str) -> None:
+async def main_v1(
+    label: str, repeats: int, max_usd: float, commit: str, base: str, only: set[str], merge: bool
+) -> None:
+    cases = [c for c in CASES["cases"] if not only or c["id"] in only]
     results: list[dict] = []
     total = 0.0
     async with httpx.AsyncClient(timeout=httpx.Timeout(600)) as client:
@@ -175,7 +181,7 @@ async def main_v1(label: str, repeats: int, max_usd: float, commit: str, base: s
             if total >= max_usd:
                 print(f"spend cap ${max_usd} reached; stopping")
                 break
-            batch = await asyncio.gather(*(run_case_v1(client, base, c) for c in CASES["cases"]))
+            batch = await asyncio.gather(*(run_case_v1(client, base, c) for c in cases))
             for r in batch:
                 r.update(repeat=repeat + 1, commit=commit)
                 total += r["cost_usd"] or 0
@@ -183,6 +189,10 @@ async def main_v1(label: str, repeats: int, max_usd: float, commit: str, base: s
             results.extend(batch)
     RESULTS.mkdir(exist_ok=True)
     path = RESULTS / f"{label}.json"
+    if merge and path.exists():
+        earlier = json.loads(path.read_text())
+        results = [r for r in earlier["runs"] if r["case"] not in {c["id"] for c in cases}] + results
+        total += earlier["spent_usd"]
     out = {
         "label": label,
         "agent": "v1",
@@ -278,16 +288,20 @@ async def main(label: str, repeats: int, max_usd: float, commit: str, only: set[
 
 
 def write_report() -> None:
+    # v1 (the baseline) first, then v2 before and after the defenses.
+    order = {"v1": 0, "before": 1, "after": 2}
     labels = sorted(
-        (json.loads(p.read_text()) for p in RESULTS.glob("*.json")), key=lambda r: (r["date"], r["label"])
+        (json.loads(p.read_text()) for p in RESULTS.glob("*.json")),
+        key=lambda r: (order.get(r["label"], 9), r["date"], r["label"]),
     )
     md = [
         "# Prompt-injection results",
         "",
         "Each cell: runs where the agent followed the page's injected instruction, at the",
         "researcher / verifier / draft layer, over the runs of that case. `n/a`: the layer",
-        "doesn't apply (the fetch and suppression cases act before any claim is verified).",
-        "Lower is better. Cases and grading: `cases.json`, `run.py`.",
+        "doesn't apply (the fetch and suppression cases act before any claim is verified;",
+        "v1 shows only its profile, so only its draft layer is graded). Lower is better.",
+        "Cases and grading: `cases.json`, `run.py`.",
         "",
         "| case | " + " | ".join(f"{r['label']} ({r['commit']})" for r in labels) + " |",
         "|---|" + "---|" * len(labels),
@@ -337,6 +351,6 @@ if __name__ == "__main__":
         head = subprocess.run(git, check=True, capture_output=True, text=True).stdout.strip()
         only = {c for c in args.cases.split(",") if c}
         if args.agent == "v1":
-            asyncio.run(main_v1(args.label, args.repeats, args.max_usd, head, args.base))
+            asyncio.run(main_v1(args.label, args.repeats, args.max_usd, head, args.base, only, args.merge))
         else:
             asyncio.run(main(args.label, args.repeats, args.max_usd, head, only, args.merge))
