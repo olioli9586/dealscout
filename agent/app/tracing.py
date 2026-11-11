@@ -5,15 +5,22 @@ Off unless LANGFUSE_PUBLIC_KEY and LANGFUSE_SECRET_KEY are set
 (LANGFUSE_BASE_URL picks the region). Off, every helper is a no-op and no
 Langfuse client is built.
 
-A run's trace id is its run id, so a resume or the approval step (a later
-request) adds to the same trace. Generations carry the cost from
+A run's trace id comes from its run id, so a resume or the approval step (a
+later request) adds to the same trace. It's a one-way hash of the run id,
+not the id itself: the MCP client sends the trace context with every EDGAR
+request (W3C traceparent in _meta), and a run id is enough to read that run
+through the public API. Generations carry the cost from
 app/pricing.py, which knows the models and the web search fee, instead of
 Langfuse's own price table. They record the request's newest message and
 the response's text and tool calls, not the whole conversation each time.
+
+The Anthropic SDK traces its own requests too (OpenTelemetry), and Langfuse
+keeps such spans by default: every request showed up twice, and Langfuse
+priced the SDK's copies at a sixth of the real cost (no reasoning tokens,
+no search fees). Those spans aren't exported.
 """
 
 import os
-import uuid
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from functools import cache
@@ -24,6 +31,7 @@ from anthropic.types import Message
 from app.pricing import PRICES, response_cost
 
 TEXT_LIMIT = 4_000
+ANTHROPIC_SDK_SCOPE = "com.anthropic.sdk.python"
 
 
 @cache
@@ -31,9 +39,25 @@ def client() -> Any:
     """The Langfuse client, or None when the keys aren't set."""
     if not (os.environ.get("LANGFUSE_PUBLIC_KEY") and os.environ.get("LANGFUSE_SECRET_KEY")):
         return None
+    return make_client()
+
+
+def make_client(**options: Any) -> Any:
+    """A Langfuse client that leaves out the Anthropic SDK's own spans."""
+    from langfuse import Langfuse, is_default_export_span
+
+    def export(span: Any) -> bool:
+        scope = span.instrumentation_scope
+        return not (scope and scope.name == ANTHROPIC_SDK_SCOPE) and is_default_export_span(span)
+
+    return Langfuse(should_export_span=export, **options)
+
+
+def trace_id(run_id: str) -> str:
+    """The run's Langfuse trace id (32 hex characters, derived from the run id)."""
     from langfuse import Langfuse
 
-    return Langfuse()
+    return Langfuse.create_trace_id(seed=run_id)
 
 
 def flush() -> None:
@@ -56,7 +80,7 @@ def run_trace(run_id: str, company: str, step: str) -> Iterator[None]:
         return
     from langfuse import propagate_attributes
 
-    trace = {"trace_id": uuid.UUID(run_id).hex}
+    trace = {"trace_id": trace_id(run_id)}
     with (
         langfuse.start_as_current_observation(trace_context=trace, name=step, as_type="agent"),
         propagate_attributes(trace_name=f"run: {company}", session_id=run_id, metadata={"company": company}),

@@ -6,6 +6,7 @@ import json
 
 import pytest
 from langfuse import Langfuse
+from opentelemetry import trace
 from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
 
 from app import tracing
@@ -20,7 +21,7 @@ EXPORTER = InMemorySpanExporter()
 def langfuse() -> Langfuse:
     # One client for the session: Langfuse keeps one span processor per key.
     keys = {"public_key": "pk-lf-test", "secret_key": "sk-lf-test"}
-    return Langfuse(**keys, base_url="http://127.0.0.1:9", span_exporter=EXPORTER)
+    return tracing.make_client(**keys, base_url="http://127.0.0.1:9", span_exporter=EXPORTER)
 
 
 @pytest.fixture
@@ -116,11 +117,25 @@ async def test_an_edgar_call_is_a_tool_span(spans):
     assert tool.name == "secedgar_get_filing"
     assert attrs(tool)["input"] == {"accession_number": "0001803782-26-000003"}
     assert FILING_URL in attrs(tool)["output"]
-    # The MCP SDK's own span for the protocol call (Langfuse keeps gen_ai
-    # spans) sits under it.
+    # The in-process test server's own span for the call (the MCP SDK's;
+    # Langfuse keeps gen_ai spans) sits under it. A remote server's spans
+    # stay on its side.
     [protocol] = [s for s in finished if s.instrumentation_scope.name == "mcp-python-sdk"]
     assert protocol.name == "tools/call secedgar_get_filing"
     assert protocol.parent.span_id == tool.context.span_id
+
+
+def test_the_anthropic_sdks_own_spans_are_left_out(spans):
+    # Both are gen_ai spans, which Langfuse keeps by default; the SDK's would
+    # repeat each generation with a wrong cost.
+    attributes = {"gen_ai.operation.name": "chat", "gen_ai.system": "anthropic"}
+    sdk, mcp = trace.get_tracer(tracing.ANTHROPIC_SDK_SCOPE), trace.get_tracer("mcp-python-sdk")
+    with tracing.observation("researcher: business"):
+        with sdk.start_as_current_span("anthropic.messages.create") as s:
+            s.set_attributes(attributes)
+        with mcp.start_as_current_span("tools/call secedgar_get_filing") as s:
+            s.set_attributes(attributes)
+    assert sorted(s.name for s in spans()) == ["researcher: business", "tools/call secedgar_get_filing"]
 
 
 async def test_a_run_is_one_trace_across_its_requests_with_a_span_per_node(spans, make_runs):
@@ -130,7 +145,9 @@ async def test_a_run_is_one_trace_across_its_requests_with_a_span_per_node(spans
 
     finished = spans()
     trace_ids = {format(s.context.trace_id, "032x") for s in finished}
-    assert trace_ids == {run["id"].replace("-", "")}
+    assert trace_ids == {tracing.trace_id(run["id"])}
+    # Derived from the run id, not the run id itself (it goes out with EDGAR calls).
+    assert run["id"].replace("-", "") not in trace_ids
     roots = [s for s in finished if attrs(s).get("type") == "agent"]
     assert sorted(r.name for r in roots) == ["decision", "start"]
     by_id = {s.context.span_id: s for s in finished}
