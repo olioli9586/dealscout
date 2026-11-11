@@ -12,6 +12,10 @@
 //                                 [--concurrency 1]
 //         (base-url defaults to production)
 //
+// --only "A,B" runs just those companies; with --merge their rows replace
+// the ones in the existing eval/results/<label>.json (a rerun after a
+// failure that wasn't the agent's, such as a dropped connection).
+//
 // --concurrency runs that many companies at once (results keep the
 // ground-truth order). The spend cap is checked before each new company
 // starts, so it can be overshot by the runs already in flight.
@@ -41,6 +45,8 @@ const { values: opts, positionals } = parseArgs({
     api: { type: "string", default: "v1" },
     approve: { type: "boolean", default: false },
     concurrency: { type: "string", default: "1" },
+    only: { type: "string", default: "" },
+    merge: { type: "boolean", default: false },
   },
 });
 const BASE = positionals[0] ?? "https://dealscout-gamma.vercel.app";
@@ -52,6 +58,11 @@ if (opts.approve && opts.api !== "v2") throw new Error("--approve is for --api v
 const CONCURRENCY = Number(opts.concurrency);
 if (!Number.isInteger(CONCURRENCY) || CONCURRENCY < 1 || CONCURRENCY > 8) throw new Error("--concurrency must be 1 to 8");
 const truth = JSON.parse(readFileSync(new URL("./ground-truth.json", import.meta.url)));
+const only = new Set(opts.only.split(",").map((s) => s.trim()).filter(Boolean));
+for (const name of only) {
+  if (!truth.companies.some((c) => c.name === name)) throw new Error(`--only: no company named ${name}`);
+}
+if (only.size) truth.companies = truth.companies.filter((c) => only.has(c.name));
 
 async function research(company) {
   const res = await fetch(`${BASE}/api/research`, {
@@ -222,6 +233,15 @@ const date = new Date().toISOString().slice(0, 10);
 
 const resultsDir = new URL("./results/", import.meta.url);
 mkdirSync(resultsDir, { recursive: true });
+let allRows = rows;
+let allSpent = spent;
+if (opts.merge) {
+  // Put the rerun rows where the old ones were; keep every other row.
+  const earlier = JSON.parse(readFileSync(new URL(`${opts.label}.json`, resultsDir)));
+  const rerun = new Map(rows.map((r) => [r.name, r]));
+  allRows = earlier.rows.map((r) => rerun.get(r.name) ?? r);
+  allSpent = earlier.spent_usd + spent;
+}
 writeFileSync(
   new URL(`${opts.label}.json`, resultsDir),
   JSON.stringify(
@@ -235,9 +255,9 @@ writeFileSync(
         ? { models: config?.model ?? null }
         : { model: config?.model ?? null, effort: config?.effort ?? null }),
       max_usd: MAX_USD,
-      spent_usd: spent,
+      spent_usd: allSpent,
       stopped,
-      rows,
+      rows: allRows,
     },
     null,
     2,

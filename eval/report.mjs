@@ -38,6 +38,9 @@ function summarize(result) {
     ran: ran.length,
     failed: result.rows.filter((r) => r.error).length,
     medianSeconds: median(ran.map((r) => r.seconds)),
+    // The deployed functions stop at 300 s (vercel.json), so a slower run
+    // would fail there even if it finished locally.
+    over300: ran.length ? `${ran.filter((r) => r.seconds > 300).length}/${ran.length}` : "—",
     medianCost: median(costs),
     // Steps: model requests per run; tool calls: web searches per run.
     medianRequests: median(ran.flatMap((r) => (typeof r.usage?.requests === "number" ? [r.usage.requests] : []))),
@@ -76,12 +79,12 @@ hand-checked ground truth, mechanical field grading with accepted-value lists,
 every result reproducible via \`node eval/run-eval.mjs <base-url> --label <label> [--api v2]\`.
 Raw rows, profiles included: \`eval/results/<label>.json\`.
 
-| label | agent | date | fields correct | failed runs | median time | median cost | total cost | median model requests | median searches | saved by caching | claims supported | retried branches |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| label | agent | date | fields correct | failed runs | median time | runs over 300 s | median cost | total cost | median model requests | median searches | saved by caching | claims supported | retried branches |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 `;
   for (const r of results) {
     const s = summarize(r);
-    md += `| ${r.label} | ${r.api === "v2" ? "v2" : "v1"}: ${agent(r)} | ${r.date} | ${s.pass}/${s.cells} (${pct(s.pass, s.cells)}) | ${s.failed}/${s.ran} | ${s.medianSeconds ?? "—"} s | ${usd(s.medianCost)} | ${usd(r.spent_usd)} | ${s.medianRequests ?? "—"} | ${s.medianSearches ?? "—"} | ${s.cacheSaved} | ${s.claims} | ${s.retries} |\n`;
+    md += `| ${r.label} | ${r.api === "v2" ? "v2" : "v1"}: ${agent(r)} | ${r.date} | ${s.pass}/${s.cells} (${pct(s.pass, s.cells)}) | ${s.failed}/${s.ran} | ${s.medianSeconds ?? "—"} s | ${s.over300} | ${usd(s.medianCost)} | ${usd(r.spent_usd)} | ${s.medianRequests ?? "—"} | ${s.medianSearches ?? "—"} | ${s.cacheSaved} | ${s.claims} | ${s.retries} |\n`;
   }
 
   for (const r of results) {
