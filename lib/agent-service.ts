@@ -4,12 +4,7 @@
 // through the binding in vercel.json, which sets AGENT_URL. Locally, set
 // AGENT_URL to wherever `uvicorn app.main:app` runs.
 
-const RUN_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-/** Run ids are UUIDs; checking before forwarding keeps "../" out of agent paths. */
-export function isRunId(id: string): boolean {
-  return RUN_ID.test(id);
-}
+export { isRunId } from "@/lib/run-id";
 
 /** Calls the agent at `path` (no leading slash), or throws if AGENT_URL is unset. */
 export async function agentFetch(path: string, init?: RequestInit): Promise<Response> {

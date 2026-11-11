@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { StatusBadge, timeAgo, usd } from "@/app/v2/ui";
-import { launch, listRuns, readHistory, type RunSummary } from "@/lib/v2-client";
+import { historyStorage, launch, listRuns, readHistory, type RunSummary } from "@/lib/v2-client";
 
 const STEPS = [
   ["Plan", "picks the research areas the company needs"],
@@ -23,7 +23,7 @@ export default function V2Home() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    listRuns(readHistory(localStorage))
+    listRuns(readHistory(historyStorage()))
       .then((list) => {
         setRuns(list);
         setNow(Date.now());
@@ -38,7 +38,7 @@ export default function V2Home() {
     e.preventDefault();
     const name = company.trim();
     if (!name) return;
-    router.push(`/v2/runs/${launch(name, localStorage)}`);
+    router.push(`/v2/runs/${launch(name, historyStorage())}`);
   }
 
   return (

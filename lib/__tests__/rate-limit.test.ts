@@ -63,3 +63,12 @@ describe("checkRateLimit", () => {
     expect(mod.trackedIpCount()).toBe(1);
   });
 });
+
+describe("clientIp", () => {
+  it("takes the first x-forwarded-for entry, or 'unknown'", async () => {
+    const { clientIp } = await load();
+    const req = (headers: Record<string, string>) => new Request("http://localhost/", { headers });
+    expect(clientIp(req({ "x-forwarded-for": " 9.9.9.9 , 10.0.0.1" }))).toBe("9.9.9.9");
+    expect(clientIp(req({}))).toBe("unknown");
+  });
+});

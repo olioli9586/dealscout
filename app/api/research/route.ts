@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { runResearchAgent, type AgentEvent } from "@/lib/agent";
-import { checkRateLimit } from "@/lib/rate-limit";
+import { checkRateLimit, clientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 // Research runs can take a few minutes at high effort.
@@ -28,8 +28,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Charge the daily quota only for requests that will actually run the agent.
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  const { allowed, remaining } = checkRateLimit(ip);
+  const { allowed, remaining } = checkRateLimit(clientIp(req));
   if (!allowed) {
     return Response.json(
       { error: "Daily demo limit reached for your IP. Come back tomorrow!" },

@@ -60,7 +60,9 @@ export default function RunPage() {
     if (!started) return;
     let live = true;
     started
-      .then((r) => live && setRun(r))
+      // The start request answers last: polling or a decision may already
+      // have shown a newer state of the run.
+      .then((r) => live && setRun((shown) => (shown && shown.updated_at > r.updated_at ? shown : r)))
       .catch((err: Error) => {
         startFailed.current = true;
         if (live) setError(err.message);
@@ -127,10 +129,14 @@ export default function RunPage() {
   async function resume() {
     setBusy("resume");
     setError("");
-    const resumed = resumeRun(id);
+    let settled = false;
+    const resumed = resumeRun(id).finally(() => {
+      settled = true;
+    });
     // The resume request claims the run right away and then runs the graph;
-    // poll meanwhile, as for a start.
-    setTimeout(() => setPollRound((n) => n + 1), 800);
+    // poll meanwhile, as for a start. Not after a quick refusal (a 429, say):
+    // a poll would clear its message.
+    setTimeout(() => !settled && setPollRound((n) => n + 1), 800);
     try {
       setRun(await resumed);
     } catch (err) {
@@ -212,7 +218,7 @@ export default function RunPage() {
       {run.draft && (
         <Draft
           run={run}
-          draft={run.draft}
+          draft={run.edited ?? run.draft}
           editing={editing}
           busy={busy}
           onDecide={decide}
@@ -384,7 +390,7 @@ function Draft(props: {
     <article className="card-enter mt-8 overflow-hidden rounded-lg border border-edge bg-surface shadow-sm">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-edge px-6 py-4">
         <h2 className="font-display text-lg font-semibold tracking-tight text-ink">
-          {waiting ? "Draft profile" : "Profile"}
+          {waiting ? "Draft profile" : run.edited ? "Profile, as edited" : "Profile"}
         </h2>
         <span className="text-xs text-soft">{draft.confidence} confidence</span>
         {waiting && !editing && (

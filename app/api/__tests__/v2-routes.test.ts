@@ -112,6 +112,14 @@ describe("v2 routes", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
+  it("takes a resume from the daily quota", async () => {
+    const { POST: resume } = await import("@/app/api/v2/runs/[id]/resume/route");
+    const first = await resume(request(`/api/v2/runs/${RUN}/resume`, { method: "POST" }), params(RUN));
+    const second = await resume(request(`/api/v2/runs/${RUN}/resume`, { method: "POST" }), params(RUN));
+    expect([first.status, second.status]).toEqual([200, 429]);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
   it("rejects a decision that isn't JSON", async () => {
     const { POST } = await import("@/app/api/v2/runs/[id]/decision/route");
     const res = await POST(request(`/api/v2/runs/${RUN}/decision`, { method: "POST", body: "{nope" }), params(RUN));

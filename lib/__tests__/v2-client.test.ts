@@ -5,6 +5,7 @@ import {
   HISTORY_MAX,
   branchProgress,
   decideRun,
+  historyStorage,
   fromForm,
   launch,
   listRuns,
@@ -91,6 +92,20 @@ describe("api calls", () => {
     expect(readAdminToken()).toBe("s3cret-token");
     saveAdminToken("");
     expect(readAdminToken()).toBe("");
+  });
+
+  it("starts a run even where storage won't keep the history", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Response.json({})));
+    const full = {
+      getItem: () => null,
+      setItem: () => {
+        throw new DOMException("full", "QuotaExceededError");
+      },
+    };
+    const id = launch("Ramp", full);
+    await expect(starts.get(id)).resolves.toEqual({});
+    // No window here, like a browser that blocks localStorage: nothing is kept.
+    expect(readHistory(historyStorage())).toEqual([]);
   });
 
   it("does without the admin token where storage throws", () => {

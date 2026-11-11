@@ -3,6 +3,7 @@
 // per-branch progress the run page shows while the graph runs.
 
 import type { CompanyProfile } from "@/lib/agent";
+import { isRunId } from "@/lib/run-id";
 
 export type Branch = "business" | "funding" | "leadership" | "news";
 export type RunStatus = "running" | "awaiting_approval" | "saved" | "rejected" | "failed";
@@ -52,6 +53,8 @@ export interface RunView {
   findings: { branch: Branch; attempt: number; claims: number; tool_errors: string[] }[];
   verdicts: { branch: Branch; attempt: number; supported: number; unsupported: number; rejected: Rejected[] }[];
   draft: V2Profile | null;
+  // The profile a person saved instead of the draft, if they edited it.
+  edited: V2Profile | null;
   previous_version: number | null;
   changes: Change[] | null;
   saved_version: number | null;
@@ -159,22 +162,38 @@ export function launch(company: string, storage: Pick<Storage, "getItem" | "setI
 
 export const HISTORY_KEY = "dealscout-v2-history";
 export const HISTORY_MAX = 100;
-const RUN_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /** The run ids this browser started, newest first. Anything malformed is dropped. */
 export function readHistory(storage: Pick<Storage, "getItem">): string[] {
   try {
     const ids: unknown = JSON.parse(storage.getItem(HISTORY_KEY) ?? "[]");
-    return Array.isArray(ids) ? ids.filter((id): id is string => typeof id === "string" && RUN_ID.test(id)) : [];
+    return Array.isArray(ids) ? ids.filter((id): id is string => typeof id === "string" && isRunId(id)) : [];
   } catch {
     return [];
   }
 }
 
-/** Puts a run id first in the history, keeping the newest HISTORY_MAX. */
+/** Puts a run id first in the history, keeping the newest HISTORY_MAX.
+ * Storage that is full or blocked keeps nothing; the run still starts. */
 export function remember(storage: Pick<Storage, "getItem" | "setItem">, id: string): void {
   const ids = [id, ...readHistory(storage).filter((x) => x !== id)].slice(0, HISTORY_MAX);
-  storage.setItem(HISTORY_KEY, JSON.stringify(ids));
+  try {
+    storage.setItem(HISTORY_KEY, JSON.stringify(ids));
+  } catch {
+    // Not kept: the run just won't be listed under "Your runs".
+  }
+}
+
+const NO_STORAGE = { getItem: () => null, setItem: () => {} };
+
+/** localStorage, or nothing where the browser blocks it (reading the
+ * property itself throws then). */
+export function historyStorage(): Pick<Storage, "getItem" | "setItem"> {
+  try {
+    return window.localStorage;
+  } catch {
+    return NO_STORAGE;
+  }
 }
 
 // --- progress ---------------------------------------------------------------

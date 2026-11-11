@@ -24,6 +24,11 @@ const DAILY_LIMIT = parseLimit(process.env.DEMO_DAILY_LIMIT);
 const usage = new Map<string, number>();
 let usageDay = "";
 
+/** The client's IP: the first x-forwarded-for entry (set by Vercel's proxy). */
+export function clientIp(req: Request): string {
+  return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+}
+
 export function checkRateLimit(ip: string): { allowed: boolean; remaining: number } {
   const today = new Date().toISOString().slice(0, 10);
   if (today !== usageDay) {

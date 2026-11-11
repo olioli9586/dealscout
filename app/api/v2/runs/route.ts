@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { forwardToAgent, isRunId, postJson } from "@/lib/agent-service";
-import { checkRateLimit } from "@/lib/rate-limit";
+import { checkRateLimit, clientIp } from "@/lib/rate-limit";
 
 // How many runs one history request may ask for (the agent's limit too).
 const MAX_IDS = 100;
@@ -29,8 +29,7 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: "A run id must be a UUID." }, { status: 400 });
   }
 
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  if (!checkRateLimit(ip).allowed) {
+  if (!checkRateLimit(clientIp(req)).allowed) {
     return Response.json(
       { error: "Daily demo limit reached for your IP. Come back tomorrow!" },
       { status: 429 },

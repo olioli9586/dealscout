@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { runResearchAgent, type CompanyProfile } from "@/lib/agent";
 import { ADMIN_TOKEN_NEEDED, canDecide } from "@/lib/admin";
 import { forwardToAgent, isRunId, postJson } from "@/lib/agent-service";
-import { checkRateLimit } from "@/lib/rate-limit";
+import { checkRateLimit, clientIp } from "@/lib/rate-limit";
 import type { RunView } from "@/lib/v2-client";
 
 export const runtime = "nodejs";
@@ -169,10 +169,6 @@ function companyArg(args: ToolArgs): string | null {
   return company && company.length <= 200 ? company : null;
 }
 
-function clientIp(req: NextRequest): string {
-  return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-}
-
 async function researchCompany(req: NextRequest, msg: JsonRpcRequest, args: ToolArgs) {
   const company = companyArg(args);
   if (!company) {
@@ -255,6 +251,7 @@ async function runReply(req: NextRequest, msg: JsonRpcRequest, res: Response) {
     error: run.error,
     page: new URL(`/v2/runs/${run.id}`, req.url).toString(),
     draft: run.draft,
+    edited: run.edited,
     changes: run.changes,
     rejected_claims: run.verdicts.flatMap((v) => v.rejected),
     saved_version: run.saved_version,
