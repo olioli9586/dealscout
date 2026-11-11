@@ -1131,3 +1131,84 @@ on Ramp locally $0.10 and Databricks on the preview $0.13). Since
   on the preview, and the screenshot for the README.
 - Day 9: the scheduled CI eval, README, fresh-context review, merge.
 - Before 2026-11-16: TuneBench's Claude few-shot run.
+
+## Day 9 (2026-11-11): scheduled eval, approval gate, README, review
+
+### Done
+
+- **Scheduled eval in CI** (`.github/workflows/eval.yml`): the v2 agent on
+  real models against a fresh Postgres in the job, the 5 original companies
+  every Monday 09:17 UTC (about $0.65), or all 48 by hand (`workflow_dispatch`,
+  with the cap as an input). The hard cap holds three ways: `run-eval.mjs
+  --max-usd` starts no company past it, the agent's `AGENT_DAILY_USD` is set
+  to the same amount (the job's database is new, so that covers the job
+  alone), and each run stops researching at its $1.50 budget: worst case,
+  the cap plus one run. New `run-eval.mjs --min-share 0.85` fails the job on
+  a regression (a failed run's fields count as wrong). Results go to the job
+  summary and an artifact, not a commit. **It does nothing until they add
+  the `ANTHROPIC_API_KEY` repository secret.** Checked: actionlint clean; the
+  eval step run locally against the local app (below); `--min-share` exits 1
+  on runs that failed.
+- **The 5 originals on today's agent (EDGAR on): 15/15**, median $0.122 and
+  37 s (`v2-day6-originals`).
+- **Approval gate**: with `V2_ADMIN_TOKEN` set, the decision route and MCP's
+  `decide_profile_run` need it as a bearer token (SHA-256 digests compared
+  in constant time); the run page asks for it after a 401 and keeps it for
+  the tab. Unset (local, preview): no change. Checked in headless Chrome:
+  refused without it, asked again after a wrong one, a run rejected with the
+  right one.
+- **README**: v2's graph (Mermaid), the results (48 companies, injection,
+  EDGAR), design decisions, running v2, every setting. The report's
+  methodology line no longer says all the ground truth was hand-checked.
+- **Fresh-context review** (the code-review skill at "high" on PR #2, no
+  context from these sessions): 10 findings, 9 fixed:
+  - a report cut off next to an EDGAR call left that call without a
+    tool_result, so the next request would fail;
+  - a run cut off before its first checkpoint could never be resumed
+    (`ainvoke(None)` on an empty thread raises `EmptyInputError`; checked);
+  - after an edit was saved, the page showed the writer's draft as "Profile"
+    (Day 5; checked in Chrome after the fix);
+  - resume didn't take from the per-IP quota;
+  - a late start response could put back an older state;
+  - a quick resume refusal was wiped by the next poll;
+  - blocked storage stopped runs from starting;
+  - a double checkpoint read per request;
+  - duplicated run-id and client-IP helpers.
+
+  Not changed: pricing a response whose model has no price at the configured
+  model's rate. It's deliberate (a dated model id would otherwise make every
+  cost unknown and stop all runs), and the API doesn't switch a request to a
+  costlier model.
+- 106 pytest, 121 vitest.
+
+### Decisions and why
+
+- **Weekly, not nightly**: the 5 companies scored 15/15 or 14/15 on every
+  v2 run since Day 4, so a weekly check catches a regression at about $3 a
+  month instead of $20. Theirs to change.
+- **Results as a job summary and an artifact, not a commit**: no bot commits
+  on main.
+- **The gate is a shared token, not accounts**: one owner approves; anyone
+  else can still start and read runs within the demo quota.
+
+### Known gaps
+
+- CI's `build` job failed once on `next/font/google` ("queries have exactly
+  one entry") with no font changes; the rerun passed, and a local build hit
+  it once too. Google Fonts are fetched at build time.
+
+### Waiting on them
+
+- Langfuse keys and region (tracing on, traced runs, the README screenshot).
+- The `ANTHROPIC_API_KEY` repository secret for the scheduled eval, and
+  whether it should stay on after the credits expire on 2026-11-16 (it
+  would fail weekly without credit).
+- Production, their explicit OK first: v2 needs a production database, the
+  agent's settings (`AGENT_MODELS`, `AGENT_DAILY_USD`), `V2_ADMIN_TOKEN`, and
+  `DEALSCOUT_MODEL` / `DEALSCOUT_EFFORT` re-created as Config. Without them,
+  `/v2` on production would answer that the agent is unreachable.
+- The merge (they run `gh pr merge`).
+
+### Spend
+
+Day 9: $0.63 (the 5 originals). Since 2026-11-10: $38.58.
