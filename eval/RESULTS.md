@@ -1,7 +1,9 @@
 # DealScout Accuracy Eval
 
 Methodology (borrowed from [EvalBoard](https://github.com/olioli9586/evalboard)):
-hand-checked ground truth, mechanical field grading with accepted-value lists,
+ground truth with accepted-value lists (the first 5 companies hand-checked, the
+other 43 checked by two independent automated lookups, not by hand:
+`eval/ground-truth-review.md`), mechanical field grading,
 every result reproducible via `node eval/run-eval.mjs <base-url> --label <label> [--api v2]`.
 Raw rows, profiles included: `eval/results/<label>.json`.
 
