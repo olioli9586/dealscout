@@ -18,6 +18,7 @@ Raw rows, profiles included: `eval/results/<label>.json`.
 | v1-48-haiku | v1: `claude-haiku-5-5`, effort `medium` | 2026-11-11 | 137/144 (95%) | 0/48 | 22 s | 0/48 | $0.030 | $1.866 | 2 | 2 | — | — | — |
 | v2-48 | v2: planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), verifier `claude-haiku-5-5` (low), writer `claude-haiku-5-5` (medium) | 2026-11-11 | 132/144 (92%) | 0/48 | 47.5 s | 0/48 | $0.134 | $6.549 | 12 | 11 | 5.9% | 1397/1996 (70%) | 28 |
 | v2-48-verifier-fix | v2: planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), verifier `claude-haiku-5-5` (low), writer `claude-haiku-5-5` (medium) | 2026-11-11 | 138/144 (96%) | 0/48 | 36 s | 0/48 | $0.125 | $6.457 | 10 | 10 | 5.3% | 1406/2018 (70%) | 27 |
+| v2-day6-originals | v2: planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), verifier `claude-haiku-5-5` (low), writer `claude-haiku-5-5` (medium) | 2026-11-11 | 15/15 (100%) | 0/5 | 37 s | 0/5 | $0.122 | $0.628 | 11 | 10 | 8.0% | 144/198 (73%) | 2 |
 
 ## v1
 
@@ -354,6 +355,20 @@ Agent: v2, planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medi
 | Glean | ✅ | ✅ | ✅ | 27s | $0.113 | 10 | 9 | 4 | 26/36 (0 source, 10 quote) |
 
 138/144 fields correct. website_domain: 47/48, founded_year: 47/48, hq_city: 44/48.
+
+## v2-day6-originals
+
+Agent: v2, planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), verifier `claude-haiku-5-5` (low), writer `claude-haiku-5-5` (medium). Base: `http://localhost:3100`. Spend cap: $1.000.
+
+| company | website | founded | HQ city | run time | cost | API requests | searches | fetches | claims supported |
+|---|---|---|---|---|---|---|---|---|---|
+| Anthropic | ✅ | ✅ | ✅ | 32s | $0.122 | 11 | 10 | 0 | 28/37 (0 source, 9 quote) |
+| Vercel | ✅ | ✅ | ✅ | 57s | $0.161 | 14 | 13 | 2 | 32/46 (0 source, 14 quote) |
+| Airbnb | ✅ | ✅ | ✅ | 37s | $0.110 | 11 | 9 | 0 | 27/37 (0 source, 10 quote) |
+| Shopify | ✅ | ✅ | ✅ | 66s | $0.126 | 14 | 10 | 0 | 30/41 (0 source, 11 quote) |
+| Datadog | ✅ | ✅ | ✅ | 31s | $0.109 | 11 | 9 | 1 | 27/37 (0 source, 10 quote) |
+
+15/15 fields correct. website_domain: 5/5, founded_year: 5/5, hq_city: 5/5.
 
 Notes:
 - Fields were chosen for *stability* (a website or founding year doesn't move);
