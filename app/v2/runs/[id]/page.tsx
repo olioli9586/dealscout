@@ -13,7 +13,9 @@ import {
   fromForm,
   getRun,
   isActive,
+  readAdminToken,
   resumeRun,
+  saveAdminToken,
   starts,
   toForm,
   type Change,
@@ -44,6 +46,9 @@ export default function RunPage() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState("");
   const [editing, setEditing] = useState(false);
+  // A decision this deployment refused for want of the admin token, to send
+  // again once it's entered.
+  const [refused, setRefused] = useState<Decision | null>(null);
   // Bumped to start polling again after a resume.
   const [pollRound, setPollRound] = useState(0);
   const startFailed = useRef(false);
@@ -104,10 +109,15 @@ export default function RunPage() {
   async function decide(decision: Decision) {
     setBusy(decision.action);
     setError("");
+    setRefused(null);
     try {
-      setRun(await decideRun(id, decision));
+      setRun(await decideRun(id, decision, readAdminToken()));
       setEditing(false);
     } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        saveAdminToken("");
+        setRefused(decision);
+      }
       setError((err as Error).message);
     } finally {
       setBusy("");
@@ -188,6 +198,14 @@ export default function RunPage() {
         </Notice>
       )}
       {error && <ErrorNote>{error}</ErrorNote>}
+      {refused && (
+        <TokenForm
+          onSubmit={(token) => {
+            saveAdminToken(token);
+            decide(refused);
+          }}
+        />
+      )}
 
       <Progress run={run} active={active} step={step} />
 
@@ -243,6 +261,37 @@ function Notice({ tone, children }: { tone: "red" | "green" | "grey"; children: 
     grey: "border-edge bg-surface text-soft",
   }[tone];
   return <div className={`mt-6 rounded-md border px-4 py-3 text-sm leading-relaxed ${style}`}>{children}</div>;
+}
+
+function TokenForm({ onSubmit }: { onSubmit: (token: string) => void }) {
+  const [token, setToken] = useState("");
+  return (
+    <form
+      className="mt-3 flex flex-wrap items-center gap-2"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (token.trim()) onSubmit(token.trim());
+      }}
+    >
+      <label htmlFor="admin-token" className="text-sm text-soft">
+        Admin token
+      </label>
+      <input
+        id="admin-token"
+        type="password"
+        autoComplete="off"
+        value={token}
+        onChange={(e) => setToken(e.target.value)}
+        className="min-w-0 flex-1 rounded-md border border-edge bg-surface px-3 py-1.5 font-mono text-sm text-ink"
+      />
+      <button
+        type="submit"
+        className="rounded-md bg-accent px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-accent-hover"
+      >
+        Send again
+      </button>
+    </form>
+  );
 }
 
 function ResumeButton({ busy, onClick }: { busy: string; onClick: () => void }) {

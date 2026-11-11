@@ -275,6 +275,21 @@ describe("MCP v2 tools", () => {
     expect(json.result.content[0].text).toBe("The run isn't waiting for approval.");
   });
 
+  it("needs the admin token to decide where V2_ADMIN_TOKEN is set", async () => {
+    const { POST } = await loadRoute();
+    vi.stubEnv("V2_ADMIN_TOKEN", "s3cret-token");
+    const args = { run_id: RUN, action: "approve" };
+    const refused = await (await POST(call("decide_profile_run", args))).json();
+    expect(refused.result.isError).toBe(true);
+    expect(refused.result.content[0].text).toMatch(/admin token/);
+    expect(fetchMock).not.toHaveBeenCalled();
+    const req = rpc({ jsonrpc: "2.0", id: 2, method: "tools/call", params: { name: "decide_profile_run", arguments: args } });
+    req.headers.set("authorization", "Bearer s3cret-token");
+    const json = await (await POST(req)).json();
+    expect(json.result.isError).toBeUndefined();
+    expect(agentCall().body).toEqual({ action: "approve" });
+  });
+
   it("reports an unreachable agent as a tool error", async () => {
     const { POST } = await loadRoute();
     vi.stubEnv("AGENT_URL", "");

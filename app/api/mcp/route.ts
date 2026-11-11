@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { runResearchAgent, type CompanyProfile } from "@/lib/agent";
+import { ADMIN_TOKEN_NEEDED, canDecide } from "@/lib/admin";
 import { forwardToAgent, isRunId, postJson } from "@/lib/agent-service";
 import { checkRateLimit } from "@/lib/rate-limit";
 import type { RunView } from "@/lib/v2-client";
@@ -233,6 +234,9 @@ async function decideRun(req: NextRequest, msg: JsonRpcRequest, args: ToolArgs) 
   }
   if (args.action !== "approve" && args.action !== "reject") {
     return rpcError(msg.id, -32602, 'Provide arguments.action: "approve" or "reject"');
+  }
+  if (!canDecide(req)) {
+    return toolError(msg.id, `${ADMIN_TOKEN_NEEDED} Send it as a bearer token (your MCP client's Authorization header).`);
   }
   const res = await forwardToAgent(`runs/${args.run_id}/decision`, postJson({ action: args.action }));
   return runReply(req, msg, res);

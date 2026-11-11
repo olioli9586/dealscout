@@ -95,9 +95,9 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
   return body as T;
 }
 
-const post = (body: unknown): RequestInit => ({
+const post = (body: unknown, headers: Record<string, string> = {}): RequestInit => ({
   method: "POST",
-  headers: { "content-type": "application/json" },
+  headers: { "content-type": "application/json", ...headers },
   body: JSON.stringify(body),
 });
 
@@ -105,8 +105,33 @@ const post = (body: unknown): RequestInit => ({
 export const startRun = (company: string, id: string) => call<RunView>("/api/v2/runs", post({ company, id }));
 export const getRun = (id: string) => call<RunView>(`/api/v2/runs/${id}`);
 export const resumeRun = (id: string) => call<RunView>(`/api/v2/runs/${id}/resume`, post({}));
-export const decideRun = (id: string, decision: Decision) =>
-  call<RunView>(`/api/v2/runs/${id}/decision`, post(decision));
+/** adminToken: for a deployment that restricts decisions (V2_ADMIN_TOKEN). */
+export const decideRun = (id: string, decision: Decision, adminToken = "") =>
+  call<RunView>(
+    `/api/v2/runs/${id}/decision`,
+    post(decision, adminToken ? { authorization: `Bearer ${adminToken}` } : {}),
+  );
+
+// The admin token, for this tab only. Storage can be unavailable (private
+// mode, blocked site data); then the page asks again next time.
+const ADMIN_TOKEN_KEY = "dealscout-v2-admin-token";
+
+export function readAdminToken(): string {
+  try {
+    return sessionStorage.getItem(ADMIN_TOKEN_KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+export function saveAdminToken(token: string): void {
+  try {
+    if (token) sessionStorage.setItem(ADMIN_TOKEN_KEY, token);
+    else sessionStorage.removeItem(ADMIN_TOKEN_KEY);
+  } catch {
+    // Not kept: the page asks again next time.
+  }
+}
 export const listRuns = (ids: string[]) =>
   ids.length ? call<RunSummary[]>(`/api/v2/runs?ids=${ids.join(",")}`) : Promise.resolve([]);
 

@@ -118,4 +118,35 @@ describe("v2 routes", () => {
     expect(res.status).toBe(400);
     expect(fetchMock).not.toHaveBeenCalled();
   });
+
+  it.each([
+    ["no token", {}],
+    ["a wrong token", { authorization: "Bearer nope" }],
+    ["the token without Bearer", { authorization: "s3cret-token" }],
+  ])("refuses a decision with %s where V2_ADMIN_TOKEN is set", async (_label, headers) => {
+    vi.stubEnv("V2_ADMIN_TOKEN", "s3cret-token");
+    const { POST } = await import("@/app/api/v2/runs/[id]/decision/route");
+    const body = JSON.stringify({ action: "approve" });
+    const req = request(`/api/v2/runs/${RUN}/decision`, {
+      method: "POST",
+      body,
+      headers: { "content-type": "application/json", ...headers },
+    });
+    const res = await POST(req, params(RUN));
+    expect(res.status).toBe(401);
+    expect((await res.json()).error).toMatch(/admin token/);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("passes a decision with the right token on", async () => {
+    vi.stubEnv("V2_ADMIN_TOKEN", "s3cret-token");
+    const { POST } = await import("@/app/api/v2/runs/[id]/decision/route");
+    const req = request(`/api/v2/runs/${RUN}/decision`, {
+      method: "POST",
+      body: JSON.stringify({ action: "approve" }),
+      headers: { "content-type": "application/json", authorization: "Bearer s3cret-token" },
+    });
+    expect((await POST(req, params(RUN))).status).toBe(200);
+    expect(agentCall().body).toEqual({ action: "approve" });
+  });
 });

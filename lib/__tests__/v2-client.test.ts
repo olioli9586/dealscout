@@ -4,11 +4,14 @@ import {
   HISTORY_KEY,
   HISTORY_MAX,
   branchProgress,
+  decideRun,
   fromForm,
   launch,
   listRuns,
+  readAdminToken,
   readHistory,
   remember,
+  saveAdminToken,
   startRun,
   starts,
   toForm,
@@ -24,6 +27,7 @@ function memoryStorage(initial?: string) {
   return {
     getItem: (k: string) => data.get(k) ?? null,
     setItem: (k: string, v: string) => void data.set(k, v),
+    removeItem: (k: string) => void data.delete(k),
     raw: () => data.get(HISTORY_KEY),
   };
 }
@@ -67,6 +71,35 @@ describe("api calls", () => {
     const id = launch("Ramp", storage);
     expect(readHistory(storage)).toEqual([id]);
     await expect(starts.get(id)).rejects.toMatchObject({ status: 503 });
+  });
+
+  it("sends the admin token with a decision only when there is one", async () => {
+    const fetchMock = vi.fn(async () => Response.json({}));
+    vi.stubGlobal("fetch", fetchMock);
+    await decideRun(A, { action: "approve" }, "s3cret-token");
+    await decideRun(A, { action: "reject" });
+    const headers = fetchMock.mock.calls.map((c) => (c as unknown as [string, RequestInit])[1].headers);
+    expect(headers).toEqual([
+      { "content-type": "application/json", authorization: "Bearer s3cret-token" },
+      { "content-type": "application/json" },
+    ]);
+  });
+
+  it("keeps the admin token for the tab, and forgets it on request", () => {
+    vi.stubGlobal("sessionStorage", memoryStorage());
+    saveAdminToken("s3cret-token");
+    expect(readAdminToken()).toBe("s3cret-token");
+    saveAdminToken("");
+    expect(readAdminToken()).toBe("");
+  });
+
+  it("does without the admin token where storage throws", () => {
+    const blocked = () => {
+      throw new DOMException("blocked", "SecurityError");
+    };
+    vi.stubGlobal("sessionStorage", { getItem: blocked, setItem: blocked, removeItem: blocked });
+    saveAdminToken("s3cret-token");
+    expect(readAdminToken()).toBe("");
   });
 
   it("asks for nothing when the history is empty", async () => {
