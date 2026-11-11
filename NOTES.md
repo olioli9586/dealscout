@@ -1028,3 +1028,106 @@ now $100 a month.
 - Day 6: tracing (needs their Langfuse keys) and MCP both ways.
 - Day 9: the scheduled CI eval, README, fresh-context review, merge.
 - Before 2026-11-16 (credits expire): TuneBench's Claude few-shot run.
+
+## Day 6 (2026-11-11, after Day 8): MCP both ways, tracing
+
+### Done
+
+- **MCP client: the funding researcher reads SEC EDGAR** (`agent/app/edgar.py`).
+  The server is cyanheads/secedgar-mcp-server (Apache 2.0), through its
+  public instance: no key, and it sends SEC its own User-Agent, so nothing
+  about whoever runs DealScout goes to sec.gov. At the start of a funding
+  pass the agent lists the server's tools over MCP (the official Python SDK,
+  2.3) and offers three of its 16 to the model: find a company, search
+  filings, read a filing. The research loop runs the calls: at most 4 a
+  pass, results cut to 12,000 characters, and the sec.gov URLs in results
+  join the sources a claim may cite (the Day 2 source check, unchanged).
+  An unreachable server leaves the pass with its web tools and a
+  `tool_errors` entry. `EDGAR_MCP_URL` picks the server; empty turns it off.
+- **MCP server: v2 tools on `/api/mcp`**, next to v1's `research_company`:
+  `start_profile_run` (waits for the draft; shares the per-IP daily quota),
+  `get_profile_run`, `decide_profile_run` (approve or reject). Each returns a
+  summary of the run with a link to its page.
+- **Tracing with Langfuse** (`agent/app/tracing.py`), **off until their keys
+  are set**: one trace per run (the trace id is the run id, so a resume and
+  the approval step add to the same trace), a span per graph node, a
+  generation per model request with its usage and the cost from
+  `app/pricing.py`, and a tool span per EDGAR call, with the MCP SDK's own
+  protocol span under it. Tested against an in-memory span exporter; no
+  real traces yet.
+- 104 pytest (EDGAR client against an in-process MCP server, the research
+  loop with EDGAR, tracing), 110 vitest.
+
+### Checked end to end (local, real models)
+
+The official MCP Python client against the local app's `/api/mcp`:
+`start_profile_run` on Ramp returned a draft in 28 s for $0.099; one of its
+deal signals is the Form D the funding researcher read over EDGAR's MCP
+server ("Form D ... filed October 16, 2026 shows $1,585,000,000 sold
+against a $1,850,000,000 total offering amount"), cited to its sec.gov
+URL. Approving saved version 1; approving again came back as a tool error
+("the run is not waiting for approval"). The client asked for MCP's
+2026-07-28 protocol first and fell back to this server's 2025-06-18. (The
+saved test profile was deleted from the dev database afterwards.)
+
+On the deployed preview (`vercel curl` to its `/api/mcp`): the four tools
+list, and `start_profile_run` on Databricks returned a draft in 39 s for
+$0.127 whose funding_status includes "Form D for Databricks, Inc. filed
+2026-08-27 shows total amount sold of $241,204,249 USD", cited to sec.gov:
+the agent reaches the EDGAR server from Vercel.
+
+### Results: the funding researcher with and without EDGAR (`eval/edgar.py`)
+
+Only the funding researcher and the verifier, on 10 companies (6 private
+US, 2 public US, 2 outside the US), twice:
+
+| setup | claims verified | citing sec.gov | cost (10 companies) |
+|---|---|---|---|
+| web only | 48/81, 54/83 (59%, 65%) | 4, 5 | $0.250, $0.251 |
+| with EDGAR | 57/71, 60/80 (80%, 75%) | 11, 12 | $0.154, $0.168 |
+
+- **More claims verified, for about a third less.** With EDGAR the model ran
+  about one web search a pass instead of two (searches are $0.01 each); the
+  three tool definitions add 6,137 input tokens (counted), cheap at Haiku's
+  rates and cached.
+- **Form D is primary-source data the web often lacks**: amount sold, total
+  offering, filing date. The first try lost its filing claim to the
+  verifier (the value added a date and total the quote didn't state); the
+  guide now asks for one claim per fact, each quoting the filing's line.
+- funding_status isn't a graded field, so this counts claims, not
+  correctness.
+
+### Decisions and why
+
+- **The researcher calls EDGAR client-side (the MCP SDK in the agent), not
+  through the Messages API's MCP connector**: the loop sees every call, so
+  it can cap calls and result size, add sec.gov URLs to the citable
+  sources, and trace each call. The connector would need none of that code
+  but hides it all.
+- **A third party's hosted server, not one written here**: the point is
+  consuming an MCP server someone else built and runs. The cost is uptime
+  that isn't ours, hence the fallback to web tools. The same package could
+  be self-hosted (it then needs an SEC User-Agent with contact details).
+- **A connection per EDGAR call**: the server is stateless, and a failure,
+  including while closing, stays inside that call (about 0.4 s each).
+- **Our cost on each generation, not Langfuse's price table**, which may not
+  know Haiku 5.5 or the web search fee.
+
+### Known gaps
+
+- No real traces or trace screenshot until they add the Langfuse keys.
+- `decide_profile_run` has no auth, like the web route it mirrors; the
+  approval gate planned for production covers both.
+
+### Spend
+
+Day 6: $1.09 (EDGAR probe $0.04, two comparison runs $0.82, the MCP checks
+on Ramp locally $0.10 and Databricks on the preview $0.13). Since
+2026-11-10: $37.95.
+
+### Next
+
+- Tracing on: their Langfuse keys and region, then traced runs locally and
+  on the preview, and the screenshot for the README.
+- Day 9: the scheduled CI eval, README, fresh-context review, merge.
+- Before 2026-11-16: TuneBench's Claude few-shot run.
