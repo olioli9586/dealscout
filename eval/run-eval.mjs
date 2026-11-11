@@ -28,6 +28,11 @@
 // memory (that is how the memory runs were made; clear the profiles table
 // afterwards for memory-free runs again).
 //
+// --min-share 0.85 makes the eval exit with status 1 when fewer than that
+// share of the fields are correct, counting every company that ran (a
+// failed run's fields count as wrong; companies the spend cap skipped
+// don't count): the scheduled eval in CI fails on a regression.
+//
 // --max-usd is a hard spend cap: no new company starts once the runs so far
 // cost that much, and a run that reports no cost stops the eval, because the
 // cap can't be enforced without it. One run is bounded by the agent's own
@@ -47,6 +52,7 @@ const { values: opts, positionals } = parseArgs({
     concurrency: { type: "string", default: "1" },
     only: { type: "string", default: "" },
     merge: { type: "boolean", default: false },
+    "min-share": { type: "string", default: "0" },
   },
 });
 const BASE = positionals[0] ?? "https://dealscout-gamma.vercel.app";
@@ -55,6 +61,8 @@ if (!Number.isFinite(MAX_USD) || MAX_USD <= 0) throw new Error("--max-usd must b
 if (!/^[\w.-]+$/.test(opts.label)) throw new Error("--label may only use letters, digits, '.', '_' and '-'");
 if (!["v1", "v2"].includes(opts.api)) throw new Error("--api must be v1 or v2");
 if (opts.approve && opts.api !== "v2") throw new Error("--approve is for --api v2 runs");
+const MIN_SHARE = Number(opts["min-share"]);
+if (!(MIN_SHARE >= 0 && MIN_SHARE <= 1)) throw new Error("--min-share must be from 0 to 1");
 const CONCURRENCY = Number(opts.concurrency);
 if (!Number.isInteger(CONCURRENCY) || CONCURRENCY < 1 || CONCURRENCY > 8) throw new Error("--concurrency must be 1 to 8");
 const truth = JSON.parse(readFileSync(new URL("./ground-truth.json", import.meta.url)));
@@ -267,3 +275,10 @@ writeFileSync(
 writeReport();
 const usd = (x) => (typeof x === "number" ? `$${x.toFixed(3)}` : "—");
 console.log(`\n${totalPass}/${totalCells} fields correct, ${usd(spent)} spent — wrote eval/results/${opts.label}.json and eval/RESULTS.md`);
+
+const ran = rows.filter((r) => !r.skipped).length * fields.length;
+const share = ran ? totalPass / ran : 0;
+if (share < MIN_SHARE) {
+  console.log(`FAIL: ${totalPass}/${ran} fields correct (${(100 * share).toFixed(1)}%) is below --min-share ${MIN_SHARE}`);
+  process.exitCode = 1;
+}
