@@ -60,10 +60,15 @@ describe("MCP endpoint", () => {
     expect(json.result.capabilities).toHaveProperty("tools");
   });
 
-  it("lists the research_company tool", async () => {
+  it("lists the v1 tool and the three v2 tools", async () => {
     const { POST } = await loadRoute();
     const json = await (await POST(rpc({ jsonrpc: "2.0", id: "a", method: "tools/list" }))).json();
-    expect(json.result.tools.map((t: { name: string }) => t.name)).toEqual(["research_company"]);
+    expect(json.result.tools.map((t: { name: string }) => t.name)).toEqual([
+      "research_company",
+      "start_profile_run",
+      "get_profile_run",
+      "decide_profile_run",
+    ]);
   });
 
   it("accepts notifications with 202 and no body", async () => {
@@ -165,5 +170,116 @@ describe("MCP endpoint", () => {
     const res = await GET();
     expect(res.status).toBe(405);
     expect(res.headers.get("Allow")).toBe("POST");
+  });
+});
+
+const RUN = "0b6f3b5e-6a4e-4a8e-9a43-3f1e2d9c7b10";
+
+// Enough of the agent's run view for the summary.
+const VIEW = {
+  id: RUN,
+  company: "Ramp",
+  status: "awaiting_approval",
+  error: null,
+  draft: { company_name: "Ramp", website: "https://ramp.com" },
+  changes: null,
+  verdicts: [
+    { branch: "business", rejected: [] },
+    { branch: "funding", rejected: [{ field: "funding_status", value: "x", check: "quote", reason: "r" }] },
+  ],
+  saved_version: null,
+  usage: { cost_usd: 0.12, calls: [{ node: "planner" }] },
+};
+
+describe("MCP v2 tools", () => {
+  const fetchMock = vi.fn();
+
+  function call(name: string, args: Record<string, unknown>) {
+    return rpc({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name, arguments: args } });
+  }
+
+  function agentCall(i = 0) {
+    const [url, init] = fetchMock.mock.calls[i];
+    return { url: String(url), method: init?.method ?? "GET", body: init?.body ? JSON.parse(init.body) : null };
+  }
+
+  beforeEach(() => {
+    vi.stubEnv("AGENT_URL", "https://agent.internal");
+    fetchMock.mockReset().mockImplementation(async () => Response.json(VIEW));
+    vi.stubGlobal("fetch", fetchMock);
+  });
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+  });
+
+  it("starts a run and returns a summary with a link to its page", async () => {
+    const { POST } = await loadRoute();
+    const json = await (await POST(call("start_profile_run", { company: " Ramp " }))).json();
+    expect(agentCall()).toEqual({ url: "https://agent.internal/runs", method: "POST", body: { company: "Ramp" } });
+    expect(json.result.isError).toBeUndefined();
+    const summary = JSON.parse(json.result.content[0].text);
+    expect(summary).toMatchObject({
+      id: RUN,
+      status: "awaiting_approval",
+      page: `http://localhost/v2/runs/${RUN}`,
+      draft: VIEW.draft,
+      cost_usd: 0.12,
+    });
+    expect(summary.rejected_claims).toEqual([VIEW.verdicts[1].rejected[0]]);
+    // The per-call usage stays out of the summary.
+    expect(summary.usage).toBeUndefined();
+  });
+
+  it("shares the per-IP daily limit with v1", async () => {
+    const { POST } = await loadRoute("1");
+    await POST(call("start_profile_run", { company: "Ramp" }));
+    const json = await (await POST(call("start_profile_run", { company: "Ramp" }))).json();
+    expect(json.result.isError).toBe(true);
+    expect(json.result.content[0].text).toMatch(/limit/i);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("reads a run and answers its approval step", async () => {
+    const { POST } = await loadRoute();
+    await POST(call("get_profile_run", { run_id: RUN }));
+    await POST(call("decide_profile_run", { run_id: RUN, action: "approve" }));
+    expect(agentCall(0)).toMatchObject({ url: `https://agent.internal/runs/${RUN}`, method: "GET" });
+    expect(agentCall(1)).toEqual({
+      url: `https://agent.internal/runs/${RUN}/decision`,
+      method: "POST",
+      body: { action: "approve" },
+    });
+  });
+
+  it.each([
+    ["start_profile_run", { company: "  " }],
+    ["get_profile_run", { run_id: "../health" }],
+    ["get_profile_run", {}],
+    ["decide_profile_run", { run_id: RUN, action: "edit" }],
+    ["decide_profile_run", { run_id: 7, action: "approve" }],
+  ])("rejects bad arguments to %s with -32602 without calling the agent", async (name, args) => {
+    const { POST } = await loadRoute();
+    const json = await (await POST(call(name, args))).json();
+    expect(json.error.code).toBe(-32602);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("reports the agent's errors as tool errors", async () => {
+    const { POST } = await loadRoute();
+    fetchMock.mockImplementation(async () =>
+      Response.json({ detail: "The run isn't waiting for approval." }, { status: 409 }),
+    );
+    const json = await (await POST(call("decide_profile_run", { run_id: RUN, action: "reject" }))).json();
+    expect(json.result).toMatchObject({ isError: true });
+    expect(json.result.content[0].text).toBe("The run isn't waiting for approval.");
+  });
+
+  it("reports an unreachable agent as a tool error", async () => {
+    const { POST } = await loadRoute();
+    vi.stubEnv("AGENT_URL", "");
+    const json = await (await POST(call("get_profile_run", { run_id: RUN }))).json();
+    expect(json.result.isError).toBe(true);
+    expect(json.result.content[0].text).toMatch(/unreachable/);
   });
 });
