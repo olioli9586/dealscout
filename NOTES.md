@@ -1197,7 +1197,8 @@ on Ramp locally $0.10 and Databricks on the preview $0.13). Since
 
 - CI's `build` job failed once on `next/font/google` ("queries have exactly
   one entry") with no font changes; the rerun passed, and a local build hit
-  it once too. Google Fonts are fetched at build time.
+  it once too. Google Fonts are fetched at build time. (Fixed after the
+  merge: the fonts ship in the repo now, see below.)
 
 ### Tracing on (their Langfuse keys, EU region)
 
@@ -1251,3 +1252,28 @@ Langfuse's API:
 
 Day 9: $0.99 (the 5 originals $0.63, three traced runs $0.36). Since
 2026-11-10: $38.94.
+
+### After the merge (PR #2, merge commit 0320618)
+
+They set up production themselves (the steps above): a new Neon database
+`dealscout-prod-db` connected to Production only, `AGENT_MODELS` and
+`AGENT_DAILY_USD=3`, `V2_ADMIN_TOKEN` (Secret; their copy in
+`.env.admin.local`), and the `ANTHROPIC_API_KEY` repository secret. PR #2
+was still a draft; they marked it ready and merged it.
+
+- **Live site checked:** `/api/v2/health` lists both migrations (the build
+  migrated the new database); a v2 run on Cloudflare drafted in 58 s for
+  $0.161 with one EDGAR call, website, HQ and founding year right, the
+  funding line from the S-1. Approving answered 401 without a token and
+  with a wrong one, and saved version 1 with theirs. The live `/api/mcp`
+  lists the four tools.
+- **The first CI eval run failed before spending anything:** `npm run
+  build` hit the `next/font/google` error again (the third time in a day:
+  a local build, PR #2's CI, this run). So the three fonts now ship in
+  `app/fonts` (Latin woff2 files from Fontsource 5.3.0, with their SIL Open
+  Font License texts) through `next/font/local`, same weights and CSS
+  variables. Three local builds in a row passed; the live page and the
+  local build render the same in screenshots, with the same fonts loaded.
+
+Spend: $0.16 (the live run). Since 2026-11-10: $39.10.
+
