@@ -135,9 +135,12 @@ in 1 of 15 runs. [Details](eval/injection/RESULTS.md).
   web tools.
 - **Tracing with Langfuse** (`agent/app/tracing.py`), on when its keys are set.
   There's one trace per run, so a resume or the approval step joins the run's
-  trace. It has a span per graph node and a generation per model request, with
-  usage and this app's own cost, and a tool span per EDGAR call with the MCP
-  SDK's protocol span inside it.
+  trace. It has a span per graph node, a generation per model request with
+  usage and this app's own cost, and a tool span per EDGAR call. The Anthropic
+  SDK's own spans are left out: Langfuse priced them at a sixth of the real
+  cost. The trace id is a hash of the run id, because the MCP client sends
+  the trace context to the EDGAR server and a run id would let anyone read
+  the run.
 - **Approvals are gated on public deployments.** An approval writes the profile
   every later run starts from, so with `V2_ADMIN_TOKEN` set, deciding a run
   needs that token (the run page asks for it; MCP clients send it as a bearer

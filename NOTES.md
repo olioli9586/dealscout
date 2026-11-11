@@ -1049,12 +1049,13 @@ now $100 a month.
   `get_profile_run`, `decide_profile_run` (approve or reject). Each returns a
   summary of the run with a link to its page.
 - **Tracing with Langfuse** (`agent/app/tracing.py`), **off until their keys
-  are set**: one trace per run (the trace id is the run id, so a resume and
-  the approval step add to the same trace), a span per graph node, a
-  generation per model request with its usage and the cost from
-  `app/pricing.py`, and a tool span per EDGAR call, with the MCP SDK's own
-  protocol span under it. Tested against an in-memory span exporter; no
-  real traces yet.
+  are set**: one trace per run (a resume and the approval step add to the
+  same trace), a span per graph node, a generation per model request with
+  its usage and the cost from `app/pricing.py`, and a tool span per EDGAR
+  call. Tested against an in-memory span exporter. (Corrected on Day 9 with
+  real traces: the trace id was the run id itself, now a hash of it; and the
+  "MCP protocol span" seen in the tests came from the in-process test
+  server, so a remote server's calls have none.)
 - 104 pytest (EDGAR client against an in-process MCP server, the research
   loop with EDGAR, tracing), 110 vitest.
 
@@ -1198,9 +1199,35 @@ on Ramp locally $0.10 and Databricks on the preview $0.13). Since
   one entry") with no font changes; the rerun passed, and a local build hit
   it once too. Google Fonts are fetched at build time.
 
+### Tracing on (their Langfuse keys, EU region)
+
+Two traced runs locally (start, then approve), read back through Langfuse's
+API:
+
+- **Vanta**: 34 observations, but every model request was there twice: the
+  Anthropic SDK (2.6) traces its own requests with OpenTelemetry, and
+  Langfuse keeps gen_ai spans by default. Langfuse priced the SDK's copies
+  at $0.02 for a run that cost $0.114 (no reasoning tokens, no search
+  fees), and counted both copies toward the trace's total and the free
+  tier's units. Fix: the Langfuse client leaves out spans from the SDK's
+  scope (`com.anthropic.sdk.python`). A test checks that the SDK's span
+  goes and an MCP span stays; a one-off script showed a plain client
+  exports the SDK's span.
+- **Ramp**, after the fix: 25 observations (2 agent roots, 9 spans, 12
+  generations for 12 model requests, 2 EDGAR tool spans); Langfuse's total,
+  $0.0991, is the run's cost to the cent.
+- **The trace id was the run id**, and the MCP client sends the current
+  trace context (W3C `traceparent` in `_meta`) with every request: the EDGAR
+  server's operator would see run ids, and a run id is enough to read the
+  run through the public API (and approve it where no admin token is set).
+  The trace id is now `create_trace_id(seed=run_id)`, a SHA-256 of the run
+  id. Today's two traced runs sent theirs; both live only in the local
+  database.
+- The test profiles both runs saved were deleted from the dev database.
+
 ### Waiting on them
 
-- Langfuse keys and region (tracing on, traced runs, the README screenshot).
+- The trace screenshot for the README (Langfuse needs their login).
 - The `ANTHROPIC_API_KEY` repository secret for the scheduled eval, and
   whether it should stay on after the credits expire on 2026-11-16 (it
   would fail weekly without credit).
@@ -1213,4 +1240,5 @@ on Ramp locally $0.10 and Databricks on the preview $0.13). Since
 
 ### Spend
 
-Day 9: $0.63 (the 5 originals). Since 2026-11-10: $38.58.
+Day 9: $0.84 (the 5 originals $0.63, two traced runs $0.21). Since
+2026-11-10: $38.79.
