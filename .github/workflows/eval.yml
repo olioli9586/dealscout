@@ -6,7 +6,9 @@ name: eval
 # daily cap (each job gets a fresh database, so the cap covers this job
 # alone), and each run stops researching at its own $1.50 budget. Worst
 # case: MAX_USD plus one run. Nothing runs without the ANTHROPIC_API_KEY
-# repository secret.
+# repository secret, or when the API refuses a one-token test request (an
+# account with no credit left, say): the job is then skipped with a
+# warning, not failed, since that's not a regression.
 
 on:
   schedule:
@@ -31,26 +33,34 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Secrets can't be read in a job's `if`, so this job checks for the key.
+  # Secrets can't be read in a job's `if`, so this job checks the key.
   key:
     runs-on: ubuntu-latest
     outputs:
-      present: ${{ steps.check.outputs.present }}
+      ready: ${{ steps.check.outputs.ready }}
     steps:
       - id: check
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          if [ -n "$ANTHROPIC_API_KEY" ]; then
-            echo "present=true" >> "$GITHUB_OUTPUT"
-          else
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
             echo "::notice::No ANTHROPIC_API_KEY repository secret, so the eval is skipped."
-            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          code=$(curl -s -o reply.json -w '%{http_code}' https://api.anthropic.com/v1/messages \
+            -H "x-api-key: $ANTHROPIC_API_KEY" -H "anthropic-version: 2023-06-01" -H "content-type: application/json" \
+            -d '{"model":"claude-haiku-5-5","max_tokens":1,"messages":[{"role":"user","content":"hi"}]}')
+          if [ "$code" = 200 ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::The API refused a test request (HTTP $code: $(jq -r '.error.message // empty' reply.json)), so the eval is skipped."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
           fi
 
   eval:
     needs: key
-    if: needs.key.outputs.present == 'true'
+    if: needs.key.outputs.ready == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     services:
