@@ -934,3 +934,97 @@ TuneBench's Claude run: $26.40.
 
 - Day 8 as soon as they've checked `eval/ground-truth-review.md`.
 - Day 6 (tracing, MCP) once they've created a Langfuse account; Day 9.
+
+## Day 8 (2026-11-10/11): 48 companies, v1 vs v2
+
+### Done
+
+- **Ground truth from 5 to 48 companies** (`eval/ground-truth.json`): 43
+  public, private and newer companies, US and international. They asked
+  for the check to be done for them, so it is **not hand-checked**: lookup
+  agents drafted each row from public sources, and a second, independent
+  agent pass opened every cited source plus another and tried to prove
+  each value wrong; it changed four rows (Vanta, Wise, Spotify, Grab).
+  Rules: a founding year counts if a reputable source gives it as the
+  founding (not a rename, launch or later entity); the HQ is the current
+  operating one. Linear and Mercury were dropped (no stated HQ). Every row's
+  source and the judgment calls: `eval/ground-truth-review.md`. One lookup
+  agent put their email in a sec.gov request header once; reported to them.
+- **Eval tooling**: `--concurrency` (48 v1 runs at ~4 minutes each would
+  otherwise take 3 hours), `--only` with `--merge` to rerun named
+  companies, and new summary columns: runs over 300 s, median model
+  requests (steps) and searches (tool calls). `eval/replay.py` replays the
+  verifier and writer on a saved run's own findings, about $0.004 a
+  company, to measure a verifier change on the same research.
+- **Two agent fixes from the runs**: the HQ hint says no street address
+  (Day 4's leftover), and the verifier accepts a city's added region or
+  country (see below).
+
+### Results (48 companies, 144 fields, `eval/RESULTS.md`)
+
+| setup | fields correct | median cost | median time | runs over 300 s |
+|---|---|---|---|---|
+| v1, Sonnet 4.6 (the Day 1 baseline's setup) | 142/144 (98.6%) | $0.248 | 226 s | 11/48 |
+| v1, Haiku 5.5 (v2's model) | 137/144 (95.1%) | $0.030 | 22 s | 0/48 |
+| v2, Haiku 5.5, Day 4 verifier | 132/144 (91.7%) | $0.134 | 48 s | 0/48 |
+| v2, Haiku 5.5, region rule | 138/144 (95.8%) | $0.125 | 36 s | 0/48 |
+
+v2: 10 to 12 model requests and 10 to 11 searches per run (v1: 2 and 2
+to 3, its searches running inside long requests); about 70% of v2's
+claims pass the verifier (1,406 of 2,018). No run failed in any setup
+once four v1 runs that lost the network at the same moment
+(`EHOSTUNREACH`) were rerun.
+
+### What the runs show
+
+- **On the same model, v2 costs about 4x v1 for the same field accuracy**
+  (138 against 137; one field is noise). The multi-agent design doesn't buy
+  accuracy on stable facts; what it buys isn't in these three fields: every
+  field backed by claims that passed a source and quote check, memory
+  across runs, an approval step, resume after a crash, and no injected
+  content reaching a draft (v1 on Sonnet: 1 in 15).
+- **v1 on Sonnet 4.6 is the most accurate and too slow to deploy as is**:
+  11 of 48 runs took over 300 s, where the deployed function stops, so
+  about a quarter would fail on the live demo. v2's parallel researchers
+  keep every run under 3 minutes (longest 160 s).
+- **v1 on Haiku's 6 misses on Klarna and Ramp are Haiku's malformed search
+  input** ("the search tool returned input errors on repeated attempts"),
+  the bug v2 fixed on Day 4 with `strict` web tools. v1 stays as it was: it's
+  the baseline.
+- **The first v2 run lost four HQs to the verifier** (Toast, DoorDash,
+  Samsara, Okta): the field asks for city, region and country, and Haiku
+  rejected "San Francisco, California, United States" against a quote with
+  "San Francisco, California". With a rule that adding a city's region or
+  country is fine, a replay on the same findings went 132 to 136 ($0.18);
+  a full rerun scored 138. The difference between those two is run-to-run
+  noise, about two fields.
+- **v2's remaining misses**: three HQs left unknown (Nubank, Figma, Modal),
+  Canva's HQ given as Surry Hills (its Sydney suburb; the city rule grades
+  it wrong, and the answers weren't changed after seeing results), Gusto's
+  2012 (v1 Sonnet gave the same), Harvey's website unknown.
+- **The reworded injection line (Day 7) didn't cost accuracy**: the 5
+  original companies scored 15/15 in both 48-company runs (Day 4: 14/15).
+
+### Decisions and why
+
+- **Ground truth checked by agents, labeled as such**: their call; the file
+  and the review sheet say how each row was checked, and a person's spot
+  check would still strengthen it.
+- **v1's network failures rerun, not counted against it**: all four hit
+  `read EHOSTUNREACH` at the same moment on this laptop.
+- **Keep v2, and say plainly what it costs.** At the same model it's 4x the
+  price for the same graded accuracy; the case for it is verifiability,
+  control and fitting the deployed time limit.
+
+### Spend
+
+Day 8: $28.26 (v2 $6.55, replay $0.18, v1 Sonnet $13.20, v2 with the
+region rule $6.46, v1 Haiku $1.87). Since 2026-11-10: $36.86. They removed
+the $35 cap partway through (about $27 spent then); the Console limit is
+now $100 a month.
+
+### Next
+
+- Day 6: tracing (needs their Langfuse keys) and MCP both ways.
+- Day 9: the scheduled CI eval, README, fresh-context review, merge.
+- Before 2026-11-16 (credits expire): TuneBench's Claude few-shot run.
