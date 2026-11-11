@@ -1,0 +1,644 @@
+{
+  "label": "edgar-funding-2",
+  "cost_usd": 0.41854,
+  "rows": [
+    {
+      "company": "Ramp",
+      "setup": "edgar",
+      "claims": 8,
+      "supported": 5,
+      "sec_claims": 2,
+      "sec_supported": 2,
+      "mcp_tool_calls": 2,
+      "searches": 1,
+      "cost_usd": 0.01351908,
+      "seconds": 15.0,
+      "tool_errors": [],
+      "funding_status": [
+        "Roughly $5B total equity funding raised to date"
+      ],
+      "rejected": [
+        {
+          "value": "Raised $1.85B in a round at a $60B valuation, announced Oct 15, 2026",
+          "source_url": "https://www.axios.com/pro/fintech-deals/2026/10/15/ramp-valuation-60-billion-funding-round",
+          "reason": "the quote doesn't support it (Quote states $1.85B raise at $60B valuation announced Thursday; value says Oct 15, 2026 date not in quote but Thursday is not stated as date)"
+        },
+        {
+          "value": "Series F of $750M in June 2026 at a $44B valuation, led by ICONIQ, GIC and Ontario Teachers' Pension Plan",
+          "source_url": "https://techstartups.com/2026/06/04/fintech-startup-ramp-hits-44b-valuation-after-raising-750m-in-new-funding-round/",
+          "reason": "the quote doesn't support it (Quote names ICONIQ, GIC, Ontario Teachers as leads but says nothing about Series F, $750M, June 2026, or $44B valuation)"
+        },
+        {
+          "value": "Bloomberg reported the $60B valuation was pre-money, excluding the capital raised",
+          "source_url": "https://uk.finance.yahoo.com/news/ramp-hits-60-billion-valuation-203610650.html",
+          "reason": "the quote doesn't support it (Quote says $60B valuation is pre-money, excluding capital raised; value says Bloomberg reported it, which the quote does not attribute by name)"
+        }
+      ]
+    },
+    {
+      "company": "Ramp",
+      "setup": "web only",
+      "claims": 10,
+      "supported": 5,
+      "sec_claims": 0,
+      "sec_supported": 0,
+      "mcp_tool_calls": 0,
+      "searches": 2,
+      "cost_usd": 0.023832810000000003,
+      "seconds": 12.5,
+      "tool_errors": [],
+      "funding_status": [
+        "Roughly $5B of total equity funding raised to date, including the October 2026 round",
+        "The $60B valuation is pre-money, excluding the capital raised in the round"
+      ],
+      "rejected": [
+        {
+          "value": "Privately held; raised $1.85B in a primary round at a $60B valuation, announced October 15, 2026",
+          "source_url": "https://www.axios.com/pro/fintech-deals/2026/10/15/ramp-valuation-60-billion-funding-round",
+          "reason": "the quote doesn't support it (quote states $1.85B raised at $60B valuation announced Thursday; no 'Privately held' stated but round details match, date Oct 15 not in quote but Thursday; value's privately held not in quote)"
+        },
+        {
+          "value": "June 2026 Series F: $750M primary round at a $44B valuation, led by ICONIQ, GIC and Ontario Teachers' Pension Plan",
+          "source_url": "https://www.prnewswire.com/news-releases/ramp-raises-series-f-at-44-billion-valuation-302791103.html",
+          "reason": "the quote doesn't support it (quote states $750M primary round led by ICONIQ, GIC, Ontario Teachers' at $44B valuation; June date not stated in quote)"
+        },
+        {
+          "value": "Valuation rose about 36% in four months, from $44B in June to $60B in October 2026",
+          "source_url": "https://dealroom.co/news/149663-ramp-targets-1b-raise-at-60b-valuation-up-from-44b-in-june/",
+          "reason": "the quote doesn't support it (quote says raise lifts valuation by more than a third in months; does not give $44B, June, or 36% figure)"
+        },
+        {
+          "value": "Early talks for a round of about $1B at roughly $60B were reported in September 2026, before the round closed",
+          "source_url": "https://finance.yahoo.com/markets/stocks/articles/ramp-eyes-60-billion-valuation-202539383.html",
+          "reason": "the quote doesn't support it (quote says early-stage talks for a round valuing company at roughly $60B; no September 2026 date stated and no $1B amount in quote)"
+        },
+        {
+          "value": "Round-by-round history shows a Series E at $16B in June 2025 and $22.5B in July 2025, with a $32B valuation by November 2025",
+          "source_url": "https://en.wikipedia.org/wiki/Ramp_(company)",
+          "reason": "the quote doesn't support it (quote covers only the November 2025 $32B valuation; nothing about Series E at $16B in June 2025 or $22.5B in July 2025)"
+        }
+      ]
+    },
+    {
+      "company": "Rippling",
+      "setup": "edgar",
+      "claims": 9,
+      "supported": 8,
+      "sec_claims": 0,
+      "sec_supported": 0,
+      "mcp_tool_calls": 2,
+      "searches": 1,
+      "cost_usd": 0.013883965,
+      "seconds": 19.1,
+      "tool_errors": [],
+      "funding_status": [
+        "Prior valuation was $13.5B from early 2024",
+        "Series G investors include Elad Gil, Sands Capital, GIC, Goldman Sachs Alternatives, Baillie Gifford, and Y Combinator, plus existing investors",
+        "Total funding of about $1.85B across multiple rounds (per Sacra estimate)",
+        "Series F in 2024 was led by Coatue Management"
+      ],
+      "rejected": [
+        {
+          "value": "Raised $450M in Series G round in May 2025, valuing the company at $16.8B",
+          "source_url": "https://finance.yahoo.com/news/hr-tech-firm-rippling-raises-170216938.html",
+          "reason": "the quote doesn't support it (quote states $450M Series G at $16.8B valuation; May 2025 date not in quote but value adds date not stated)"
+        }
+      ]
+    },
+    {
+      "company": "Rippling",
+      "setup": "web only",
+      "claims": 8,
+      "supported": 7,
+      "sec_claims": 0,
+      "sec_supported": 0,
+      "mcp_tool_calls": 0,
+      "searches": 2,
+      "cost_usd": 0.023890985,
+      "seconds": 13.4,
+      "tool_errors": [],
+      "funding_status": [
+        "Privately held; no public stock listing",
+        "Series G: $450M raised at a $16.8B valuation, announced May 9, 2025 by CEO Parker Conrad",
+        "About $1.85B total funding raised across rounds, per TechCrunch"
+      ],
+      "rejected": [
+        {
+          "value": "Secondary-market trading implied roughly a $13.27B market cap in early June 2026, about 21% below the last round",
+          "source_url": "https://www.hustlefund.vc/post/angel-squad-rippling-pre-ipo-shares-what-accredited-investors-should-know-in-2026",
+          "reason": "the quote doesn't support it (quote gives 21% discount to last round only; no $13.27B market cap or June 2026 date stated)"
+        }
+      ]
+    },
+    {
+      "company": "Anduril",
+      "setup": "edgar",
+      "claims": 10,
+      "supported": 7,
+      "sec_claims": 0,
+      "sec_supported": 0,
+      "mcp_tool_calls": 1,
+      "searches": 2,
+      "cost_usd": 0.024735465,
+      "seconds": 18.6,
+      "tool_errors": [],
+      "funding_status": [
+        "Prior round was a June 2025 round at a $30.5B valuation, which included a $1B check from Founders Fund",
+        "Named investors include Thrive Capital, Andreessen Horowitz, Founders Fund, ICONIQ, Flux Capital, Greycroft, Altimeter and 1789 Capital"
+      ],
+      "rejected": [
+        {
+          "value": "Privately held; latest completed round is a $5B raise in May 2026, led by Thrive Capital and Andreessen Horowitz, at a $61B valuation",
+          "source_url": "https://www.cnbc.com/2026/05/13/anduril-valuation-defense-tech-funding-boom.html",
+          "reason": "the quote doesn't support it (quote says $5B round led by Thrive and a16z at $61B valuation; value says privately held and May 2026 date not in quote)"
+        },
+        {
+          "value": "Reported in July 2026 (Reuters, citing anonymous sources) to be raising a new round that could value Anduril at about $100B, possibly in two stages",
+          "source_url": "https://techcrunch.com/2026/07/24/anduril-reportedly-in-talks-to-raise-funding-at-100b-valuation-more-than-3x-last-years-mark/",
+          "reason": "the quote doesn't support it (quote says raising a round valuing Anduril near $100B per Reuters; value adds July 2026 date, anonymous sources and two-stage detail not stated)"
+        },
+        {
+          "value": "Founder Palmer Luckey has said Anduril will go public, but the CEO has said listing in a hype cycle would be a mistake (July 2026)",
+          "source_url": "https://everything-pr.com/anduril-ipo-watch-defense-tech-communications-strategy",
+          "reason": "the quote doesn't support it (quote says CEO Schimpf said listing mid-hype cycle would be a mistake; value says founder Luckey said it will go public, which the quote does not state)"
+        }
+      ]
+    },
+    {
+      "company": "Anduril",
+      "setup": "web only",
+      "claims": 8,
+      "supported": 4,
+      "sec_claims": 0,
+      "sec_supported": 0,
+      "mcp_tool_calls": 0,
+      "searches": 2,
+      "cost_usd": 0.024033660000000002,
+      "seconds": 14.7,
+      "tool_errors": [],
+      "funding_status": [
+        "Has raised more than $11 billion from investors in total"
+      ],
+      "rejected": [
+        {
+          "value": "Latest round: $5B Series H at a $61B valuation (May 2026), led by Thrive Capital and Andreessen Horowitz",
+          "source_url": "https://www.anduril.com/news/anduril-announces-usd5b-series-h-raise",
+          "reason": "the quote doesn't support it (Quote gives $5B raise, $61B valuation, led by Thrive and a16z; value adds May 2026 date and 'Series H' name not in quote)"
+        },
+        {
+          "value": "Prior round: $2.5B Series G in June 2025 at a $30.5B valuation, led by Founders Fund",
+          "source_url": "https://techcrunch.com/2026/05/13/anduril-raises-5b-doubles-valuation-to-61b/",
+          "reason": "the quote doesn't support it (Quote gives $2.5B at $30.5B valuation led by Founders Fund; value adds Series G and June 2025 date not stated in quote)"
+        },
+        {
+          "value": "Reportedly raising a new round that could lift valuation about $40B to roughly $100B (Reuters report, July 2026)",
+          "source_url": "https://techcrunch.com/2026/07/24/anduril-reportedly-in-talks-to-raise-funding-at-100b-valuation-more-than-3x-last-years-mark/",
+          "reason": "the quote doesn't support it (Quote says valuation may rise $40B to about $100B; value adds Reuters attribution and July 2026 date, not in quote)"
+        },
+        {
+          "value": "Reported fundraise may be structured as two stages, with both tranches possibly closing within the year",
+          "source_url": "https://techcrunch.com/2026/07/24/anduril-reportedly-in-talks-to-raise-funding-at-100b-valuation-more-than-3x-last-years-mark/",
+          "reason": "the quote doesn't support it (Quote says two-stage process with second stage at higher valuation; value adds both tranches closing within the year, not stated)"
+        }
+      ]
+    },
+    {
+      "company": "Databricks",
+      "setup": "edgar",
+      "claims": 8,
+      "supported": 6,
+      "sec_claims": 2,
+      "sec_supported": 2,
+      "mcp_tool_calls": 2,
+      "searches": 1,
+      "cost_usd": 0.013744365000000001,
+      "seconds": 20.2,
+      "tool_errors": [],
+      "funding_status": [
+        "Earlier round: $5B in funding plus $2B in new debt capacity at a $134B valuation, announced February 2026",
+        "Roughly $15B in total primary funding raised since its 2013 founding"
+      ],
+      "rejected": [
+        {
+          "value": "Closed a $5B strategic funding round at a $190B valuation, announced August 13, 2026",
+          "source_url": "https://www.databricks.com/company/newsroom/press-releases/databricks-grows-80-yoy-surpasses-7b-revenue-run-rate-scales",
+          "reason": "the quote doesn't support it (Quote says closed $5B strategic round at $190B valuation; no August 13, 2026 date stated, so the announcement date is an extra detail)"
+        },
+        {
+          "value": "CEO says the company is prepared to go public when the time is right, with no IPO date set",
+          "source_url": "https://www.cnbc.com/2026/02/09/databricks-completes-5-billion-funding-round-with-2-billion-in-debt.html",
+          "reason": "the quote doesn't support it (Quote says prepared to go public when the time is right; it does not state that no IPO date is set)"
+        }
+      ]
+    },
+    {
+      "company": "Databricks",
+      "setup": "web only",
+      "claims": 9,
+      "supported": 5,
+      "sec_claims": 0,
+      "sec_supported": 0,
+      "mcp_tool_calls": 0,
+      "searches": 2,
+      "cost_usd": 0.024207910000000003,
+      "seconds": 17.2,
+      "tool_errors": [],
+      "funding_status": [
+        "Aug 2026 round led by Coatue, with Blackstone, MGX, T. Rowe Price and new investor Sixth Street Growth",
+        "Other new investors in the Aug 2026 round include BOND, Clearlake Capital, Point72, Premji Invest and TPG",
+        "Approximately $15B in total primary funding raised since founding in 2013"
+      ],
+      "rejected": [
+        {
+          "value": "Private company; closed a $5B strategic funding round at a $190B valuation",
+          "source_url": "https://www.databricks.com/company/newsroom/press-releases/databricks-grows-80-yoy-surpasses-7b-revenue-run-rate-scales",
+          "reason": "the quote doesn't support it (Quote gives the $5B round at a $190B valuation; the value's 'Private company' is not stated in the quote)"
+        },
+        {
+          "value": "Feb 2026 round: $5B equity plus $2B new debt capacity at a $134B valuation",
+          "source_url": "https://www.cnbc.com/2026/02/09/databricks-completes-5-billion-funding-round-with-2-billion-in-debt.html",
+          "reason": "the quote doesn't support it (Quote gives $5B funding, $2B debt and $134B valuation but no February 2026 date)"
+        },
+        {
+          "value": "Valuation of $188B was announced in July 2026 before the round had closed; round was led by Coatue",
+          "source_url": "https://techcrunch.com/2026/07/17/databricks-hits-188b-valuation-extending-its-run-as-ais-favorite-second-act/",
+          "reason": "the quote doesn't support it (Quote says the round has not closed and proceeds are not yet in hand; it does not mention the $188B valuation, July announcement or Coatue)"
+        },
+        {
+          "value": "No IPO filing: Databricks had not publicly filed a prospectus with the SEC as of Oct 27, 2026; media reports say a 2027 IPO is possible but unconfirmed",
+          "source_url": "https://www.investnao.com/en/post/databricks-share",
+          "reason": "the quote doesn't support it (Quote says no prospectus was filed with the SEC by 27 Oct 2026, but does not mention media reports of a possible 2027 IPO)"
+        }
+      ]
+    },
+    {
+      "company": "Retool",
+      "setup": "edgar",
+      "claims": 8,
+      "supported": 4,
+      "sec_claims": 0,
+      "sec_supported": 0,
+      "mcp_tool_calls": 3,
+      "searches": 2,
+      "cost_usd": 0.025820740000000002,
+      "seconds": 25.9,
+      "tool_errors": [
+        "edgar: secedgar_get_filing {\"accession_number\": \"000000000000000000\"}: Error: Filing '0000000000-00-000000' not found."
+      ],
+      "funding_status": [
+        "Venture capital-backed, privately held",
+        "Series C of $45M at a $3.2B valuation in July 2022, led by Sequoia Capital",
+        "About $141M total funding across multiple rounds",
+        "34 investors have invested in Retool (PitchBook)"
+      ],
+      "rejected": [
+        {
+          "value": "Series C post-money valuation of $3.2B dated July 2022 (SeedTable)",
+          "source_url": "https://seedtable.com/companies/retool",
+          "reason": "the quote doesn't support it (Quote gives Series C post-money date Jul 2022 but no $3.2B valuation amount)"
+        },
+        {
+          "value": "Reported $45M Series D at a $3.2B valuation led by Sequoia Capital and Thrive Capital, dated October 13, 2025 (single aggregator source; conflicts with other profiles)",
+          "source_url": "https://salestools.io/en/report/retool-raises-45m-series-d",
+          "reason": "the quote doesn't support it (Quote says $45M Series D at $3.2B led by Sequoia and Thrive, but gives no October 13, 2025 date)"
+        },
+        {
+          "value": "TechStackIPO lists a Series D of $250M in July 2026 and a $4.5B valuation (unverified; the same page dates the $4.5B valuation to 2021)",
+          "source_url": "https://www.techstackipo.com/company/retool",
+          "reason": "the quote doesn't support it (Quote lists a Series D of $250M in July 2026; the value's $4.5B valuation is not in the quote and the $250M contradicts the value's $45M-free framing of the claim)"
+        },
+        {
+          "value": "IPO status is pre-IPO, with no IPO date announced as of 2026 (TechStackIPO)",
+          "source_url": "https://www.techstackipo.com/company/retool",
+          "reason": "the quote doesn't support it (Quote says no specific IPO date announced as of 2026; value's pre-IPO status is not stated in the quote)"
+        }
+      ]
+    },
+    {
+      "company": "Retool",
+      "setup": "web only",
+      "claims": 9,
+      "supported": 8,
+      "sec_claims": 0,
+      "sec_supported": 0,
+      "mcp_tool_calls": 0,
+      "searches": 3,
+      "cost_usd": 0.03640984,
+      "seconds": 19.6,
+      "tool_errors": [],
+      "funding_status": [
+        "Most recent round: $250M Series E at $6.5B post-money (reported June 2026)",
+        "Series E round led by Andreessen Horowitz, with Sequoia, Meritech, ICONIQ Growth and Coatue listed as participants",
+        "Total funding raised reported as $391M (single aggregator; other aggregators report $121M-$190M)",
+        "Series C2 of $45M at a $3.2B valuation in July 2022, with Sequoia, the Collison brothers, Nat Friedman and Elad Gil participating",
+        "Privately held, venture-capital-backed"
+      ],
+      "rejected": [
+        {
+          "value": "Series D reported as $45M at a $3.2B valuation led by Sequoia Capital and Thrive Capital, dated October 13, 2025 (low-reliability aggregator, conflicts with the $4.4B figure)",
+          "source_url": "https://salestools.io/en/report/retool-raises-45m-series-d",
+          "reason": "the quote doesn't support it (Quote says $45M Series D at $3.2B led by Sequoia and Thrive; value adds a date of October 13, 2025, which the quote does not state.)"
+        }
+      ]
+    },
+    {
+      "company": "Vanta",
+      "setup": "edgar",
+      "claims": 7,
+      "supported": 4,
+      "sec_claims": 3,
+      "sec_supported": 2,
+      "mcp_tool_calls": 2,
+      "searches": 1,
+      "cost_usd": 0.013392625,
+      "seconds": 14.6,
+      "tool_errors": [],
+      "funding_status": [
+        "Total funds raised of $504 million since 2021",
+        "Privately held, with Wellington Management among its lead investors"
+      ],
+      "rejected": [
+        {
+          "value": "Privately held; latest round was a $150M Series D announced July 23, 2025 at a $4.15B valuation, led by Wellington Management",
+          "source_url": "https://www.businesswire.com/news/home/20250723901336/en/Vanta-Raises-$150M-Series-D-to-Power-the-Future-of-AI-Driven-Trust",
+          "reason": "the quote doesn't support it (Quote states $150M Series D at $4.15B valuation; does not mention July 23, 2025 date or Wellington lead, and the value adds those details; 'Privately held' not in quote)"
+        },
+        {
+          "value": "Series D round of $150M at $4.15B valuation was led by new investor Wellington Management, with existing investors including Goldman Sachs Alternatives, Sequoia, J.P. Morgan, Craft Ventures, Y Combinator, Atlassian Ventures and CrowdStrike Ventures",
+          "source_url": "https://www.businesswire.com/news/home/20250723901336/en/Vanta-Raises-$150M-Series-D-to-Power-the-Future-of-AI-Driven-Trust",
+          "reason": "the quote doesn't support it (Quote says round led by new investor Wellington and included existing investors, but cuts off before naming them; the listed investors and amounts are not stated)"
+        },
+        {
+          "value": "Form D lists Total Offering Amount of $150,050,008 USD, with $46,679,794 USD remaining to be sold",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1934145/000193414522000002/xslFormDX01/primary_doc.xml",
+          "reason": "the quote doesn't support it (Quote states Total Offering Amount $150,050,008 USD, but does not state the $46,679,794 remaining figure in the value's context of this claim beyond the adjacent text; the remaining amount appears in a different quote)"
+        }
+      ]
+    },
+    {
+      "company": "Vanta",
+      "setup": "web only",
+      "claims": 9,
+      "supported": 5,
+      "sec_claims": 0,
+      "sec_supported": 0,
+      "mcp_tool_calls": 0,
+      "searches": 2,
+      "cost_usd": 0.02375306,
+      "seconds": 12.6,
+      "tool_errors": [],
+      "funding_status": [
+        "Series D round led by Wellington Management, a new investor; existing backers included Goldman Sachs Alternatives, Sequoia, J.P. Morgan, Craft Ventures, Y Combinator, Atlassian Ventures and CrowdStrike Ventures",
+        "Total funds raised about $504M since 2021"
+      ],
+      "rejected": [
+        {
+          "value": "Privately held; latest round was a $150M Series D at a $4.15B valuation, announced July 23, 2025",
+          "source_url": "https://www.businesswire.com/news/home/20250723901336/en/Vanta-Raises-$150M-Series-D-to-Power-the-Future-of-AI-Driven-Trust",
+          "reason": "the quote doesn't support it (quote states $150M Series D at $4.15B valuation; July 23, 2025 date not in quote, and 'privately held' not stated)"
+        },
+        {
+          "value": "Signed a definitive agreement on November 9, 2026 to acquire Israeli AI security company Pillar Security; the deal is signed, not completed",
+          "source_url": "https://www.calcalistech.com/ctechnews/article/hkjzjkjrfl",
+          "reason": "the quote doesn't support it (quote says signed a definitive agreement to acquire Pillar Security; the November 9, 2026 date is not in the quote)"
+        },
+        {
+          "value": "Pillar Security deal terms (reported at $150M) were not disclosed by the company; the closing timeline was also not disclosed",
+          "source_url": "https://www.citybiz.co/article/931405/vanta-to-acquire-pillar-security-adding-ai-agent-testing-and-runtime-protection/",
+          "reason": "the quote doesn't support it (quote says financial terms and closing timeline were not disclosed; the $150M reported figure is not mentioned in the quote and the value adds it, so it is not fully supported)"
+        },
+        {
+          "value": "No IPO filing (S-1) as of May 17, 2026; company described as private with no IPO timeline announced",
+          "source_url": "https://soc2vendors.com/guides/vanta-ipo-watch-2026/",
+          "reason": "the quote doesn't support it (quote says no S-1 filed as of May 17, 2026; it does not state that the company is private or that no IPO timeline was announced)"
+        }
+      ]
+    },
+    {
+      "company": "Cloudflare",
+      "setup": "edgar",
+      "claims": 8,
+      "supported": 6,
+      "sec_claims": 2,
+      "sec_supported": 2,
+      "mcp_tool_calls": 1,
+      "searches": 2,
+      "cost_usd": 0.024405005,
+      "seconds": 17.8,
+      "tool_errors": [],
+      "funding_status": [
+        "Public company, listed on the NYSE under NET",
+        "Raised more than $330 million in venture capital before its IPO"
+      ],
+      "rejected": [
+        {
+          "value": "IPO priced at $15 per share, announced September 2019 (offering of 35 million shares, $525 million)",
+          "source_url": "https://www.renaissancecapital.com/IPO-Center/News/64952/web-performance-unicorn-cloudflare-prices-ipo-above-the-range-at-15",
+          "reason": "the quote doesn't support it (Quote gives 35 million shares at $15 and $525 million raised; value adds September 2019 date, which the quote does not state.)"
+        },
+        {
+          "value": "Priced $2.175 billion of 0% convertible senior notes due 2031 in a private offering (August 2026)",
+          "source_url": "https://finance.yahoo.com/markets/stocks/articles/cloudflare-inc-announces-pricing-offering-080000397.html",
+          "reason": "the quote doesn't support it (Quote gives $2.175 billion of 0% convertible notes due 2031 priced; value adds 'private offering' and August 2026 date, not in quote.)"
+        }
+      ]
+    },
+    {
+      "company": "Cloudflare",
+      "setup": "web only",
+      "claims": 5,
+      "supported": 3,
+      "sec_claims": 5,
+      "sec_supported": 3,
+      "mcp_tool_calls": 0,
+      "searches": 2,
+      "cost_usd": 0.022959225,
+      "seconds": 10.3,
+      "tool_errors": [],
+      "funding_status": [
+        "Public company, NYSE: NET"
+      ],
+      "rejected": [
+        {
+          "value": "Announced a plan on May 7, 2026 to reduce its workforce by about 20%, with restructuring charges estimated at $140M to $150M",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/0001477333/000147733326000033/cloud-20260507.htm",
+          "reason": "the quote doesn't support it (Quote gives 20% workforce reduction and $140M-$150M charges but no May 7, 2026 announcement date in the quote)"
+        },
+        {
+          "value": "Q3 2026 revenue of $782.5 million, up 39% year over year; crossed $3 billion annualized revenue",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/0001477333/000147733326000060/q326exhibit991.htm",
+          "reason": "the quote doesn't support it (Quote gives Q3 revenue $782.5M up 39% YoY; does not mention crossing $3 billion annualized revenue)"
+        }
+      ]
+    },
+    {
+      "company": "Duolingo",
+      "setup": "edgar",
+      "claims": 6,
+      "supported": 5,
+      "sec_claims": 5,
+      "sec_supported": 4,
+      "mcp_tool_calls": 1,
+      "searches": 1,
+      "cost_usd": 0.012822925,
+      "seconds": 12.9,
+      "tool_errors": [],
+      "funding_status": [
+        "Publicly listed on Nasdaq under the ticker DUOL",
+        "IPO completed July 30, 2021, with Class A shares sold at a $102.00 price to the public",
+        "IPO generated about $431.1 million in net proceeds after underwriting discounts and offering expenses"
+      ],
+      "rejected": [
+        {
+          "value": "Board authorized a share repurchase program of up to $400 million in February 2026, with no expiration date",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1562088/000162828026012246/duol-20260226.htm",
+          "reason": "the quote doesn't support it (quote confirms a $400 million repurchase authorization but says nothing about February 2026 or no expiration date)"
+        }
+      ]
+    },
+    {
+      "company": "Duolingo",
+      "setup": "web only",
+      "claims": 7,
+      "supported": 3,
+      "sec_claims": 5,
+      "sec_supported": 2,
+      "mcp_tool_calls": 0,
+      "searches": 2,
+      "cost_usd": 0.02358228,
+      "seconds": 14.5,
+      "tool_errors": [],
+      "funding_status": [
+        "IPO gross proceeds to the company were $455.5 million before underwriting discounts and offering expenses",
+        "Pre-IPO venture funding totaled more than $183 million"
+      ],
+      "rejected": [
+        {
+          "value": "Public company listed on NASDAQ under DUOL, after IPO at $102.00 per share on July 30, 2021",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1562088/000156208822000039/duol-20211231.htm",
+          "reason": "the quote doesn't support it (Quote gives IPO date July 30, 2021 and price $102.00 per share, but not NASDAQ or ticker DUOL; value adds listing venue and ticker not stated)"
+        },
+        {
+          "value": "Board authorized a share repurchase program of up to $400 million on February 26, 2026",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1562088/000162828026012246/duol-20260226.htm",
+          "reason": "the quote doesn't support it (Quote states Board authorized repurchase program up to $400 million; the February 26, 2026 date is not in the quote)"
+        },
+        {
+          "value": "Repurchases under the $400M program may be made in the open market or through privately negotiated transactions, with no expiration date",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/0001562088/000162828026069692/duol-20260930.htm",
+          "reason": "the quote doesn't support it (Quote says repurchases may be made in open market or privately negotiated transactions; it says nothing about expiration date, which value asserts)"
+        },
+        {
+          "value": "Company expects fully-diluted share count to increase approximately 3.5-4% in 2026, excluding buyback impact",
+          "source_url": "https://investors.duolingo.com/static-files/aab30d54-eb91-422e-b365-c03859fea85c",
+          "reason": "the quote doesn't support it (Quote says fully-diluted share count to increase approximately 3.5-4% in 2026 driven by equity grants; does not say excluding buyback impact)"
+        }
+      ]
+    },
+    {
+      "company": "Revolut",
+      "setup": "edgar",
+      "claims": 8,
+      "supported": 8,
+      "sec_claims": 0,
+      "sec_supported": 0,
+      "mcp_tool_calls": 1,
+      "searches": 1,
+      "cost_usd": 0.012655305,
+      "seconds": 11.3,
+      "tool_errors": [],
+      "funding_status": [
+        "Private company; completed a funding round that valued it at $115 billion (announced Nov 4, 2026)",
+        "Valuation rose more than 50% from the $75 billion share sale of the prior year",
+        "Round led by Glade Brook Capital Partners, Coatue, Durable Capital Partners, T. Rowe Price Associates and Baillie Gifford",
+        "Has raised about $1.73B across 10 rounds from 151 investors, per Tracxn"
+      ],
+      "rejected": []
+    },
+    {
+      "company": "Revolut",
+      "setup": "web only",
+      "claims": 8,
+      "supported": 7,
+      "sec_claims": 0,
+      "sec_supported": 0,
+      "mcp_tool_calls": 0,
+      "searches": 2,
+      "cost_usd": 0.023939535,
+      "seconds": 14.6,
+      "tool_errors": [],
+      "funding_status": [
+        "Latest valuation of $115B set through a secondary share sale; no new capital entered the company",
+        "Previous valuation was $75B, set in a share sale in late 2025",
+        "Raised about $1.73B in total across 10 rounds from 151 investors"
+      ],
+      "rejected": [
+        {
+          "value": "Earlier 2026 reports pointed to a possible $200B valuation at an IPO around 2028",
+          "source_url": "https://www.siliconrepublic.com/business/revolut-hits-115bn-valuation-amid-global-expansion-drive",
+          "reason": "the quote doesn't support it (Quote only says reports suggested a $200bn valuation; does not mention an IPO or around 2028 timing or that these were earlier 2026 reports)"
+        }
+      ]
+    },
+    {
+      "company": "Mistral AI",
+      "setup": "edgar",
+      "claims": 8,
+      "supported": 7,
+      "sec_claims": 0,
+      "sec_supported": 0,
+      "mcp_tool_calls": 1,
+      "searches": 1,
+      "cost_usd": 0.013006645,
+      "seconds": 14.5,
+      "tool_errors": [],
+      "funding_status": [
+        "Latest round: Series D of \u20ac3B (about $3.5B) at a valuation above \u20ac21B, announced September 2026",
+        "Samsung Electronics led the Series D; EQT's Scaleup Europe Fund and PSG Equity were co-leads",
+        "Mistral raised $830 million in debt financing in March 2026 for data center construction near Paris"
+      ],
+      "rejected": [
+        {
+          "value": "Prior Series C of \u20ac1.7B at an \u20ac11.7B valuation, September 2025, led by ASML",
+          "source_url": "https://techfundingnews.com/mistral-ai-3b-euro-20b-valuation-data-centres/",
+          "reason": "the quote doesn't support it (quote states \u20ac11.7B valuation in Sept 2025 and \u20ac1.7B Series C; quote does not say ASML led it)"
+        }
+      ]
+    },
+    {
+      "company": "Mistral AI",
+      "setup": "web only",
+      "claims": 10,
+      "supported": 7,
+      "sec_claims": 0,
+      "sec_supported": 0,
+      "mcp_tool_calls": 0,
+      "searches": 2,
+      "cost_usd": 0.023944575,
+      "seconds": 14.4,
+      "tool_errors": [],
+      "funding_status": [
+        "Prior round: Series C of \u20ac1.7B at an \u20ac11.7B post-money valuation",
+        "Total raised since 2023 inception: about $7.5B (Crunchbase count; PitchBook estimate in TechCrunch is about $4B, so figures vary by source)",
+        "Also raised $830M in debt financing in March 2026 to fund data center construction near Paris"
+      ],
+      "rejected": [
+        {
+          "value": "Latest round: Series D, about \u20ac3B, closed in September 2026 at a post-money valuation above \u20ac21B",
+          "source_url": "https://techcrunch.com/2026/09/08/mistral-raises-e3b-as-sovereign-ai-becomes-big-business/",
+          "reason": "the quote doesn't support it (Quote gives \u20ac3B (about $3.58B) at post-money above \u20ac21B; value says Series D, closed September 2026, which the quote does not state)"
+        },
+        {
+          "value": "Acquisitions: bought Paris-based AI startup Koyeb in February 2026, and Austrian industrial AI simulation firm Emmi AI announced 19 May 2026",
+          "source_url": "https://en.wikipedia.org/wiki/Mistral_AI",
+          "reason": "the quote doesn't support it (Quote covers only the February 2026 Koyeb acquisition; nothing about Emmi AI or its 19 May 2026 announcement)"
+        },
+        {
+          "value": "Reported talks in June 2026 to raise about \u20ac3B at around \u20ac20B preceded the closed round",
+          "source_url": "https://www.bloomberg.com/news/articles/2026-06-12/france-s-mistral-in-funding-talks-at-about-20-billion-valuation",
+          "reason": "the quote doesn't support it (Quote reports June talks to raise about \u20ac3B at about \u20ac20B valuation; value says reported talks preceded the closed round, which the quote's date-free wording does not confirm as June 2026 from the quote itself)"
+        }
+      ]
+    }
+  ]
+}
