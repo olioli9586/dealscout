@@ -18,7 +18,7 @@ There are two agents in this repo:
   the draft before it's saved. It runs with Postgres checkpoints, memory across
   runs, resume after a crash, cost budgets, MCP both ways and tracing.
 
-**Live demo:** https://dealscout-gamma.vercel.app (rate-limited to a few runs per visitor per day)
+**Live demo:** https://dealscout-gamma.vercel.app (v1 at `/`, v2 at `/v2`; rate-limited to a few runs per visitor per day)
 
 ![DealScout](docs/home.png)
 
@@ -146,13 +146,25 @@ in 1 of 15 runs. [Details](eval/injection/RESULTS.md).
   needs that token (the run page asks for it; MCP clients send it as a bearer
   token).
 
+### A traced run
+
+![One v2 run traced in Langfuse](docs/trace/v2-trace.png)
+
+One run on Databricks as Langfuse recorded it, drawn from the trace's data
+(`docs/trace/`). The four researchers run in parallel, and the funding
+researcher's two EDGAR calls go over MCP. The verifier sent the news branch
+back for a second pass, and the writer then drafted from the verified claims.
+The approval came in a second request and joined the same trace. Langfuse's
+total matches the run's own cost to the cent.
+
 ### Scheduled eval
 
 `.github/workflows/eval.yml` runs the v2 eval on real models in CI: the 5
 original companies weekly (about $0.65), or all 48 by hand. A hard spend cap
 is enforced three ways (the eval script, the agent's daily cap and each run's
 budget). The job fails when fewer than 85% of fields are correct. It needs an
-`ANTHROPIC_API_KEY` repository secret and does nothing without one.
+`ANTHROPIC_API_KEY` repository secret, and it's skipped with a warning, not
+failed, when the API refuses a one-token test request (no credit left, say).
 
 ## v1: the single-agent loop
 
