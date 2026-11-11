@@ -1183,8 +1183,9 @@ on Ramp locally $0.10 and Databricks on the preview $0.13). Since
 
 ### Decisions and why
 
-- **Weekly, not nightly**: the 5 companies scored 15/15 or 14/15 on every
-  v2 run since Day 4, so a weekly check catches a regression at about $3 a
+- **Weekly, not nightly**: the default setup's memory-free runs since Day 4
+  scored 14/15 or 15/15 on the 5 companies (the one-search variant 12/15, the
+  memory re-run 13/15), so a weekly check catches a regression at about $3 a
   month instead of $20. Theirs to change.
 - **Results as a job summary and an artifact, not a commit**: no bot commits
   on main.
@@ -1205,8 +1206,9 @@ on Ramp locally $0.10 and Databricks on the preview $0.13). Since
   would fail weekly without credit).
 - Production, their explicit OK first: v2 needs a production database, the
   agent's settings (`AGENT_MODELS`, `AGENT_DAILY_USD`), `V2_ADMIN_TOKEN`, and
-  `DEALSCOUT_MODEL` / `DEALSCOUT_EFFORT` re-created as Config. Without them,
-  `/v2` on production would answer that the agent is unreachable.
+  `DEALSCOUT_MODEL` / `DEALSCOUT_EFFORT` re-created as Config. Without a
+  database, `/v2` on production answers 503 "DATABASE_URL is not set"; v1
+  is unaffected.
 - The merge (they run `gh pr merge`).
 
 ### Spend
