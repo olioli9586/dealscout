@@ -24,6 +24,8 @@ import re
 
 from mcp import Client
 
+from app import tracing
+
 DEFAULT_URL = "https://secedgar.caseyjhand.com/mcp"
 TOOLS = ("secedgar_company_search", "secedgar_search_filings", "secedgar_get_filing")
 # Per researcher pass. A Form D's amounts section is about 3,000 characters
@@ -77,6 +79,12 @@ class Edgar:
 
     async def call(self, name: str, arguments: dict) -> tuple[str, bool]:
         """The result's text, cut to RESULT_MAX_CHARS, and whether it is an error."""
+        with tracing.observation(name, as_type="tool", input=arguments) as span:
+            text, is_error = await self._call(name, arguments)
+            span.update(output=text, level="ERROR" if is_error else "DEFAULT")
+        return text, is_error
+
+    async def _call(self, name: str, arguments: dict) -> tuple[str, bool]:
         if self.calls >= CALLS_PER_PASS:
             return f"No more EDGAR calls in this pass (at most {CALLS_PER_PASS}). Report what you have.", True
         self.calls += 1

@@ -13,6 +13,7 @@ and two requests that start together can both pass it: it bounds spend to
 the cap plus the runs in flight.
 """
 
+import asyncio
 from datetime import datetime
 from uuid import uuid4
 
@@ -20,6 +21,7 @@ from langgraph.graph.state import CompiledStateGraph
 from langgraph.types import Command
 from psycopg_pool import AsyncConnectionPool
 
+from app import tracing
 from app.profile_schema import diff_profiles
 from app.profiles import company_key
 from app.state import Decision, Usage, spent
@@ -67,6 +69,8 @@ class Runs:
             )
         return await self._drive(
             run_id,
+            company,
+            "start",
             {
                 "company": company,
                 "company_key": key,
@@ -81,15 +85,19 @@ class Runs:
         """Continues a failed or cut-off run; None if it isn't resumable now.
         Raises SpendCapReached instead of resuming past the daily cap."""
         await self._check_daily_cap()
-        if not await self._claim(run_id, "status = 'failed' or (status = 'running' and lease_until < now())"):
+        company = await self._claim(
+            run_id, "status = 'failed' or (status = 'running' and lease_until < now())"
+        )
+        if company is None:
             return None
-        return await self._drive(run_id, None)
+        return await self._drive(run_id, company, "resume", None)
 
     async def decide(self, run_id: str, decision: Decision) -> dict | None:
         """Answers the approval interrupt; None if the run isn't waiting for one."""
-        if not await self._claim(run_id, "status = 'awaiting_approval'"):
+        company = await self._claim(run_id, "status = 'awaiting_approval'")
+        if company is None:
             return None
-        return await self._drive(run_id, Command(resume=decision))
+        return await self._drive(run_id, company, "decision", Command(resume=decision))
 
     async def get(self, run_id: str) -> dict | None:
         async with self.pool.connection() as conn:
@@ -136,25 +144,27 @@ class Runs:
         if self.daily_usd is not None and await self.spent_today() >= self.daily_usd:
             raise SpendCapReached(f"the daily spend cap (${self.daily_usd:.2f}) is reached")
 
-    async def _claim(self, run_id: str, condition: str) -> bool:
+    async def _claim(self, run_id: str, condition: str) -> str | None:
+        """Takes the run's lease if the condition holds; its company, or None."""
         async with self.pool.connection() as conn:
             row = await (
                 await conn.execute(
                     f"""update runs set status = 'running', error = null, updated_at = now(),
                           lease_until = now() + make_interval(secs => %s)
-                        where id = %s and ({condition}) returning id""",
+                        where id = %s and ({condition}) returning company""",
                     (self.lease_seconds, run_id),
                 )
             ).fetchone()
-        return row is not None
+        return row["company"] if row else None
 
-    async def _drive(self, run_id: str, graph_input: dict | Command | None) -> dict:
+    async def _drive(self, run_id: str, company: str, step: str, graph_input: dict | Command | None) -> dict:
         config = self._config(run_id)
         try:
-            # "sync": each step's checkpoint is written before the next step
-            # starts, so a run killed at any point loses at most the step in
-            # progress (minus the branches of it that had finished).
-            await self.graph.ainvoke(graph_input, config, durability="sync")
+            with tracing.run_trace(run_id, company, step):
+                # "sync": each step's checkpoint is written before the next
+                # step starts, so a run killed at any point loses at most the
+                # step in progress (minus the branches of it that had finished).
+                await self.graph.ainvoke(graph_input, config, durability="sync")
         except Exception as err:  # noqa: BLE001 (any node error leaves a resumable 'failed' run)
             snapshot = await self.graph.aget_state(config)
             await self._finish(run_id, "failed", f"{type(err).__name__}: {err}"[:1000], snapshot.values)
@@ -167,6 +177,7 @@ class Runs:
             else:
                 status = "saved"
             await self._finish(run_id, status, None, snapshot.values)
+        await asyncio.to_thread(tracing.flush)
         run = await self.get(run_id)
         assert run is not None
         return run

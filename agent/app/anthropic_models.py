@@ -25,6 +25,7 @@ from anthropic import AsyncAnthropic
 from anthropic.types import Message
 from pydantic import BaseModel
 
+from app import tracing
 from app.edgar import CALLS_PER_PASS, GUIDE, Edgar, sec_urls
 from app.pricing import PRICES, response_cost
 from app.profile_schema import BRANCH_FIELDS, DERIVED_FIELDS, CompanyProfile, facts, to_saved, unknown_profile
@@ -408,7 +409,8 @@ and a checker verified against their sources.
 
 class AnthropicModels:
     def __init__(self, client: AsyncAnthropic, config: ModelConfig, edgar_server: object = None):
-        self.client = client
+        # Each request becomes a Langfuse generation when tracing is on.
+        self.client = tracing.TracedClient(client)
         self.config = config
         # The EDGAR MCP server for the funding researcher (a URL); None for none.
         self.edgar_server = edgar_server

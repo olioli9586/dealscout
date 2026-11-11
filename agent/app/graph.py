@@ -24,6 +24,7 @@ from langgraph.checkpoint.base import BaseCheckpointSaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Send, interrupt
 
+from app import tracing
 from app.models import Models
 from app.profiles import ProfileStore
 from app.state import (
@@ -52,10 +53,15 @@ def pass_cost(usage: list[Usage], branch: str, attempt: int) -> float:
 
 def build_graph(models: Models, profiles: ProfileStore, checkpointer: BaseCheckpointSaver):
     async def load_memory(state: RunState) -> dict:
-        return {"previous": await profiles.latest(state["company_key"])}
+        with tracing.observation("load_memory") as span:
+            previous = await profiles.latest(state["company_key"])
+            span.update(output={"previous_version": previous["version"] if previous else None})
+        return {"previous": previous}
 
     async def planner(state: RunState) -> dict:
-        plan, usage = await models.plan(state["company"], state.get("previous"))
+        with tracing.observation("planner") as span:
+            plan, usage = await models.plan(state["company"], state.get("previous"))
+            span.update(output=plan)
         return {"plan": plan, "usage": usage}
 
     def fan_out(state: RunState) -> list[Send] | str:
@@ -77,7 +83,12 @@ def build_graph(models: Models, profiles: ProfileStore, checkpointer: BaseCheckp
         return sends or "writer"
 
     async def researcher(task: ResearchTask) -> dict:
-        finding, usage = await models.research(task)
+        name = f"researcher: {task['branch']}" + (f" (pass {task['attempt']})" if task["attempt"] > 1 else "")
+        with tracing.observation(
+            name, metadata={"branch": task["branch"], "attempt": task["attempt"]}
+        ) as span:
+            finding, usage = await models.research(task)
+            span.update(output=finding)
         return {"findings": [finding], "usage": usage}
 
     async def verifier(state: RunState) -> dict:
@@ -87,7 +98,9 @@ def build_graph(models: Models, profiles: ProfileStore, checkpointer: BaseCheckp
             for f in latest_per_branch(state["findings"]).values()
             if (f["branch"], f["attempt"]) not in checked
         ]
-        results = await asyncio.gather(*(models.verify(f) for f in new))
+        with tracing.observation("verifier") as span:
+            results = await asyncio.gather(*(models.verify(f) for f in new))
+            span.update(output=[v for v, _ in results])
         return {"verdicts": [v for v, _ in results], "usage": [u for _, usage in results for u in usage]}
 
     def after_verifier(state: RunState) -> list[Send] | str:
@@ -127,9 +140,11 @@ def build_graph(models: Models, profiles: ProfileStore, checkpointer: BaseCheckp
         # Every pass, not just each branch's last: a retry adds claims, and
         # mustn't drop what the first pass verified.
         verdicts = state["verdicts"]
-        draft, usage = await models.write(
-            state["company"], verdicts, previous["profile"] if previous else None
-        )
+        with tracing.observation("writer") as span:
+            draft, usage = await models.write(
+                state["company"], verdicts, previous["profile"] if previous else None
+            )
+            span.update(output=draft)
         return {"draft": draft, "usage": usage}
 
     def approve(state: RunState) -> dict:
@@ -145,7 +160,10 @@ def build_graph(models: Models, profiles: ProfileStore, checkpointer: BaseCheckp
         decision = state["decision"]
         profile = decision["profile"] if decision["action"] == "edit" else state["draft"]
         run_id = config["configurable"]["thread_id"]
-        return {"saved_version": await profiles.save(run_id, state["company_key"], profile)}
+        with tracing.observation("save", input={"action": decision["action"]}) as span:
+            version = await profiles.save(run_id, state["company_key"], profile)
+            span.update(output={"saved_version": version})
+        return {"saved_version": version}
 
     graph = StateGraph(RunState)
     graph.add_node("load_memory", load_memory)
