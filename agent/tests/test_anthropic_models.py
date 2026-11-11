@@ -503,6 +503,24 @@ async def test_a_funding_pass_goes_on_with_the_web_tools_when_edgar_is_down():
     assert error.startswith("edgar: unavailable")
 
 
+async def test_a_cut_off_report_next_to_an_edgar_call_gets_both_answered():
+    # Every tool_use needs a tool_result, or the next request is refused.
+    cut_off = {"type": "tool_use", "id": "toolu_cut", "name": "report_findings", "input": {}}
+    client = ScriptedClient(
+        created=[
+            message(
+                edgar_call("secedgar_search_filings", {"query": "Ramp", "forms": ["D"]}) + [cut_off],
+                "max_tokens",
+            ),
+            message(report(), "tool_use"),
+        ]
+    )
+    await AnthropicModels(client, CONFIG, edgar_server=fake_edgar()).research(task(branch="funding"))
+    results = client.requests[1]["messages"][-1]["content"]
+    assert [(r["tool_use_id"], r["is_error"]) for r in results] == [("toolu_e1", False), ("toolu_cut", True)]
+    assert results[1]["content"] == CUT_OFF
+
+
 async def test_a_failed_edgar_call_and_an_unknown_tool_are_answered_as_errors():
     client = ScriptedClient(
         created=[

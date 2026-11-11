@@ -87,6 +87,23 @@ async def test_a_run_cut_off_mid_step_waits_for_its_lease_then_resumes(make_runs
     assert research_calls(models) == {"business": [1], "funding": [1], "leadership": [1, 1], "news": [1]}
 
 
+async def test_a_run_cut_off_before_its_first_checkpoint_starts_over_on_resume(make_runs, pool):
+    # The process died after the runs row was written and before the graph
+    # wrote anything: there's no checkpoint to go on from.
+    runs, _ = make_runs()
+    run_id = "5d1b8c3e-2f7a-4c1e-9b6d-0a4e8f2c7d91"
+    async with pool.connection() as conn:
+        await conn.execute(
+            """insert into runs (id, company, company_key, budget_usd, lease_until)
+               values (%s, 'Acme', 'acme', 1.5, now() - interval '1 second')""",
+            (run_id,),
+        )
+    run = await runs.resume(run_id)
+    assert run["status"] == "awaiting_approval"
+    assert run["draft"]["company_name"] == "Acme"
+    assert run["budget_usd"] == 1.5
+
+
 async def test_resume_is_refused_while_another_request_drives_the_run(make_runs):
     runs, _ = make_runs(FakeModels(research_seconds={"*": 0.3}))
     run_id = str(uuid4())

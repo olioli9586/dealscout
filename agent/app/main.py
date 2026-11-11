@@ -179,6 +179,6 @@ async def decide_run(run_id: UUID, body: DecisionIn, runs: RunsDep) -> dict:
 
 
 async def _not_found_or_conflict(runs: Runs, run_id: UUID, conflict: str) -> None:
-    if await runs.get(str(run_id)) is None:
+    if not await runs.exists(str(run_id)):
         raise HTTPException(404, "no such run")
     raise HTTPException(409, conflict)

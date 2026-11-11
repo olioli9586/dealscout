@@ -67,45 +67,42 @@ class Runs:
                    values (%s, %s, %s, %s, now() + make_interval(secs => %s))""",
                 (run_id, company, key, self.run_budget_usd, self.lease_seconds),
             )
-        return await self._drive(
-            run_id,
-            company,
-            "start",
-            {
-                "company": company,
-                "company_key": key,
-                "budget_usd": self.run_budget_usd,
-                "findings": [],
-                "verdicts": [],
-                "usage": [],
-            },
-        )
+        return await self._drive(run_id, company, "start", first_input(company, self.run_budget_usd))
 
     async def resume(self, run_id: str) -> dict | None:
         """Continues a failed or cut-off run; None if it isn't resumable now.
         Raises SpendCapReached instead of resuming past the daily cap."""
         await self._check_daily_cap()
-        company = await self._claim(
-            run_id, "status = 'failed' or (status = 'running' and lease_until < now())"
-        )
-        if company is None:
+        row = await self._claim(run_id, "status = 'failed' or (status = 'running' and lease_until < now())")
+        if row is None:
             return None
-        return await self._drive(run_id, company, "resume", None)
+        # Cut off before its first checkpoint, the graph has nothing to go on
+        # from, so the run starts over.
+        started = (await self.graph.aget_state(self._config(run_id))).values
+        graph_input = None if started else first_input(row["company"], row["budget_usd"])
+        return await self._drive(run_id, row["company"], "resume", graph_input)
 
     async def decide(self, run_id: str, decision: Decision) -> dict | None:
         """Answers the approval interrupt; None if the run isn't waiting for one."""
-        company = await self._claim(run_id, "status = 'awaiting_approval'")
-        if company is None:
+        row = await self._claim(run_id, "status = 'awaiting_approval'")
+        if row is None:
             return None
-        return await self._drive(run_id, company, "decision", Command(resume=decision))
+        return await self._drive(run_id, row["company"], "decision", Command(resume=decision))
 
     async def get(self, run_id: str) -> dict | None:
-        async with self.pool.connection() as conn:
-            row = await (await conn.execute(f"{ROW} where id = %s", (run_id,))).fetchone()
+        row = await self._row(run_id)
         if row is None:
             return None
         snapshot = await self.graph.aget_state(self._config(run_id))
         return view(row, snapshot.values, snapshot.next)
+
+    async def exists(self, run_id: str) -> bool:
+        """Whether there is such a run (without reading its checkpoint)."""
+        return await self._row(run_id) is not None
+
+    async def _row(self, run_id: str) -> dict | None:
+        async with self.pool.connection() as conn:
+            return await (await conn.execute(f"{ROW} where id = %s", (run_id,))).fetchone()
 
     async def summaries(self, run_ids: list[str]) -> list[dict]:
         """The runs table rows for these ids, newest first, without reading
@@ -144,18 +141,18 @@ class Runs:
         if self.daily_usd is not None and await self.spent_today() >= self.daily_usd:
             raise SpendCapReached(f"the daily spend cap (${self.daily_usd:.2f}) is reached")
 
-    async def _claim(self, run_id: str, condition: str) -> str | None:
-        """Takes the run's lease if the condition holds; its company, or None."""
+    async def _claim(self, run_id: str, condition: str) -> dict | None:
+        """Takes the run's lease if the condition holds; its company and
+        budget, or None."""
         async with self.pool.connection() as conn:
-            row = await (
+            return await (
                 await conn.execute(
                     f"""update runs set status = 'running', error = null, updated_at = now(),
                           lease_until = now() + make_interval(secs => %s)
-                        where id = %s and ({condition}) returning company""",
+                        where id = %s and ({condition}) returning company, budget_usd""",
                     (self.lease_seconds, run_id),
                 )
             ).fetchone()
-        return row["company"] if row else None
 
     async def _drive(self, run_id: str, company: str, step: str, graph_input: dict | Command | None) -> dict:
         config = self._config(run_id)
@@ -178,9 +175,9 @@ class Runs:
                 status = "saved"
             await self._finish(run_id, status, None, snapshot.values)
         await asyncio.to_thread(tracing.flush)
-        run = await self.get(run_id)
-        assert run is not None
-        return run
+        row = await self._row(run_id)
+        assert row is not None
+        return view(row, snapshot.values, snapshot.next)
 
     async def _finish(self, run_id: str, status: str, error: str | None, values: dict) -> None:
         cost = spent(values.get("usage", []))
@@ -195,6 +192,18 @@ class Runs:
     @staticmethod
     def _config(run_id: str) -> dict:
         return {"configurable": {"thread_id": run_id}}
+
+
+def first_input(company: str, budget_usd: float) -> dict:
+    """The graph's input for a new run."""
+    return {
+        "company": company,
+        "company_key": company_key(company),
+        "budget_usd": budget_usd,
+        "findings": [],
+        "verdicts": [],
+        "usage": [],
+    }
 
 
 def iso(value: datetime) -> str:
@@ -233,6 +242,7 @@ def view(row: dict, values: dict, next_nodes: tuple[str, ...]) -> dict:
     # draft, or in the edited profile once a person has edited it.
     current = decision["profile"] if decision.get("action") == "edit" else draft
     changes = diff_profiles(previous["profile"], current) if previous and current else None
+    edited = decision["profile"] if decision.get("action") == "edit" else None
     return {
         "id": row["id"],
         "company": row["company"],
@@ -273,6 +283,8 @@ def view(row: dict, values: dict, next_nodes: tuple[str, ...]) -> dict:
             for v in values.get("verdicts", [])
         ],
         "draft": draft,
+        # The profile a person saved instead of the draft, if they edited it.
+        "edited": edited,
         "previous_version": previous["version"] if previous else None,
         "changes": changes,
         "saved_version": values.get("saved_version"),

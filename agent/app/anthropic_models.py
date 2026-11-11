@@ -482,25 +482,7 @@ class AnthropicModels:
             report = next(
                 (b for b in response.content if b.type == "tool_use" and b.name == "report_findings"), None
             )
-            if report is not None and response.stop_reason == "max_tokens":
-                # Cut off mid-report: strict only holds for a finished call, so
-                # the input is incomplete. Answer the call and ask again.
-                messages.append({"role": "assistant", "content": response.content})
-                messages.append(
-                    {
-                        "role": "user",
-                        "content": [
-                            {
-                                "type": "tool_result",
-                                "tool_use_id": report.id,
-                                "is_error": True,
-                                "content": CUT_OFF,
-                            }
-                        ],
-                    }
-                )
-                continue
-            if report is not None:
+            if report is not None and response.stop_reason != "max_tokens":
                 # strict: true means the input matches the schema.
                 claims = [
                     {
@@ -514,9 +496,17 @@ class AnthropicModels:
                 break
             calls = [b for b in response.content if b.type == "tool_use"]
             if calls:
-                # EDGAR tool calls: this loop runs them and sends the results back.
+                # Every tool_use gets its tool_result: EDGAR calls run here, and
+                # a report cut off at max_tokens (strict only holds for a
+                # finished call, so its input is incomplete) is refused, so the
+                # model sends it again.
                 messages.append({"role": "assistant", "content": response.content})
-                results = [await run_tool(edgar, c, sources, errors) for c in calls]
+                results = [
+                    {"type": "tool_result", "tool_use_id": c.id, "is_error": True, "content": CUT_OFF}
+                    if c.name == "report_findings"
+                    else await run_tool(edgar, c, sources, errors)
+                    for c in calls
+                ]
                 messages.append({"role": "user", "content": results})
                 continue
             if response.stop_reason == "refusal":

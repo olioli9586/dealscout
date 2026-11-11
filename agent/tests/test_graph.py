@@ -85,9 +85,12 @@ async def test_an_edit_saves_the_edited_profile(make_runs, pool):
     runs, _ = make_runs()
     run = await runs.start("Acme Corp")
     edited = unknown_profile("Acme Corporation").model_dump() | {"leadership": ["Jane Doe, CEO"]}
-    await runs.decide(run["id"], {"action": "edit", "profile": edited})
+    after = await runs.decide(run["id"], {"action": "edit", "profile": edited})
 
     assert [p["profile"] for p in await saved_profiles(pool)] == [edited]
+    # The view shows what was saved, next to the writer's draft.
+    assert after["edited"] == edited
+    assert after["draft"] == run["draft"]
 
 
 async def test_rejecting_saves_nothing(make_runs, pool):
