@@ -5,15 +5,15 @@ hand-checked ground truth, mechanical field grading with accepted-value lists,
 every result reproducible via `node eval/run-eval.mjs <base-url> --label <label> [--api v2]`.
 Raw rows, profiles included: `eval/results/<label>.json`.
 
-| label | agent | date | fields correct | failed runs | median time | median cost | total cost | saved by caching | claims supported | retried branches |
-|---|---|---|---|---|---|---|---|---|---|---|
-| v1 | v1: `claude-sonnet-4-6`, effort `medium` | 2026-11-06 | 15/15 (100%) | 0/5 | 212 s | $0.242 | $1.198 | — | — | — |
-| v2-haiku | v2: planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), writer `claude-haiku-5-5` (medium) | 2026-11-08 | 14/15 (93%) | 0/5 | 27 s | $0.127 | $0.603 | — | 241/242 (100%) | — |
-| v2-haiku-sonnet-writer | v2: planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), writer `claude-sonnet-5-5` (medium) | 2026-11-08 | 13/15 (87%) | 0/5 | 39 s | $0.162 | $0.812 | — | 239/241 (99%) | — |
-| v2-sonnet | v2: planner `claude-haiku-5-5` (low), researcher `claude-sonnet-5-5` (medium), writer `claude-sonnet-5-5` (medium) | 2026-11-08 | 9/15 (60%) | 0/5 | 48 s | $0.531 | $2.703 | — | 64/64 (100%) | — |
-| v2-day4 | v2: planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), verifier `claude-haiku-5-5` (low), writer `claude-haiku-5-5` (medium) | 2026-11-10 | 14/15 (93%) | 0/5 | 46 s | $0.132 | $0.697 | 5.3% | 151/210 (72%) | 3 |
-| v2-day4-1-search | v2: planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), verifier `claude-haiku-5-5` (low), writer `claude-haiku-5-5` (medium) | 2026-11-10 | 12/15 (80%) | 0/5 | 49 s | $0.069 | $0.364 | 16.7% | 150/214 (70%) | 5 |
-| v2-day4-memory | v2: planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), verifier `claude-haiku-5-5` (low), writer `claude-haiku-5-5` (medium) | 2026-11-10 | 13/15 (87%) | 0/5 | 53 s | $0.098 | $0.550 | 5.3% | 95/153 (62%) | 6 |
+| label | agent | date | fields correct | failed runs | median time | median cost | total cost | median model requests | median searches | saved by caching | claims supported | retried branches |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| v1 | v1: `claude-sonnet-4-6`, effort `medium` | 2026-11-06 | 15/15 (100%) | 0/5 | 212 s | $0.242 | $1.198 | 2 | 3 | — | — | — |
+| v2-haiku | v2: planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), writer `claude-haiku-5-5` (medium) | 2026-11-08 | 14/15 (93%) | 0/5 | 27 s | $0.127 | $0.603 | 6 | 10 | — | 241/242 (100%) | — |
+| v2-haiku-sonnet-writer | v2: planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), writer `claude-sonnet-5-5` (medium) | 2026-11-08 | 13/15 (87%) | 0/5 | 39 s | $0.162 | $0.812 | 6 | 10 | — | 239/241 (99%) | — |
+| v2-sonnet | v2: planner `claude-haiku-5-5` (low), researcher `claude-sonnet-5-5` (medium), writer `claude-sonnet-5-5` (medium) | 2026-11-08 | 9/15 (60%) | 0/5 | 48 s | $0.531 | $2.703 | 7 | 11 | — | 64/64 (100%) | — |
+| v2-day4 | v2: planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), verifier `claude-haiku-5-5` (low), writer `claude-haiku-5-5` (medium) | 2026-11-10 | 14/15 (93%) | 0/5 | 46 s | $0.132 | $0.697 | 10 | 11 | 5.3% | 151/210 (72%) | 3 |
+| v2-day4-1-search | v2: planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), verifier `claude-haiku-5-5` (low), writer `claude-haiku-5-5` (medium) | 2026-11-10 | 12/15 (80%) | 0/5 | 49 s | $0.069 | $0.364 | 12 | 5 | 16.7% | 150/214 (70%) | 5 |
+| v2-day4-memory | v2: planner `claude-haiku-5-5` (low), researcher `claude-haiku-5-5` (medium), verifier `claude-haiku-5-5` (low), writer `claude-haiku-5-5` (medium) | 2026-11-10 | 13/15 (87%) | 0/5 | 53 s | $0.098 | $0.550 | 9 | 8 | 5.3% | 95/153 (62%) | 6 |
 
 ## v1
 

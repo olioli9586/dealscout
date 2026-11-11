@@ -175,7 +175,11 @@ FIELD_HELP = {
     # homepage" (Day 3) failed whenever the homepage wasn't a search result.
     "website": "the official homepage URL; search for the company's official site and cite the homepage "
     "itself when your results include it",
-    "hq_location": "city, region and country of the main office, not a registered-agent or mailing address",
+    # No street address: researchers kept adding one the quote didn't
+    # state, and the verifier rightly rejected the whole claim (3 times on
+    # Day 4, including Airbnb's HQ in the final run).
+    "hq_location": "city, region and country of the main office (no street address), not a registered-agent "
+    "or mailing address",
 }
 REPORTABLE_FIELDS = sorted(FIELD_HELP)
 

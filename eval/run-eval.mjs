@@ -9,7 +9,12 @@
 // (eval/report.mjs).
 //
 // Usage:  node eval/run-eval.mjs [base-url] [--label v1] [--max-usd 5] [--api v1|v2] [--approve]
+//                                 [--concurrency 1]
 //         (base-url defaults to production)
+//
+// --concurrency runs that many companies at once (results keep the
+// ground-truth order). The spend cap is checked before each new company
+// starts, so it can be overshot by the runs already in flight.
 //
 // --api v2 starts each company as a v2 run (POST /api/v2/runs, the LangGraph
 // agent behind the Next.js app) and grades the draft it stops at for
@@ -35,6 +40,7 @@ const { values: opts, positionals } = parseArgs({
     "max-usd": { type: "string", default: "5" },
     api: { type: "string", default: "v1" },
     approve: { type: "boolean", default: false },
+    concurrency: { type: "string", default: "1" },
   },
 });
 const BASE = positionals[0] ?? "https://dealscout-gamma.vercel.app";
@@ -43,6 +49,8 @@ if (!Number.isFinite(MAX_USD) || MAX_USD <= 0) throw new Error("--max-usd must b
 if (!/^[\w.-]+$/.test(opts.label)) throw new Error("--label may only use letters, digits, '.', '_' and '-'");
 if (!["v1", "v2"].includes(opts.api)) throw new Error("--api must be v1 or v2");
 if (opts.approve && opts.api !== "v2") throw new Error("--approve is for --api v2 runs");
+const CONCURRENCY = Number(opts.concurrency);
+if (!Number.isInteger(CONCURRENCY) || CONCURRENCY < 1 || CONCURRENCY > 8) throw new Error("--concurrency must be 1 to 8");
 const truth = JSON.parse(readFileSync(new URL("./ground-truth.json", import.meta.url)));
 
 async function research(company) {
@@ -147,15 +155,7 @@ const graders = {
   hq_city: (p, accepted) => accepted.some((c) => norm(p.hq_location).includes(c)),
 };
 
-const rows = [];
-let spent = 0;
-let stopped = null;
-for (const gt of truth.companies) {
-  if (stopped) {
-    rows.push({ name: gt.name, skipped: stopped, fields: {} });
-    continue;
-  }
-  process.stdout.write(`researching ${gt.name}… `);
+async function evaluate(gt) {
   const started = Date.now();
   let run;
   try {
@@ -182,17 +182,35 @@ for (const gt of truth.companies) {
     for (const [field, grade] of Object.entries(graders)) row.fields[field] = grade(run.profile, gt[field]);
     row.profile = run.profile;
   }
-  rows.push(row);
-  const cost = run.usage?.cost_usd;
-  if (typeof cost === "number") spent += cost;
-  console.log(
-    `${row.seconds}s`,
-    typeof cost === "number" ? `$${cost.toFixed(3)}` : "cost unknown",
-    row.error ? `FAILED: ${row.error}` : row.fields,
-  );
-  if (typeof cost !== "number") stopped = "the previous run reported no cost, so the spend cap can't be enforced";
-  else if (spent >= MAX_USD) stopped = `spend cap $${MAX_USD} reached`;
+  return row;
 }
+
+const rows = new Array(truth.companies.length);
+let spent = 0;
+let stopped = null;
+let next = 0;
+async function worker() {
+  while (next < truth.companies.length) {
+    const i = next++;
+    const gt = truth.companies[i];
+    if (stopped) {
+      rows[i] = { name: gt.name, skipped: stopped, fields: {} };
+      continue;
+    }
+    const row = await evaluate(gt);
+    rows[i] = row;
+    const cost = row.usage?.cost_usd;
+    if (typeof cost === "number") spent += cost;
+    console.log(
+      `${gt.name}: ${row.seconds}s`,
+      typeof cost === "number" ? `$${cost.toFixed(3)}` : "cost unknown",
+      row.error ? `FAILED: ${row.error}` : row.fields,
+    );
+    if (typeof cost !== "number") stopped = "a run reported no cost, so the spend cap can't be enforced";
+    else if (spent >= MAX_USD) stopped = `spend cap $${MAX_USD} reached`;
+  }
+}
+await Promise.all(Array.from({ length: CONCURRENCY }, worker));
 if (stopped) console.log(`stopped early: ${stopped}`);
 
 const fields = Object.keys(graders);
