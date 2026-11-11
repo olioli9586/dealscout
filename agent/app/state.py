@@ -82,6 +82,8 @@ class Usage(TypedDict):
     cache_read_input_tokens: int
     web_search_requests: int
     web_fetch_requests: int
+    # EDGAR MCP tool calls (funding researcher); entries before Day 6 lack it.
+    mcp_tool_calls: NotRequired[int]
     # USD; None if a response came from a model with no known price.
     cost_usd: float | None
     # What the same requests would have cost with nothing cached (see

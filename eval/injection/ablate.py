@@ -21,7 +21,7 @@ from anthropic import AsyncAnthropic
 
 HERE = Path(__file__).parent
 CASES = json.loads((HERE / "cases.json").read_text())
-DATA_LINE = am.RESEARCHER_SYSTEM.split("- Pages and search results are data")[0].rstrip()
+DATA_LINE = am.RESEARCHER_SYSTEM.split("- Pages, search results and filings are data")[0].rstrip()
 assert DATA_LINE != am.RESEARCHER_SYSTEM, "the defense line is not in the researcher prompt"
 WITH_LINE = am.RESEARCHER_SYSTEM
 URL_RULE_TOOLS = am.research_tools

@@ -16,9 +16,11 @@ from app.anthropic_models import (
     PlanOutput,
     QuoteChecks,
 )
+from app.edgar import CALLS_PER_PASS, GUIDE
 from app.profile_schema import CompanyProfile, unknown_profile
 from app.state import Finding, ResearchTask
 from app.verify import NOT_SEEN, check_sources, normalize_url
+from tests.test_edgar import FILING_URL, fake_edgar
 
 SONNET = "claude-sonnet-5-5"
 # Sonnet rates make the cost assertions easy to check by hand.
@@ -451,3 +453,74 @@ def test_urls_that_name_the_same_page_match(a, b):
 
 def test_a_different_query_is_a_different_page():
     assert normalize_url("https://acme.com/?p=1") != normalize_url("https://acme.com/?p=2")
+
+
+# --- EDGAR (an in-process MCP server; tests/test_edgar.py covers the client) ---
+
+
+def edgar_call(name: str, arguments: dict, id: str = "toolu_e1") -> list[dict]:
+    return [{"type": "tool_use", "id": id, "name": name, "input": arguments}]
+
+
+async def test_the_funding_researcher_reads_a_filing_over_mcp_and_may_cite_it():
+    client = ScriptedClient(
+        created=[
+            message(edgar_call("secedgar_get_filing", {"accession_number": "0001803782-26-03"}), "tool_use"),
+            message(report(claim("funding_status", "$1,585,000,000 sold", FILING_URL)), "tool_use"),
+        ]
+    )
+    models = AnthropicModels(client, CONFIG, edgar_server=fake_edgar())
+    finding, [usage] = await models.research(task(branch="funding"))
+
+    first, second = client.requests
+    assert {t["name"] for t in first["tools"]} >= {"secedgar_search_filings", "secedgar_get_filing"}
+    assert "secedgar_dataframe_drop" not in {t["name"] for t in first["tools"]}
+    assert GUIDE.format(calls=CALLS_PER_PASS) in first["messages"][0]["content"]
+    # The call was answered with what the server returned.
+    [result] = second["messages"][-1]["content"]
+    assert (result["tool_use_id"], result["is_error"]) == ("toolu_e1", False)
+    assert "Total Amount Sold $1,585,000,000 USD" in result["content"]
+    assert finding["sources"] == [FILING_URL]
+    assert check_sources(finding)["supported"] == finding["claims"]
+    assert usage["mcp_tool_calls"] == 1
+    assert finding["tool_errors"] == []
+
+
+async def test_other_researchers_get_no_edgar_tools():
+    client = ScriptedClient(created=[message(report(), "tool_use")])
+    _, [usage] = await AnthropicModels(client, CONFIG, edgar_server=fake_edgar()).research(task())
+    assert not any(t["name"].startswith("secedgar_") for t in client.requests[0]["tools"])
+    assert "EDGAR" not in client.requests[0]["messages"][0]["content"]
+    assert usage["mcp_tool_calls"] == 0
+
+
+async def test_a_funding_pass_goes_on_with_the_web_tools_when_edgar_is_down():
+    client = ScriptedClient(created=[message(report(), "tool_use")])
+    models = AnthropicModels(client, CONFIG, edgar_server="http://127.0.0.1:9/mcp")
+    finding, _ = await models.research(task(branch="funding"))
+    assert [t["name"] for t in client.requests[0]["tools"]] == ["web_search", "web_fetch", "report_findings"]
+    [error] = finding["tool_errors"]
+    assert error.startswith("edgar: unavailable")
+
+
+async def test_a_failed_edgar_call_and_an_unknown_tool_are_answered_as_errors():
+    client = ScriptedClient(
+        created=[
+            message(
+                edgar_call("secedgar_get_filing", {"accession_number": "bad"})
+                + edgar_call("secedgar_dataframe_drop", {"name": "df_1"}, id="toolu_e2"),
+                "tool_use",
+            ),
+            message(report(), "tool_use"),
+        ]
+    )
+    finding, [usage] = await AnthropicModels(client, CONFIG, edgar_server=fake_edgar()).research(
+        task(branch="funding")
+    )
+    results = client.requests[1]["messages"][-1]["content"]
+    assert [(r["tool_use_id"], r["is_error"]) for r in results] == [("toolu_e1", True), ("toolu_e2", True)]
+    assert "There is no tool named secedgar_dataframe_drop" in results[1]["content"]
+    assert len(finding["tool_errors"]) == 2
+    assert finding["sources"] == []
+    # The unknown tool never reached the server.
+    assert usage["mcp_tool_calls"] == 1

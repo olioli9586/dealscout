@@ -16,6 +16,7 @@ from pydantic import BaseModel, StringConstraints, model_validator
 
 from app.anthropic_models import AnthropicModels, ModelConfig
 from app.db import database_url, make_pool
+from app.edgar import server_from_env
 from app.fakes import FakeModels
 from app.graph import build_graph
 from app.models import Models
@@ -33,7 +34,7 @@ def models_from_env() -> Models:
     if kind == "fake":
         return FakeModels.from_env()
     if kind == "anthropic":
-        return AnthropicModels(AsyncAnthropic(), ModelConfig.from_env())
+        return AnthropicModels(AsyncAnthropic(), ModelConfig.from_env(), edgar_server=server_from_env())
     raise RuntimeError(f"AGENT_MODELS={kind!r} is not supported (use 'fake' or 'anthropic')")
 
 
