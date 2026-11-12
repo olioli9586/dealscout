@@ -1,28 +1,35 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  Bricolage_Grotesque,
-  IBM_Plex_Mono,
-  Public_Sans,
-} from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const publicSans = Public_Sans({
+// The fonts ship in app/fonts (Latin subsets from Fontsource 5.3.0, SIL Open
+// Font License): next/font/google fetched them at build time, and builds
+// failed now and then on "next/font/google queries have exactly one entry".
+const publicSans = localFont({
   variable: "--font-public-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  src: [
+    { path: "./fonts/public-sans-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/public-sans-latin-500-normal.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/public-sans-latin-600-normal.woff2", weight: "600", style: "normal" },
+  ],
 });
 
-const plexMono = IBM_Plex_Mono({
+const plexMono = localFont({
   variable: "--font-plex-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
+  src: [
+    { path: "./fonts/ibm-plex-mono-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/ibm-plex-mono-latin-500-normal.woff2", weight: "500", style: "normal" },
+  ],
 });
 
-const bricolage = Bricolage_Grotesque({
+const bricolage = localFont({
   variable: "--font-bricolage",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  src: [
+    { path: "./fonts/bricolage-grotesque-latin-500-normal.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/bricolage-grotesque-latin-600-normal.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/bricolage-grotesque-latin-700-normal.woff2", weight: "700", style: "normal" },
+  ],
 });
 
 export const metadata: Metadata = {
